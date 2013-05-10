@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "event",
+  "namespace": "com.cloudera.cdk.examples.logging",
+  "doc": "An application event",
+  "fields": [
+    {
+      "name": "id",
+      "type": "long"
+    },
+    {
+      "name": "message",
+      "type": "string"
+    }
+  ]
+}
