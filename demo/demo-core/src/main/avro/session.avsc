@@ -1,0 +1,38 @@
+{
+  "name": "Session",
+  "namespace": "com.cloudera.cdk.examples.demo.event",
+  "type": "record",
+  "doc": "A session derived from a standard event log.",
+  "fields": [
+    {
+      "name": "user_id",
+      "type": "long",
+      "doc": "A unique identifier for the user. Required."
+    },
+    {
+      "name": "session_id",
+      "type": "string",
+      "doc": "A unique identifier for the session. Required."
+    },
+    {
+      "name": "ip",
+      "type": "string",
+      "doc": "The IP address of the host where the event originated. Required."
+    },
+    {
+      "name": "start_timestamp",
+      "type": "long",
+      "doc": "The point in time when the session started, represented as the number of milliseconds since January 1, 1970, 00:00:00 GMT. Required."
+    },
+    {
+      "name": "duration",
+      "type": "long",
+      "doc": "The duration of the session in milliseconds. Required."
+    },
+    {
+      "name": "session_event_count",
+      "type": "int",
+      "doc": "The number of events that occurred in the session. Required."
+    }
+  ]
+}
