@@ -6,8 +6,8 @@ Crunch, and finally analysing the session data with SQL using Hive or Impala.
 
 ## Prequisites
 
-Before trying this example, you need to have installed Flume and started a Flume agent
-(this is explained in the `logging` example).
+Before trying this example, you need to have installed Flume (this is explained in the
+`logging` example).
 
 You will also need a Hadoop and Hive installation. If you are running from tarballs you
 will need to set the `HADOOP_HOME` and `HIVE_HOME` environment variables.
@@ -30,9 +30,17 @@ running Crunch jobs, and a WAR file for the webapp that logs application events.
 
 ## Running
 
+### Start the Flume agent
+
+Open a new terminal and start a Flume agent with:
+
+```bash
+$FLUME_HOME/bin/flume-ng agent -n agent -c conf -f flume.properties
+```
+
 ### Create the datasets
 
-First we need to create the datasets: one called `event` for the raw events,
+First we need to create the datasets: one called `events` for the raw events,
 and `sessions` for the derived sessions.
 
 We store the raw events metadata in HDFS so Flume can find the schema (it would be nice

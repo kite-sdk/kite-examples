@@ -1,11 +1,13 @@
 package com.cloudera.cdk.examples.demo;
 
 import com.cloudera.cdk.examples.demo.event.Session;
+import com.cloudera.data.Dataset;
 import com.cloudera.data.DatasetRepository;
 import com.cloudera.data.event.StandardEvent;
 import com.cloudera.data.filesystem.CrunchDatasets;
 import com.cloudera.data.filesystem.FileSystemDatasetRepository;
 import com.cloudera.data.hcatalog.HCatalogDatasetRepository;
+import com.google.common.collect.Iterables;
 import java.io.Serializable;
 import java.net.URI;
 import org.apache.crunch.CombineFn;
@@ -39,8 +41,12 @@ public class CreateSessions extends CrunchTool implements Serializable {
     getPipeline().enableDebug();
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
+    // Only process the last dataset partition written
+    Dataset eventsDataset = fsRepo.get("events");
+    Dataset lastPartition = getLatestPartition(eventsDataset);
+
     PCollection<StandardEvent> events = read(
-        CrunchDatasets.asSource(fsRepo.get("events"), StandardEvent.class));
+        CrunchDatasets.asSource(lastPartition, StandardEvent.class));
 
     PCollection<Session> sessions = events
       .parallelDo(new DoFn<StandardEvent, Session>() {
@@ -99,6 +105,14 @@ public class CreateSessions extends CrunchTool implements Serializable {
         Target.WriteMode.APPEND);
 
     return run().succeeded() ? 0 : 1;
+  }
+
+  private Dataset getLatestPartition(Dataset eventsDataset) {
+    Dataset ds = eventsDataset;
+    while (ds.getDescriptor().isPartitioned()) {
+      ds = Iterables.getLast(ds.getPartitions());
+    }
+    return ds;
   }
 
   public static void main(String... args) throws Exception {
