@@ -16,24 +16,7 @@
 -->
 <configuration>
   <property>
-    <name>hive.metastore.local</name>
-    <value>false</value>
+    <name>fs.default.name</name>
+    <value>hdfs://localhost.localdomain/</value>
   </property>
-  <property>
-    <name>hive.metastore.uris</name>
-    <value>thrift://localhost:9083</value>
-  </property>
-  <property>
-    <name>hive.metastore.warehouse.dir</name>
-    <value>/user/hive/warehouse</value>
-  </property>
-
-  <!-- To use an embedded Hive metastore use the following configuration,
-       with the above properties commented out or removed.  -->
-<!--
-  <property>
-    <name>hive.metastore.warehouse.dir</name>
-    <value>/tmp/user/hive/warehouse</value>
-  </property>
--->
 </configuration>

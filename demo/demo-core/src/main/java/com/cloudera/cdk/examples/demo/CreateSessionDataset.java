@@ -4,11 +4,9 @@ import com.cloudera.cdk.examples.demo.event.Session;
 import com.cloudera.data.DatasetDescriptor;
 import com.cloudera.data.DatasetRepository;
 import com.cloudera.data.hcatalog.HCatalogDatasetRepository;
+import java.net.URI;
 import org.apache.avro.Schema;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -18,8 +16,8 @@ public class CreateSessionDataset extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Construct an HCatalog dataset repository using external Hive tables
-    DatasetRepository repo = new HCatalogDatasetRepository(
-        FileSystem.get(new Configuration()), new Path("/tmp/data"));
+    DatasetRepository repo = new HCatalogDatasetRepository.Builder()
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Get the Avro schema from the Session class
     Schema schema = Session.SCHEMA$;

@@ -19,9 +19,6 @@ import org.apache.crunch.Pair;
 import org.apache.crunch.Target;
 import org.apache.crunch.types.avro.Avros;
 import org.apache.crunch.util.CrunchTool;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.ToolRunner;
 
 public class CreateSessions extends CrunchTool implements Serializable {
@@ -31,11 +28,11 @@ public class CreateSessions extends CrunchTool implements Serializable {
 
     // Construct a local filesystem dataset repository rooted at /tmp/data
     DatasetRepository fsRepo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new URI("/tmp/data")).get();
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Construct an HCatalog dataset repository using external Hive tables
-    DatasetRepository hcatRepo = new HCatalogDatasetRepository(
-        FileSystem.get(new Configuration()), new Path("/tmp/data"));
+    DatasetRepository hcatRepo = new HCatalogDatasetRepository.Builder()
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Turn debug on while in development.
     getPipeline().enableDebug();

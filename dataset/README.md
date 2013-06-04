@@ -22,10 +22,23 @@ mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDataset
 You can look at the files that were created with:
 
 ```bash
-find /tmp/data
+hadoop fs -ls -R /tmp/data/users
 ```
 
-Read the entities in the dataset:
+Note: The above assumes that you are running against a single-node localhost HDFS installation.
+If this is not the case, then you can change `fs.default.name` in
+`src/main/resources/core-site.xml`, e.g. to `file:///` to use the local filesystem.
+Alternatively, you can pass in extra arguments to the command, as follows:
+
+```bash
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetPojo" \
+  -Dexec.args="-fs file:///"
+```
+
+For the rest of the examples we will assume a single-node localhost HDFS installation.
+
+Once we have created a dataset and written some data to it, the next thing to do is to
+read it back. We can do this with the `ReadUserDatasetPojo` program. 
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetPojo"
@@ -40,7 +53,7 @@ mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
 ### Generic records vs. POJOs
 
 The previous examples used POJOs, since they are the most familiar data transfer
-obejcts for most Java programmers. Avro supports generic records too,
+objects for most Java programmers. Avro supports generic records too,
 which are more efficient, since they don't require reflection,
 and also don't require either the reader or writer to have the POJO class available.
 
@@ -59,24 +72,24 @@ according to the value of particular partition fields.
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetGenericPartitioned"
-find /tmp/data # see how partitioning affects the data layout
+hadoop fs -ls -R /tmp/data/users # see how partitioning affects the data layout
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGenericOnePartition"
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
 ```
 
-### Parquet Columar Format
+### Parquet Columnar Format
 
 Parquet is a new columnar format for data. Columnar formats provide performance
 advantages over row-oriented formats like Avro data files (which is the default in CDK),
-when the number of columns is large (dozens) and the typical queries that you perform
+when the number of columns is large (typically dozens) and the typical queries that you perform
 over the data only retrieve a small number of the columns.
 
 Note that Parquet support is still experimental in this release.
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetGenericParquet"
-find /tmp/data # see the parquet file extension
+hadoop fs -ls -R /tmp/data/users # see the parquet file extension
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
 ```
@@ -93,11 +106,13 @@ Run the following to create the dataset:
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateHCatalogUserDatasetGeneric"
 ```
 
-Hive/HCatalog's metastore directory is set to _/tmp/user/hive/warehouse/_ (see
-_resources/hive-site.xml_), which is where the data is written to:
+Note: This example assumes a local (not embedded) metastore running on the local machine. You can
+change the default to use a different metastore by editing _src/main/resources/hive-site.xml_.
+
+Now inspect the dataset storage area:
 
 ```bash
-find /tmp/user/hive/warehouse/
+hadoop fs -ls -R /user/hive/warehouse/
 ```
 
 Notice that there is no metadata stored there, since the metadata is stored in

@@ -5,7 +5,11 @@ import com.cloudera.data.DatasetRepository;
 import com.cloudera.data.PartitionStrategy;
 import com.cloudera.data.event.StandardEvent;
 import com.cloudera.data.filesystem.FileSystemDatasetRepository;
-import com.cloudera.data.partition.*;
+import com.cloudera.data.partition.DayOfMonthFieldPartitioner;
+import com.cloudera.data.partition.HourFieldPartitioner;
+import com.cloudera.data.partition.MinuteFieldPartitioner;
+import com.cloudera.data.partition.MonthFieldPartitioner;
+import com.cloudera.data.partition.YearFieldPartitioner;
 import java.net.URI;
 import org.apache.avro.Schema;
 import org.apache.hadoop.conf.Configured;
@@ -19,7 +23,7 @@ public class CreateStandardEventDataset extends Configured implements Tool {
 
     // Construct a local filesystem dataset repository rooted at /tmp/data
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new URI("/tmp/data")).get();
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Get the Avro schema from the StandardEvent class
     Schema schema = StandardEvent.SCHEMA$;

@@ -38,7 +38,7 @@ public class App extends Configured implements Tool {
 
     // Find the schema from the repository
     FileSystemDatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new URI("/tmp/data")).get();
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
     Schema schema = repo.getMetadataProvider().load("events").getSchema();
 
     // Build some events using the generic Avro API and log them using log4j

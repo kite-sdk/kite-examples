@@ -36,7 +36,7 @@ public class CreateUserDatasetPojo extends Configured implements Tool {
 
     // Construct a local filesystem dataset repository rooted at /tmp/data
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new URI("/tmp/data")).get();
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Create a dataset of users with the Avro schema in the repository
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(User.class).get();

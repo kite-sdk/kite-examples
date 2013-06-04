@@ -42,7 +42,7 @@ public class CreateUserDatasetGenericPartitioned extends Configured implements T
 
     // Construct a local filesystem dataset repository rooted at /tmp/data
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new URI("/tmp/data")).get();
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Read an Avro schema from the user.avsc file on the classpath
     Schema schema = new Schema.Parser().parse(
