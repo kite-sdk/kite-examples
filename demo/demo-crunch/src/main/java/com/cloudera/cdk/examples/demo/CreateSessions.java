@@ -3,6 +3,7 @@ package com.cloudera.cdk.examples.demo;
 import com.cloudera.cdk.examples.demo.event.Session;
 import com.cloudera.data.Dataset;
 import com.cloudera.data.DatasetRepository;
+import com.cloudera.data.PartitionKey;
 import com.cloudera.data.crunch.CrunchDatasets;
 import com.cloudera.data.event.StandardEvent;
 import com.cloudera.data.filesystem.FileSystemDatasetRepository;
@@ -38,12 +39,23 @@ public class CreateSessions extends CrunchTool implements Serializable {
     getPipeline().enableDebug();
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
-    // Only process the last dataset partition written
+    // Process the specified dataset partition, or the latest one, if none specified
     Dataset eventsDataset = fsRepo.get("events");
-    Dataset lastPartition = getLatestPartition(eventsDataset);
+    Dataset partition;
+    if (args.length == 0) {
+      partition = getLatestPartition(eventsDataset);
+    } else {
+      String partitionUri = args[0];
+      PartitionKey partitionKey = FileSystemDatasetRepository.partitionKeyForPath(
+          eventsDataset, new URI(partitionUri));
+      partition = eventsDataset.getPartition(partitionKey, false);
+      if (partition == null) {
+        throw new IllegalArgumentException("Partition not found: " + partitionUri);
+      }
+    }
 
     PCollection<StandardEvent> events = read(
-        CrunchDatasets.asSource(lastPartition, StandardEvent.class));
+        CrunchDatasets.asSource(partition, StandardEvent.class));
 
     PCollection<Session> sessions = events
       .parallelDo(new DoFn<StandardEvent, Session>() {

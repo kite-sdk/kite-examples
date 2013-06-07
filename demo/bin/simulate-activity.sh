@@ -1,7 +1,7 @@
 #!/bin/bash
 
 USER_ID=$1
-REPEATS=$2
+REPEATS=${2:-100000}
 COOKIE_FILE=/tmp/user_${USER_ID}_cookies.txt
 rm -f $COOKIE_FILE
 
@@ -12,5 +12,5 @@ do
       -b $COOKIE_FILE \
       -c $COOKIE_FILE \
       "http://localhost:8080/demo-webapp/send?user_id=$USER_ID&message=message$i"
-  sleep $(printf ".%02ds" $(( $RANDOM % 100 )))
+  sleep $(printf ".%02ds" $(( $RANDOM % 1000 )))
 done

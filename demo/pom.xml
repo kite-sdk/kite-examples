@@ -22,13 +22,16 @@
 
   <groupId>com.cloudera.cdk.examples</groupId>
   <artifactId>demo</artifactId>
-  <version>0.2.1-SNAPSHOT</version>
+  <version>0.3.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>demo</name>
 
   <modules>
+    <module>demo-admin</module>
     <module>demo-core</module>
+    <module>demo-crunch</module>
+    <module>demo-oozie</module>
     <module>demo-webapp</module>
   </modules>
 

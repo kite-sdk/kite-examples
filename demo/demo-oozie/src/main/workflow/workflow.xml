@@ -1,0 +1,23 @@
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="create-sessions-wf">
+  <start to="java-node"/>
+  <action name="java-node">
+    <java>
+      <job-tracker>${jobTracker}</job-tracker>
+      <name-node>${nameNode}</name-node>
+      <configuration>
+        <property>
+          <name>mapred.job.queue.name</name>
+          <value>${queueName}</value>
+        </property>
+      </configuration>
+      <main-class>com.cloudera.cdk.examples.demo.CreateSessions</main-class>
+      <arg>${workflowInput}</arg>
+    </java>
+    <ok to="end"/>
+    <error to="fail"/>
+  </action>
+  <kill name="fail">
+    <message>Java failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill>
+  <end name="end"/>
+</workflow-app>

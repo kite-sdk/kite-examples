@@ -1,0 +1,45 @@
+<coordinator-app name="create-sessions-coord" frequency="1" start="${start}" end="${end}"
+                 timezone="UTC" xmlns="uri:oozie:coordinator:0.4">
+  <datasets>
+    <dataset name="events" frequency="1" initial-instance="${initialDataset}"
+             timezone="UTC">
+      <uri-template>${nameNode}/tmp/data/events/year=${YEAR}/month=${MONTH}/day=${DAY}/hour=${HOUR}/minute=${MINUTE}</uri-template>
+      <done-flag></done-flag> <!-- No file to signify that a dataset is "done". -->
+    </dataset>
+  </datasets>
+  <input-events>
+    <data-in name="eventsInput" dataset="events">
+      <instance>${coord:current(0)}</instance>
+    </data-in>
+    <!--
+    The eventsInput data is deemed ready only once the next directory is created.
+    See http://blog.cloudera.com/blog/2013/01/how-to-schedule-recurring-hadoop-jobs-with-apache-oozie/
+    -->
+    <data-in name="readyIndicator" dataset="events">
+      <instance>${coord:current(1)}</instance>
+    </data-in>
+  </input-events>
+  <action>
+    <workflow>
+      <app-path>${appPath}</app-path>
+      <configuration>
+        <property>
+          <name>jobTracker</name>
+          <value>${jobTracker}</value>
+        </property>
+        <property>
+          <name>nameNode</name>
+          <value>${nameNode}</value>
+        </property>
+        <property>
+          <name>queueName</name>
+          <value>${queueName}</value>
+        </property>
+        <property>
+          <name>workflowInput</name>
+          <value>${coord:dataIn('eventsInput')}</value>
+        </property>
+      </configuration>
+    </workflow>
+  </action>
+</coordinator-app>

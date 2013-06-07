@@ -20,7 +20,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>demo-core</artifactId>
+  <artifactId>demo-crunch</artifactId>
 
   <parent>
     <groupId>com.cloudera.cdk.examples</groupId>
@@ -30,24 +30,22 @@
 
   <packaging>jar</packaging>
 
-  <name>demo-core</name>
+  <name>demo-crunch</name>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.avro</groupId>
-        <artifactId>avro-maven-plugin</artifactId>
-        <version>1.7.4</version>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.3</version>
         <configuration>
-          <stringType>String</stringType>
-          <createSetters>false</createSetters>
-          <fieldVisibility>private</fieldVisibility>
+          <descriptor>src/main/assembly/hadoop-job.xml</descriptor>
         </configuration>
         <executions>
           <execution>
-            <phase>generate-sources</phase>
+            <id>make-hadoop-jar</id>
+            <phase>package</phase>
             <goals>
-              <goal>schema</goal>
+              <goal>single</goal>
             </goals>
           </execution>
         </executions>
@@ -56,11 +54,52 @@
   </build>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.cloudera.cdk.examples</groupId>
+      <artifactId>demo-core</artifactId>
+      <version>0.3.1-SNAPSHOT</version>
+    </dependency>
+
     <dependency>
       <groupId>com.cloudera</groupId>
       <artifactId>cdk-data</artifactId>
       <version>0.3.1-SNAPSHOT</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>14.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>1.7.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-common</artifactId>
+      <version>2.0.0-cdh4.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>2.0.0-cdh4.2.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- include optional Crunch dependencies -->
+    <dependency>
+      <groupId>org.apache.crunch</groupId>
+      <artifactId>crunch-core</artifactId>
+      <version>0.6.0-cdh4.2.0</version>
+    </dependency>
+
   </dependencies>
 
 </project>
