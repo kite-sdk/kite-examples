@@ -71,6 +71,35 @@
         <artifactId>tomcat7-maven-plugin</artifactId>
         <version>2.1</version>
       </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>0.9</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <excludes>
+            <exclude>**/*.avro</exclude>
+            <exclude>**/*.avsc</exclude>
+            <exclude>**/*.iml</exclude>
+            <exclude>**/*.md</exclude>
+            <exclude>**/*.txt</exclude>
+            <exclude>**/.classpath</exclude>
+            <exclude>**/.project</exclude>
+            <exclude>**/.settings/**</exclude>
+            <exclude>**/target/**</exclude>
+            <exclude>.git/**</exclude>
+            <exclude>.gitignore</exclude>
+            <exclude>.idea/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
