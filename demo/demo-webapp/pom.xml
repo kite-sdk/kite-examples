@@ -34,7 +34,7 @@
   <dependencies>
     <dependency>
       <groupId>com.cloudera</groupId>
-      <artifactId>cdk-data</artifactId>
+      <artifactId>cdk-data-core</artifactId>
       <version>0.3.1-SNAPSHOT</version>
       <exclusions>
         <exclusion>
@@ -88,13 +88,13 @@
       </exclusions>
     </dependency>
     <dependency>
-      <artifactId>cdk-flume-log4jappender</artifactId>
       <groupId>com.cloudera</groupId>
+      <artifactId>cdk-flume-log4jappender</artifactId>
       <version>0.3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <artifactId>log4j</artifactId>
       <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
       <version>1.2.16</version>
     </dependency>
     <dependency>
