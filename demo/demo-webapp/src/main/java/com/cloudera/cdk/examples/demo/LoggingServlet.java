@@ -15,7 +15,7 @@
  */
 package com.cloudera.cdk.examples.demo;
 
-import com.cloudera.data.event.StandardEvent;
+import com.cloudera.cdk.data.event.StandardEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;

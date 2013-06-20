@@ -15,7 +15,7 @@
  */
 package com.cloudera.cdk.examples.logging;
 
-import com.cloudera.data.filesystem.FileSystemDatasetRepository;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
 import java.net.URI;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;

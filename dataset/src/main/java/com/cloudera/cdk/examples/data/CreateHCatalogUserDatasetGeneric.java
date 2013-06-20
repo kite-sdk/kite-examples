@@ -15,11 +15,11 @@
  */
 package com.cloudera.cdk.examples.data;
 
-import com.cloudera.data.Dataset;
-import com.cloudera.data.DatasetDescriptor;
-import com.cloudera.data.DatasetRepository;
-import com.cloudera.data.DatasetWriter;
-import com.cloudera.data.hcatalog.HCatalogDatasetRepository;
+import com.cloudera.cdk.data.Dataset;
+import com.cloudera.cdk.data.DatasetDescriptor;
+import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.DatasetWriter;
+import com.cloudera.cdk.data.hcatalog.HCatalogDatasetRepository;
 import com.google.common.io.Resources;
 import java.util.Random;
 import org.apache.avro.Schema;

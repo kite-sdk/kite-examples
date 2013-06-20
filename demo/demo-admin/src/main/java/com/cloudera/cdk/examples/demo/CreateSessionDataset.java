@@ -16,9 +16,9 @@
 package com.cloudera.cdk.examples.demo;
 
 import com.cloudera.cdk.examples.demo.event.Session;
-import com.cloudera.data.DatasetDescriptor;
-import com.cloudera.data.DatasetRepository;
-import com.cloudera.data.hcatalog.HCatalogDatasetRepository;
+import com.cloudera.cdk.data.DatasetDescriptor;
+import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.hcatalog.HCatalogDatasetRepository;
 import java.net.URI;
 import org.apache.avro.Schema;
 import org.apache.hadoop.conf.Configured;

@@ -15,16 +15,16 @@
  */
 package com.cloudera.cdk.examples.demo;
 
-import com.cloudera.data.DatasetDescriptor;
-import com.cloudera.data.DatasetRepository;
-import com.cloudera.data.PartitionStrategy;
-import com.cloudera.data.event.StandardEvent;
-import com.cloudera.data.filesystem.FileSystemDatasetRepository;
-import com.cloudera.data.partition.DayOfMonthFieldPartitioner;
-import com.cloudera.data.partition.HourFieldPartitioner;
-import com.cloudera.data.partition.MinuteFieldPartitioner;
-import com.cloudera.data.partition.MonthFieldPartitioner;
-import com.cloudera.data.partition.YearFieldPartitioner;
+import com.cloudera.cdk.data.DatasetDescriptor;
+import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.PartitionStrategy;
+import com.cloudera.cdk.data.event.StandardEvent;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
+import com.cloudera.cdk.data.partition.DayOfMonthFieldPartitioner;
+import com.cloudera.cdk.data.partition.HourFieldPartitioner;
+import com.cloudera.cdk.data.partition.MinuteFieldPartitioner;
+import com.cloudera.cdk.data.partition.MonthFieldPartitioner;
+import com.cloudera.cdk.data.partition.YearFieldPartitioner;
 import java.net.URI;
 import org.apache.avro.Schema;
 import org.apache.hadoop.conf.Configured;

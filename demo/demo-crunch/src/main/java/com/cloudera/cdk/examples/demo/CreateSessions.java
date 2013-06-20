@@ -16,13 +16,13 @@
 package com.cloudera.cdk.examples.demo;
 
 import com.cloudera.cdk.examples.demo.event.Session;
-import com.cloudera.data.Dataset;
-import com.cloudera.data.DatasetRepository;
-import com.cloudera.data.PartitionKey;
-import com.cloudera.data.crunch.CrunchDatasets;
-import com.cloudera.data.event.StandardEvent;
-import com.cloudera.data.filesystem.FileSystemDatasetRepository;
-import com.cloudera.data.hcatalog.HCatalogDatasetRepository;
+import com.cloudera.cdk.data.Dataset;
+import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.PartitionKey;
+import com.cloudera.cdk.data.crunch.CrunchDatasets;
+import com.cloudera.cdk.data.event.StandardEvent;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
+import com.cloudera.cdk.data.hcatalog.HCatalogDatasetRepository;
 import com.google.common.collect.Iterables;
 import java.io.Serializable;
 import java.net.URI;

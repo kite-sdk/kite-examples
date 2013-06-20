@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.cloudera.data.{DatasetDescriptor, DatasetWriter}
-import com.cloudera.data.filesystem.FileSystemDatasetRepository
+import com.cloudera.cdk.data.{DatasetDescriptor, DatasetWriter}
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository
 import java.io.FileInputStream
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Parser

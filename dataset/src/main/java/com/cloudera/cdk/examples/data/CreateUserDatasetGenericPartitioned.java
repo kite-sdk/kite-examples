@@ -15,12 +15,12 @@
  */
 package com.cloudera.cdk.examples.data;
 
-import com.cloudera.data.Dataset;
-import com.cloudera.data.DatasetDescriptor;
-import com.cloudera.data.DatasetRepository;
-import com.cloudera.data.DatasetWriter;
-import com.cloudera.data.PartitionStrategy;
-import com.cloudera.data.filesystem.FileSystemDatasetRepository;
+import com.cloudera.cdk.data.Dataset;
+import com.cloudera.cdk.data.DatasetDescriptor;
+import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.DatasetWriter;
+import com.cloudera.cdk.data.PartitionStrategy;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
 import com.google.common.io.Resources;
 import java.net.URI;
 import java.util.Random;

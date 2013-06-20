@@ -1,6 +1,6 @@
 package com.cloudera.cdk.examples.logging.webapp;
 
-import com.cloudera.data.filesystem.FileSystemDatasetRepository;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;

@@ -15,9 +15,9 @@
  */
 package com.cloudera.cdk.examples.data;
 
-import com.cloudera.data.DatasetRepository;
-import com.cloudera.data.filesystem.FileSystemDatasetRepository;
-import com.cloudera.data.hcatalog.HCatalogDatasetRepository;
+import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
+import com.cloudera.cdk.data.hcatalog.HCatalogDatasetRepository;
 import java.net.URI;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;

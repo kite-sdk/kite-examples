@@ -15,10 +15,10 @@
  */
 package com.cloudera.cdk.examples.data;
 
-import com.cloudera.data.Dataset;
-import com.cloudera.data.DatasetReader;
-import com.cloudera.data.DatasetRepository;
-import com.cloudera.data.hcatalog.HCatalogDatasetRepository;
+import com.cloudera.cdk.data.Dataset;
+import com.cloudera.cdk.data.DatasetReader;
+import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.hcatalog.HCatalogDatasetRepository;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
