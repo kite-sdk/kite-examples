@@ -13,7 +13,7 @@ The current examples run on version 4.3.0 of the QuickStart VM.
 
 Start by checking out the CDK and examples and building as follows:
 
-``bash
+```bash
 git clone git://github.com/cloudera/cdk.git
 (cd cdk; mvn install -DskipTests)
 git clone git://github.com/cloudera/cdk-examples.git
