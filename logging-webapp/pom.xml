@@ -15,7 +15,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.cloudera</groupId>
+      <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-core</artifactId>
       <version>0.3.1-SNAPSHOT</version>
       <exclusions>
@@ -70,7 +70,7 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.cloudera</groupId>
+      <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-flume</artifactId>
       <version>0.3.1-SNAPSHOT</version>
     </dependency>

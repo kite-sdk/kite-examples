@@ -62,19 +62,19 @@
     </dependency>
 
     <dependency>
-      <groupId>com.cloudera</groupId>
+      <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-core</artifactId>
       <version>0.3.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
-      <groupId>com.cloudera</groupId>
+      <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-crunch</artifactId>
       <version>0.3.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
-      <groupId>com.cloudera</groupId>
+      <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-hcatalog</artifactId>
       <version>0.3.1-SNAPSHOT</version>
       <exclusions>
