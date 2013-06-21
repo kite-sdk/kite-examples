@@ -17,16 +17,16 @@ Then, in the `demo` directory, start a Flume agent with the configuration specif
 sudo flume-ng agent -n agent -c /etc/flume-ng/conf -f flume.properties
 ```
 
-You also need to install Oozie's sharelib, as documented in the [CDH installation
-instructions](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Installation-Guide/cdh4ig_topic_17_6.html#topic_17_6_4_unique_1__title_471_unique_1).
+For Oozie you need to have Oozie's sharelib installed (which is taken care of already in
+the QuickStart VM) and the Oozie service must be running - so start it using Cloudera
+Manager.
 
-After the sharelib is installed, add the HCatalog Core JAR to the Hive sharelib
-(and in the local Hive lib):
+Finally add the HCatalog Core JAR to the Hive Oozie sharelib:
 
 ```bash
-wget https://repository.cloudera.com/artifactory/cloudera-repos/org/apache/hcatalog/hcatalog-core/0.4.0-cdh4.2.1/hcatalog-core-0.4.0-cdh4.2.1.jar
-sudo -u oozie hadoop fs -put hcatalog-core-0.4.0-cdh4.2.1.jar /user/oozie/share/lib/hive
-sudo cp hcatalog-core-0.4.0-cdh4.2.1.jar /usr/lib/hive/lib/
+sudo -u oozie hadoop fs -put \
+  /usr/lib/hcatalog/share/hcatalog/hcatalog-core-0.5.0-cdh4.3.0.jar \
+  /user/oozie/share/lib/hive
 ```
 
 ## Building
@@ -99,7 +99,7 @@ Wait about 30 seconds for Flume to flush the events to the filesystem,
 then run the Crunch job to generate derived session data from the events:
 
 ```bash
-export HADOOP_CLASSPATH=/usr/lib/hive/lib/*
+export HADOOP_CLASSPATH=/usr/lib/hive/lib/*:/usr/lib/hcatalog/share/hcatalog/*
 hadoop jar demo-crunch/target/demo-crunch-*-job.jar com.cloudera.cdk.examples.demo.CreateSessions
 ```
 
@@ -148,10 +148,19 @@ oozie job -config ./demo-oozie/src/main/workflow/job.properties \
   -D end="2013-12-31T00:00Z" -run
 ```
 
-Visit the Oozie web console at
-[http://localhost:11000/oozie](http://localhost:11000/oozie) to monitor the
-coordinator and workflow jobs. After a minute or two you should see new
-files appear in the `sessions` dataset.
+Monitor the coordinator and workflow jobs from the console with
+
+```bash
+oozie jobs -jobtype coordinator
+oozie jobs # list workflow jobs
+oozie job -info <job-id>
+```
+
+Alternatively, you can visit the Oozie web console at
+[http://localhost:11000/oozie](http://localhost:11000/oozie), although it is not
+enabled by default.
+
+After a minute or two you should see new files appear in the `sessions` dataset.
 
 ```bash
 hadoop fs -ls /tmp/data/sessions
@@ -160,13 +169,7 @@ hadoop fs -ls /tmp/data/sessions
 When you see new files appear, then try running the session analysis from above.
 
 When you have finished, stop the user simulation script by killing the process
-(with Ctrl-C). Kill the Oozie job by finding its ID with
-
-```bash
-oozie jobs -jobtype coordinator
-```
-
-then issuing:
+(with Ctrl-C). Kill the Oozie job with:
 
 ```bash
 oozie job -kill <job-id> 

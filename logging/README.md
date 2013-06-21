@@ -16,6 +16,9 @@ sudo cp ~/.m2/repository/com/cloudera/cdk-flume-avro-event-serializer/*/cdk-flum
   /usr/lib/flume-ng/lib/
 ```
 
+Note that the HDFS sink in Flume 1.4.0 can write Avro data files so this step is not
+needed for that version of Flume or later.
+
 Next start a Flume agent with the configuration specified in `flume.properties`.
 
 ```
