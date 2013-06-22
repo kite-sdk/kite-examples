@@ -12,8 +12,8 @@ First copy the CDK event serializer module into Flume's lib directory. This is n
 since Flume 1.3.0 does not come with a HDFS sink that can write Avro data files.
 
 ```bash
-sudo cp ~/.m2/repository/com/cloudera/cdk/cdk-flume-avro-event-serializer/*/cdk-flume-avro-event-serializer-*-SNAPSHOT.jar \
-  /usr/lib/flume-ng/lib/
+sudo wget https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar \
+  -P /usr/lib/flume-ng/lib/
 ```
 
 Note that the HDFS sink in Flume 1.4.0 can write Avro data files so this step is not
