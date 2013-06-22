@@ -4,7 +4,7 @@
 
   <groupId>com.cloudera.cdk.examples</groupId>
   <artifactId>logging-webapp</artifactId>
-  <version>0.3.1-SNAPSHOT</version>
+  <version>0.4.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <name>logging-webapp</name>
@@ -17,7 +17,7 @@
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-core</artifactId>
-      <version>0.3.1-SNAPSHOT</version>
+      <version>0.4.1-SNAPSHOT</version>
       <exclusions>
         <exclusion>
           <groupId>com.sun.jersey</groupId>
@@ -72,7 +72,7 @@
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-flume</artifactId>
-      <version>0.3.1-SNAPSHOT</version>
+      <version>0.4.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
