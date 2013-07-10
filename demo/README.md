@@ -71,7 +71,7 @@ hadoop fs -chmod +w /tmp/data/events
 
 ### Create events
 
-Next we can run the webapp. It can can be used in a Java EE 6 servlet
+Next we can run the webapp. It can be used in a Java EE 6 servlet
 container; for this example we'll start an embedded Tomcat instance using Maven:
 
 ```bash
