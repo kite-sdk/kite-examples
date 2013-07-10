@@ -10,12 +10,11 @@ session data with SQL using Hive.
 Before trying this example, you need to have installed the CDK event serializer module in
 Flume (this is explained in the `logging` example).
 
-Then, in the `demo` directory, start a Flume agent with the configuration specified in
-`flume.properties`.
-
-```bash
-sudo flume-ng agent -n agent -c /etc/flume-ng/conf -f flume.properties
-```
+Next, start a Flume agent on the QuickStart VM. You can do this via Cloudera Manager by
+selecting "View and Edit" under the Flume service Configuration tab, then clicking on the
+"Agent (Default)" category, and pasting the contents of the `flume.properties` file in
+this project into the text area for the "Configuration File" property. Save changes, then
+start the Flume agent.
 
 For Oozie you need to have Oozie's sharelib installed (which is taken care of already in
 the QuickStart VM) and the Oozie service must be running - so start it using Cloudera
@@ -60,8 +59,8 @@ The sessions dataset metadata is stored using HCatalog, so we can query via Hive
 ```bash
 java -cp demo-admin/target/*:demo-admin/target/jars/* com.cloudera.cdk.examples.demo.CreateStandardEventDataset
 java -cp demo-admin/target/*:demo-admin/target/jars/* com.cloudera.cdk.examples.demo.CreateSessionDataset
-
 ```
+
 To allow Flume to write to our dataset we need to change the directory
 permissions appropriately:
 
@@ -105,13 +104,19 @@ hadoop jar demo-crunch/target/demo-crunch-*-job.jar com.cloudera.cdk.examples.de
 
 ### Run session analysis
 
-The `sessions` dataset is now populated with data, which you can analyze using SQL. For
-example:
+The `sessions` dataset is now populated with data, which you can analyze using SQL
+using the Hive UI (Beeswax) in Hue. Try these queries:
 
-```bash
-hive -e 'DESCRIBE sessions'
-hive -e 'SELECT * FROM sessions'
-hive -e 'SELECT AVG(duration) FROM sessions'
+```
+DESCRIBE sessions
+```
+
+```
+SELECT * FROM sessions
+```
+
+```
+SELECT AVG(duration) FROM sessions
 ```
 
 ### Use Oozie to create derived sessions periodically
@@ -148,32 +153,17 @@ oozie job -config ./demo-oozie/src/main/workflow/job.properties \
   -D end="2013-12-31T00:00Z" -run
 ```
 
-Monitor the coordinator and workflow jobs from the console with
+Monitor the coordinator and workflow jobs using the [Oozie application in Hue](http://localhost:8888/oozie/list_oozie_coordinators).
 
-```bash
-oozie jobs -jobtype coordinator
-oozie jobs # list workflow jobs
-oozie job -info <job-id>
-```
-
-Alternatively, you can visit the Oozie web console at
-[http://localhost:11000/oozie](http://localhost:11000/oozie), although it is not
-enabled by default.
-
-After a minute or two you should see new files appear in the `sessions` dataset.
-
-```bash
-hadoop fs -ls /tmp/data/sessions
-```
+After a minute or two when a workflow job has completed, you should see new files appear
+in the `sessions` dataset, in `/tmp/data/sessions` (use the
+[Hue file browser](http://localhost:8888/filebrowser#/tmp/data/sessions) to view
+the directory).
 
 When you see new files appear, then try running the session analysis from above.
 
 When you have finished, stop the user simulation script by killing the process
-(with Ctrl-C). Kill the Oozie job with:
-
-```bash
-oozie job -kill <job-id> 
-```
+(with Ctrl-C). Kill the Oozie coordinator job through the Hue web interface.
 
 ### Troubleshooting Oozie
 
@@ -182,6 +172,6 @@ oozie job -kill <job-id>
   In particular, check the times that jobs are scheduled for. Note that
   times are in UTC so you may have to apply a conversion from the local
   timezone.
-* Use the Oozie web console to find the MapReduce jobs that Oozie runs. By
+* Use the Oozie application in Hue to find the MapReduce jobs that Oozie runs. By
   looking at them on the Hadoop web UI you can drill down to the task
   output to find any errors that have occurred.
