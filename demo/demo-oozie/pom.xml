@@ -25,7 +25,7 @@
   <parent>
     <groupId>com.cloudera.cdk.examples</groupId>
     <artifactId>demo</artifactId>
-    <version>0.4.1-SNAPSHOT</version>
+    <version>0.4.2-SNAPSHOT</version>
   </parent>
 
   <packaging>jar</packaging>
@@ -58,7 +58,7 @@
     <dependency>
       <groupId>com.cloudera.cdk.examples</groupId>
       <artifactId>demo-crunch</artifactId>
-      <version>0.4.1-SNAPSHOT</version>
+      <version>0.4.2-SNAPSHOT</version>
       <classifier>job</classifier> <!-- use job jar -->
     </dependency>
 
