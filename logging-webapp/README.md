@@ -20,8 +20,8 @@ this example we'll start an embedded Tomcat instance using Maven:
 mvn tomcat7:run
 ```
 
-Navigate to http://localhost:8080/logging-webapp/, which presents you with a very
-simple web page for sending messages.
+Navigate to [http://localhost:8080/logging-webapp/](http://localhost:8080/logging-webapp/),
+which presents you with a very simple web page for sending messages.
 
 The message events are sent to the Flume agent
 over IPC, and the agent writes the events to the HDFS file sink.

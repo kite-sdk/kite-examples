@@ -73,57 +73,57 @@ public class CreateSessions extends CrunchTool implements Serializable {
         CrunchDatasets.asSource(partition, StandardEvent.class));
 
     PCollection<Session> sessions = events
-        .parallelDo(new DoFn<StandardEvent, Session>() {
-          @Override
-          public void process(StandardEvent event, Emitter<Session> emitter) {
-            emitter.emit(Session.newBuilder()
-                .setUserId(event.getUserId())
-                .setSessionId(event.getSessionId())
-                .setIp(event.getIp())
-                .setStartTimestamp(event.getTimestamp())
-                .setDuration(0)
-                .setSessionEventCount(1)
-                .build());
+      .parallelDo(new DoFn<StandardEvent, Session>() {
+        @Override
+        public void process(StandardEvent event, Emitter<Session> emitter) {
+          emitter.emit(Session.newBuilder()
+              .setUserId(event.getUserId())
+              .setSessionId(event.getSessionId())
+              .setIp(event.getIp())
+              .setStartTimestamp(event.getTimestamp())
+              .setDuration(0)
+              .setSessionEventCount(1)
+              .build());
+        }
+      }, Avros.specifics(Session.class))
+      .by(new MapFn<Session, Pair<Long, String>>() {
+        @Override
+        public Pair<Long, String> map(Session session) {
+          return Pair.of(session.getUserId(), session.getSessionId());
+        }
+      }, Avros.pairs(Avros.longs(), Avros.strings()))
+      .groupByKey()
+      .combineValues(new CombineFn<Pair<Long, String>, Session>() {
+        @Override
+        public void process(Pair<Pair<Long, String>, Iterable<Session>> pairIterable,
+            Emitter<Pair<Pair<Long, String>, Session>> emitter) {
+          String ip = null;
+          long startTimestamp = Long.MAX_VALUE;
+          long endTimestamp = Long.MIN_VALUE;
+          int sessionEventCount = 0;
+          for (Session s : pairIterable.second()) {
+            ip = s.getIp();
+            startTimestamp = Math.min(startTimestamp, s.getStartTimestamp());
+            endTimestamp = Math.max(endTimestamp, s.getStartTimestamp() + s.getDuration());
+            sessionEventCount += s.getSessionEventCount();
           }
-        }, Avros.specifics(Session.class))
-        .by(new MapFn<Session, Pair<Long, String>>() {
-          @Override
-          public Pair<Long, String> map(Session session) {
-            return Pair.of(session.getUserId(), session.getSessionId());
-          }
-        }, Avros.pairs(Avros.longs(), Avros.strings()))
-        .groupByKey()
-        .combineValues(new CombineFn<Pair<Long, String>, Session>() {
-          @Override
-          public void process(Pair<Pair<Long, String>, Iterable<Session>> pairIterable,
-              Emitter<Pair<Pair<Long, String>, Session>> emitter) {
-            String ip = null;
-            long startTimestamp = Long.MAX_VALUE;
-            long endTimestamp = Long.MIN_VALUE;
-            int sessionEventCount = 0;
-            for (Session s : pairIterable.second()) {
-              ip = s.getIp();
-              startTimestamp = Math.min(startTimestamp, s.getStartTimestamp());
-              endTimestamp = Math.max(endTimestamp, s.getStartTimestamp() + s.getDuration());
-              sessionEventCount += s.getSessionEventCount();
-            }
-            emitter.emit(Pair.of(pairIterable.first(), Session.newBuilder()
-                .setUserId(pairIterable.first().first())
-                .setSessionId(pairIterable.first().second())
-                .setIp(ip)
-                .setStartTimestamp(startTimestamp)
-                .setDuration(endTimestamp - startTimestamp)
-                .setSessionEventCount(sessionEventCount)
-                .build()));
-          }
-        })
-        .parallelDo(new DoFn<Pair<Pair<Long, String>, Session>, Session>() {
-          @Override
-          public void process(Pair<Pair<Long, String>, Session> pairSession,
-              Emitter<Session> emitter) {
-            emitter.emit(pairSession.second());
-          }
-        }, Avros.specifics(Session.class));
+          emitter.emit(Pair.of(pairIterable.first(), Session.newBuilder()
+              .setUserId(pairIterable.first().first())
+              .setSessionId(pairIterable.first().second())
+              .setIp(ip)
+              .setStartTimestamp(startTimestamp)
+              .setDuration(endTimestamp - startTimestamp)
+              .setSessionEventCount(sessionEventCount)
+              .build()));
+        }
+      })
+      .parallelDo(new DoFn<Pair<Pair<Long, String>, Session>, Session>() {
+        @Override
+        public void process(Pair<Pair<Long, String>, Session> pairSession,
+            Emitter<Session> emitter) {
+          emitter.emit(pairSession.second());
+        }
+      }, Avros.specifics(Session.class));
 
     getPipeline().write(sessions, CrunchDatasets.asTarget(hcatRepo.get("sessions")),
         Target.WriteMode.APPEND);

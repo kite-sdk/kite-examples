@@ -24,14 +24,7 @@
   </datasets>
   <input-events>
     <data-in name="eventsInput" dataset="events">
-      <instance>${coord:current(0)}</instance>
-    </data-in>
-    <!--
-    The eventsInput data is deemed ready only once the next directory is created.
-    See http://blog.cloudera.com/blog/2013/01/how-to-schedule-recurring-hadoop-jobs-with-apache-oozie/
-    -->
-    <data-in name="readyIndicator" dataset="events">
-      <instance>${coord:current(1)}</instance>
+      <instance>${coord:current(-1)}</instance>
     </data-in>
   </input-events>
   <action>
@@ -45,10 +38,6 @@
         <property>
           <name>nameNode</name>
           <value>${nameNode}</value>
-        </property>
-        <property>
-          <name>queueName</name>
-          <value>${queueName}</value>
         </property>
         <property>
           <name>workflowInput</name>

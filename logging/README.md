@@ -54,13 +54,6 @@ In particular, the schema for the events is stored in a _.metadata_ directory:
 hadoop fs -cat /tmp/data/events/.metadata/schema.avsc
 ```
 
-To allow Flume to write to our dataset we need to change the directory
-permissions appropriately:
-
-```
-hadoop fs -chmod +w /tmp/data/events
-```
-
 Now we can run the application to do the logging.
 
 ```bash

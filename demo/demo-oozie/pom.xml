@@ -32,20 +32,73 @@
 
   <name>demo-oozie</name>
 
+  <properties>
+    <start></start>
+    <end>2020-12-31T00:00Z</end>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.3</version>
+        <groupId>com.cloudera.cdk.maven.plugins</groupId>
+        <artifactId>cdk-maven-plugin</artifactId>
+        <version>0.4.2-SNAPSHOT</version>
+        <extensions>true</extensions>
         <configuration>
-          <descriptor>src/main/assembly/oozie.xml</descriptor>
+          <deployFileSystem>hdfs://localhost:8020/</deployFileSystem><!-- the Hadoop filesystem to deploy Oozie apps on -->
+          <oozieUrl>http://localhost:11000/oozie</oozieUrl> <!-- where to send Oozie commands to -->
+          <updateApplication>true</updateApplication> <!-- update already-deployed apps -->
+          <toolClass>com.cloudera.cdk.examples.demo.CreateSessions</toolClass>
+          <args>
+            <arg>$${workflowInput}</arg> <!-- double dollar to escape, since this property comes from the Oozie coordinator, it's not a Maven property -->
+          </args>
+          <hadoopConfiguration>
+            <property>
+              <name>fs.default.name</name>
+              <value>hdfs://localhost.localdomain:8020</value>
+            </property>
+            <property>
+              <name>mapred.job.tracker</name>
+              <value>localhost.localdomain:8021</value>
+            </property>
+            <property>
+              <name>hive.metastore.local</name>
+              <value>false</value>
+            </property>
+            <property>
+              <name>hive.metastore.uris</name>
+              <value>thrift://localhost:9083</value>
+            </property>
+          </hadoopConfiguration>
+          <jobProperties> <!-- job properties for parameters in workflow.xml -->
+            <property>
+              <name>oozie.libpath</name>
+              <value>hdfs://localhost.localdomain:8020/user/oozie/share/lib/hive</value>
+            </property>
+            <property>
+              <name>start</name>
+              <value>${start}</value>
+            </property>
+            <property>
+              <name>end</name>
+              <value>${end}</value>
+            </property>
+            <property>
+              <name>initialDataset</name>
+              <value>${start}</value>
+            </property>
+            <property>
+              <name>workflowInput</name>
+              <value>LATEST</value> <!-- set by Oozie coordinator, otherwise indicates to process latest partition if run as a one-off workflow -->
+            </property>
+          </jobProperties>
         </configuration>
         <executions>
           <execution>
-            <id>make-oozie-bundle</id>
+            <id>make-app</id>
             <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>package-app</goal>
             </goals>
           </execution>
         </executions>
@@ -57,9 +110,96 @@
 
     <dependency>
       <groupId>com.cloudera.cdk.examples</groupId>
-      <artifactId>demo-crunch</artifactId>
+      <artifactId>demo-core</artifactId>
       <version>0.4.2-SNAPSHOT</version>
-      <classifier>job</classifier> <!-- use job jar -->
+    </dependency>
+
+    <dependency>
+      <groupId>com.cloudera.cdk</groupId>
+      <artifactId>cdk-data-core</artifactId>
+      <version>0.4.2-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.cloudera.cdk</groupId>
+      <artifactId>cdk-data-crunch</artifactId>
+      <version>0.4.2-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.cloudera.cdk</groupId>
+      <artifactId>cdk-data-hcatalog</artifactId>
+      <version>0.4.2-SNAPSHOT</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-app</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-common</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-hs</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-yarn-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-yarn-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-yarn-common</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-yarn-server-common</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-yarn-server-nodemanager</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-yarn-server-web-proxy</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-yarn-server-tests</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>11.0.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>1.7.4</version>
     </dependency>
 
     <dependency>
@@ -72,7 +212,7 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
-      <version>2.0.0-cdh4.3.0</version>
+      <version>2.0.0-mr1-cdh4.3.0</version>
       <scope>provided</scope>
     </dependency>
 
