@@ -13,14 +13,37 @@ Flume (this is explained in the `logging` example).
 Next, start a Flume agent on the QuickStart VM. You can do this via Cloudera Manager by
 selecting "View and Edit" under the Flume service Configuration tab, then clicking on the
 "Agent (Default)" category, and pasting the contents of the `flume.properties` file in
-this project into the text area for the "Configuration File" property. Save changes, then
-start the Flume agent.
+this project into the text area for the "Configuration File" property.
+
+If you are running this example from you machine and not from a QuickStart VM login,
+then make sure you change the value of the `proxyUser` setting to the user that you are
+logged in as. Save changes, then start the Flume agent.
+
+Flume needs to be able to impersonate the owner of the `events` dataset so that it can
+write to it. (This is like Unix `sudo`, see
+[Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
+for further information.) In Cloudera Manager, for the HDFS service,
+click "View and Edit" under the Configuration tab then
+search for "Cluster-wide Configuration Safety Valve for core-site.xml"
+and add the following XML snippet, then save changes and restart the HDFS service.
+
+```
+<property>
+  <name>hadoop.proxyuser.flume.groups</name>
+  <value>*</value>
+</property>
+<property>
+  <name>hadoop.proxyuser.flume.hosts</name>
+  <value>*</value>
+</property>
+```
 
 For Oozie you need to have Oozie's sharelib installed (which is taken care of already in
 the QuickStart VM) and the Oozie service must be running - so start it using Cloudera
 Manager.
 
-Finally add the HCatalog Core JAR to the Hive Oozie sharelib:
+Finally add the HCatalog Core JAR to the Hive Oozie sharelib,
+by logging in to the VM and running:
 
 ```bash
 sudo -u oozie hadoop fs -put \
@@ -59,13 +82,6 @@ The sessions dataset metadata is stored using HCatalog, so we can query via Hive
 ```bash
 java -cp demo-admin/target/*:demo-admin/target/jars/* com.cloudera.cdk.examples.demo.CreateStandardEventDataset
 java -cp demo-admin/target/*:demo-admin/target/jars/* com.cloudera.cdk.examples.demo.CreateSessionDataset
-```
-
-To allow Flume to write to our dataset we need to change the directory
-permissions appropriately:
-
-```bash
-hadoop fs -chmod +w /tmp/data/events
 ```
 
 ### Create events
