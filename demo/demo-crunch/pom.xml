@@ -35,7 +35,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>com.cloudera.cdk.maven.plugins</groupId>
+        <groupId>com.cloudera.cdk</groupId>
         <artifactId>cdk-maven-plugin</artifactId>
         <version>0.4.2-SNAPSHOT</version>
         <configuration>
