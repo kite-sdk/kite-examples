@@ -26,9 +26,9 @@ which presents you with a very simple web page for sending messages.
 The message events are sent to the Flume agent
 over IPC, and the agent writes the events to the HDFS file sink.
 
-The Flume sink will write a temporary file in _/tmp/data/events/_. Send 10 messages
-using the web form. Then wait a few seconds for the file to be renamed so it no
-longer has the _.tmp_ extension.
+The Flume sink will write a temporary file in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events).
+Send 10 messages using the web form. Then wait a few seconds for the file to be renamed
+so it no longer has the _.tmp_ extension.
 
 Then run the following program from the `logging` example to dump the contents of the
 dataset to the console:

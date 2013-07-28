@@ -19,11 +19,16 @@ sudo wget https://repository.cloudera.com/artifactory/libs-release-local/com/clo
 Note that the HDFS sink in Flume 1.4.0 can write Avro data files so this step is not
 needed for that version of Flume or later.
 
-Next start a Flume agent with the configuration specified in `flume.properties`.
+Next, start a Flume agent on the QuickStart VM. You can do this via Cloudera Manager by
+selecting "View and Edit" under the Flume service Configuration tab, then clicking on the
+"Agent (Default)" category, and pasting the contents of the `flume.properties` file in
+this project into the text area for the "Configuration File" property.
 
-```
-sudo flume-ng agent -n agent -c /etc/flume-ng/conf -f flume.properties
-```
+If you are running this example from you machine and not from a QuickStart VM login,
+then make sure you change the value of the `proxyUser` setting in the agent
+configuration to the user that you are logged in as. Save changes,
+then start the Flume agent.
+
 
 ## Running
 
@@ -33,8 +38,6 @@ To build the project, type
 mvn package
 ```
 
-This creates a single JAR with all the dependencies inside for convenience.
-
 The log data ends up in a dataset named "events". Before running the logger we need
 to create the dataset on the filesystem with the following command:
 
@@ -42,17 +45,9 @@ to create the dataset on the filesystem with the following command:
 java -cp target/*:target/jars/* com.cloudera.cdk.examples.logging.CreateDataset
 ```
 
-You can see the dataset directory hierarchy by running
-
-```bash
-hadoop fs -ls -R /tmp/data/events
-```
-
-In particular, the schema for the events is stored in a _.metadata_ directory:
-
-```bash
-hadoop fs -cat /tmp/data/events/.metadata/schema.avsc
-```
+You can see the dataset directory hierarchy in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events),
+In particular, the schema for the events is stored in
+[`/tmp/data/events/.metadata/schema.avsc`](http://localhost:8888/filebrowser/#/tmp/data/events/.metadata/schema.avsc).
 
 Now we can run the application to do the logging.
 
@@ -65,9 +60,9 @@ over IPC, and the agent writes the events to the HDFS file sink. (Even though it
 called the HDFS sink, it can actually write to any Hadoop filesystem,
 including the local filesystem.)
 
-The Flume sink will write a temporary file in _/tmp/data/events/_. After a few seconds
-the file will be renamed so it no longer has the _.tmp_ extension. Run the following
-program to dump the contents of the dataset to the console:
+The Flume sink will write a temporary file in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events).
+After a few seconds the file will be renamed so it no longer has the _.tmp_ extension.
+Run the following program to dump the contents of the dataset to the console:
 
 ```bash
 java -cp target/*:target/jars/* com.cloudera.cdk.examples.logging.ReadDataset
