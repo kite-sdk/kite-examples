@@ -28,7 +28,6 @@
   <name>demo</name>
 
   <modules>
-    <module>demo-admin</module>
     <module>demo-core</module>
     <module>demo-crunch</module>
     <module>demo-oozie</module>
@@ -57,6 +56,23 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>com.cloudera.cdk</groupId>
+        <artifactId>cdk-maven-plugin</artifactId>
+        <version>0.4.2-SNAPSHOT</version>
+        <configuration>
+          <hadoopConfiguration>
+            <property>
+              <name>fs.default.name</name>
+              <value>hdfs://localhost.localdomain:8020</value>
+            </property>
+            <property>
+              <name>hive.metastore.uris</name>
+              <value>thrift://localhost:9083</value>
+            </property>
+          </hadoopConfiguration>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

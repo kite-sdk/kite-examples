@@ -44,7 +44,6 @@ mvn package
 This creates the following artifacts:
 
 * a JAR file containing the compiled Avro specific schema `session.avsc` (in `demo-core`)
-* a JAR file containing classes for creating datasets (in `demo-admin`)
 * a WAR file for the webapp that logs application events (in `demo-webapp`)
 * a JAR file for running the Crunch job to transform events into sessions (in
 `demo-crunch`)
@@ -63,8 +62,31 @@ The sessions dataset metadata is stored using HCatalog, which will allow us to q
 via Hive.
 
 ```bash
-java -cp demo-admin/target/*:demo-admin/target/jars/* com.cloudera.cdk.examples.demo.CreateStandardEventDataset
-java -cp demo-admin/target/*:demo-admin/target/jars/* com.cloudera.cdk.examples.demo.CreateSessionDataset
+mvn cdk:create-dataset \
+  -Dcdk.rootDirectory=/tmp/data \
+  -Dcdk.datasetName=events \
+  -Dcdk.avroSchemaFile=standard_event.avsc \
+  -Dcdk.hcatalog=false \
+  -Dcdk.partitionExpression='[year("timestamp", "year"), month("timestamp", "month"), day("timestamp", "day"), hour("timestamp", "hour"), minute("timestamp", "minute")]'
+
+mvn cdk:create-dataset \
+  -Dcdk.rootDirectory=/tmp/data \
+  -Dcdk.datasetName=sessions \
+  -Dcdk.avroSchemaFile=demo-core/src/main/avro/session.avsc
+```
+
+A few comments about these commands. The schema for the `events` dataset,
+`standard_event.avsc`, is loaded from the classpath (it's in the CDK JAR),
+whereas the schema for `sessions` is a local file.
+
+The `--partition-expression` argument is used to specify how the data is partitioned.
+Here we partition by time fields, using JEXL to specify the field partitioners.
+
+Note that you can drop the datasets if you created them on a previous attempt with:
+
+```bash
+mvn cdk:drop-dataset -Dcdk.rootDirectory=/tmp/data -Dcdk.datasetName=events -Dcdk.hcatalog=false
+mvn cdk:drop-dataset -Dcdk.rootDirectory=/tmp/data -Dcdk.datasetName=sessions
 ```
 
 You can check that the data directories were created, using Hue (login as `cloudera` if
