@@ -142,7 +142,7 @@
     <dependency>
       <groupId>org.apache.crunch</groupId>
       <artifactId>crunch-core</artifactId>
-      <version>0.6.0-cdh4.2.0</version>
+      <version>0.7.0-hadoop2</version>
     </dependency>
 
     <dependency>
@@ -152,7 +152,7 @@
       <scope>provided</scope> <!-- provided by Oozie and MR task classpath -->
     </dependency>
 
-    <!-- No need for org.apache.hcatalog:hcatalog-core since it is provided by the sharlib -->
+    <!-- No need for org.apache.hcatalog:hcatalog-core since it is provided by the sharelib -->
 
   </dependencies>
 
