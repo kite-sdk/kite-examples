@@ -38,7 +38,7 @@ sudo -u oozie hadoop fs -put \
 To build the project, type
 
 ```bash
-mvn package
+mvn install
 ```
 
 This creates the following artifacts:
