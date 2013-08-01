@@ -31,7 +31,8 @@
     <module>demo-core</module>
     <module>demo-crunch</module>
     <module>demo-oozie</module>
-    <module>demo-webapp</module>
+    <module>demo-logging-webapp</module>
+    <module>demo-reports-webapp</module>
   </modules>
 
   <properties>
@@ -86,6 +87,25 @@
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
         <version>2.1</version>
+        <configuration>
+          <contextFile>demo-reports-webapp/src/main/webapp/WEB-INF/context.xml</contextFile>
+          <webapps>
+            <webapp>
+              <groupId>com.cloudera.cdk.examples</groupId>
+              <artifactId>demo-logging-webapp</artifactId>
+              <version>0.5.1-SNAPSHOT</version>
+              <type>war</type>
+              <asWebapp>true</asWebapp>
+            </webapp>
+            <webapp>
+              <groupId>com.cloudera.cdk.examples</groupId>
+              <artifactId>demo-reports-webapp</artifactId>
+              <version>0.5.1-SNAPSHOT</version>
+              <type>war</type>
+              <asWebapp>true</asWebapp>
+            </webapp>
+          </webapps>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>

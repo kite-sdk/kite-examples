@@ -82,6 +82,7 @@ in each case the host port and the guest port should be the same.
     * 9083 (Hive/HCatalog metastore)
     * 41415 (Flume agent)
     * 11000 (Oozie server)
+    * 21050 (Impala JDBC port)
 * __Bind daemons to the wildcard address__ Daemons that are accessed from the host need
 to listen on all network interfaces. In [Cloudera Manager]
 (http://localhost:7180/cmf/services/status) for each of the services listed below,
