@@ -18,43 +18,33 @@ package com.cloudera.cdk.examples.data;
 import com.google.common.base.Objects;
 
 /**
- * A POJO representing a user.
+ * A POJO representing a product.
  */
-public class User {
-  private String username;
-  private long creationDate;
-  private String favoriteColor;
+public class Product {
+  private String name;
+  private long id;
 
-  public String getUsername() {
-    return username;
+  public String getName() {
+    return name;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  public void setName(String name) {
+    this.name = name;
   }
 
-  public long getCreationDate() {
-    return creationDate;
+  public long getId() {
+    return id;
   }
 
-  public void setCreationDate(long creationDate) {
-    this.creationDate = creationDate;
-  }
-
-  public String getFavoriteColor() {
-    return favoriteColor;
-  }
-
-  public void setFavoriteColor(String favoriteColor) {
-    this.favoriteColor = favoriteColor;
+  public void setId(long id) {
+    this.id = id;
   }
 
   @Override
   public String toString() {
     return Objects.toStringHelper(this)
-        .add("username", username)
-        .add("creationDate", creationDate)
-        .add("favoriteColor", favoriteColor)
+        .add("name", name)
+        .add("id", id)
         .toString();
   }
 }

@@ -2,7 +2,7 @@
 
 The Examples Module is a collection of examples for the CDK.
 
-## Example - User Dataset
+## Example - Products Dataset
 
 This example shows basic usage of the CDK Data API for performing streaming writes
 to (and reads from) a dataset.
@@ -16,38 +16,38 @@ mvn compile
 Then create the dataset with:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetPojo"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateProductDatasetPojo"
 ```
 
 You can look at the files that were created with:
 
 ```bash
-hadoop fs -ls -R /tmp/data/users
+hadoop fs -ls -R /tmp/data/products
 ```
 
-Note: The above assumes that you are running against a single-node localhost HDFS installation.
+__Note__: The above assumes that you are running against a single-node localhost HDFS installation.
 If this is not the case, then you can change `fs.default.name` in
 `src/main/resources/core-site.xml`, e.g. to `file:///` to use the local filesystem.
 Alternatively, you can pass in extra arguments to the command, as follows:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetPojo" \
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateProductDatasetPojo" \
   -Dexec.args="-fs file:///"
 ```
 
 For the rest of the examples we will assume a single-node localhost HDFS installation.
 
 Once we have created a dataset and written some data to it, the next thing to do is to
-read it back. We can do this with the `ReadUserDatasetPojo` program. 
+read it back. We can do this with the `ReadProductDatasetPojo` program.
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetPojo"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadProductDatasetPojo"
 ```
 
 Finally, drop the dataset:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropProductDataset"
 ```
 
 ### Generic records vs. POJOs
@@ -56,6 +56,10 @@ The previous examples used POJOs, since they are the most familiar data transfer
 objects for most Java programmers. Avro supports generic records too,
 which are more efficient, since they don't require reflection,
 and also don't require either the reader or writer to have the POJO class available.
+
+__Note__: It's currently not possible to write POJOs and then read them back as generic
+objects since the return type will be the POJO. So for the generic examples below we
+model a dataset of users rather than products.
 
 Run the following to use the generic writer and reader:
 

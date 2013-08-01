@@ -27,9 +27,9 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 /**
- * Create a dataset on the local filesystem and write some {@link User} objects to it.
+ * Create a dataset on the local filesystem and write some {@link Product} objects to it.
  */
-public class CreateUserDatasetPojo extends Configured implements Tool {
+public class CreateProductDatasetPojo extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
@@ -38,22 +38,21 @@ public class CreateUserDatasetPojo extends Configured implements Tool {
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
         .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
-    // Create a dataset of users with the Avro schema in the repository
-    DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(User.class).get();
-    Dataset users = repo.create("users", descriptor);
+    // Create a dataset of products with the Avro schema in the repository
+    DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Product.class).get();
+    Dataset products = repo.create("products", descriptor);
 
-    // Get a writer for the dataset and write some users to it
-    DatasetWriter<User> writer = users.getWriter();
+    // Get a writer for the dataset and write some products to it
+    DatasetWriter<Product> writer = products.getWriter();
     try {
       writer.open();
-      String[] colors = { "green", "blue", "pink", "brown", "yellow" };
-      Random rand = new Random();
-      for (int i = 0; i < 100; i++) {
-        User user = new User();
-        user.setUsername("user-" + i);
-        user.setCreationDate(System.currentTimeMillis());
-        user.setFavoriteColor(colors[rand.nextInt(colors.length)]);
-        writer.write(user);
+      String[] names = { "toaster", "teapot", "butter dish" };
+      int i = 0;
+      for (String name : names) {
+        Product product = new Product();
+        product.setName(name);
+        product.setId(i++);
+        writer.write(product);
       }
     } finally {
       writer.close();
@@ -63,7 +62,7 @@ public class CreateUserDatasetPojo extends Configured implements Tool {
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new CreateUserDatasetPojo(), args);
+    int rc = ToolRunner.run(new CreateProductDatasetPojo(), args);
     System.exit(rc);
   }
 }

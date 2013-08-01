@@ -15,8 +15,6 @@
  */
 package com.cloudera.cdk.examples.data;
 
-import com.cloudera.cdk.data.Dataset;
-import com.cloudera.cdk.data.DatasetReader;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
 import java.net.URI;
@@ -25,9 +23,9 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 /**
- * Read all the {@link User} objects from the users dataset.
+ * Drop the products dataset.
  */
-public class ReadUserDatasetPojo extends Configured implements Tool {
+public class DropProductDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
@@ -36,26 +34,14 @@ public class ReadUserDatasetPojo extends Configured implements Tool {
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
         .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
-    // Get the users dataset
-    Dataset users = repo.get("users");
+    // Drop the products dataset
+    boolean success = repo.drop("products");
 
-    // Get a reader for the dataset and read all the users
-    DatasetReader<User> reader = users.getReader();
-    try {
-      reader.open();
-      while (reader.hasNext()) {
-        User user = reader.read();
-        System.out.println(user);
-      }
-    } finally {
-      reader.close();
-    }
-
-    return 0;
+    return success ? 0 : 1;
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new ReadUserDatasetPojo(), args);
+    int rc = ToolRunner.run(new DropProductDataset(), args);
     System.exit(rc);
   }
 }
