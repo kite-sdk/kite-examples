@@ -188,7 +188,7 @@ Before running an Oozie coordinator application, let's run a one-off workflow. T
 Oozie server to use is specified by `oozieUrl` in the plugin configuration.
 
 ```bash
-mvn cdk:run-job -Dcdk.applicationType=workflow
+mvn cdk:run-app -Dcdk.applicationType=workflow
 ```
 
 Monitor the workflow job using the [Oozie application in Hue](http://localhost:8888/oozie/list_oozie_workflows/).
@@ -213,7 +213,7 @@ of events to create, so it runs indefinitely.
 Now we can run the Oozie coordinator application.
 
 ```bash
-mvn cdk:run-job -Dcdk.applicationType=coordinator -Dstart="$(date -u +"%Y-%m-%dT%H:%MZ")"
+mvn cdk:run-app -Dcdk.applicationType=coordinator -Dstart="$(date -u +"%Y-%m-%dT%H:%MZ")"
 ```
 
 Monitor the coordinator and resulting workflow jobs using the [Oozie application in Hue](http://localhost:8888/oozie/list_oozie_coordinators).

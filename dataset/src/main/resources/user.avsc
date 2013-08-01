@@ -1,7 +1,7 @@
 {
   "type": "record",
-  "name": "user",
-  "namespace": "com.cloudera.cdk.examples",
+  "name": "User",
+  "namespace": "com.cloudera.cdk.examples.data",
   "doc": "A user record",
   "fields": [
     {
