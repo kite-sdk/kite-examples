@@ -19,11 +19,8 @@ Then create the dataset with:
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateProductDatasetPojo"
 ```
 
-You can look at the files that were created with:
-
-```bash
-hadoop fs -ls -R /tmp/data/products
-```
+You can look at the files that were created in
+[`/tmp/data/products`](http://localhost:8888/filebrowser/#/tmp/data/products).
 
 __Note__: The above assumes that you are running against a single-node localhost HDFS installation.
 If this is not the case, then you can change `fs.default.name` in
@@ -58,8 +55,8 @@ which are more efficient, since they don't require reflection,
 and also don't require either the reader or writer to have the POJO class available.
 
 __Note__: It's currently not possible to write POJOs and then read them back as generic
-objects since the return type will be the POJO. So for the generic examples below we
-model a dataset of users rather than products.
+objects since the return type will be the POJO class. So for the generic examples below
+we model a dataset of users rather than products.
 
 Run the following to use the generic writer and reader:
 
@@ -76,7 +73,12 @@ according to the value of particular partition fields.
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetGenericPartitioned"
-hadoop fs -ls -R /tmp/data/users # see how partitioning affects the data layout
+```
+
+You can see how partitioning affects the data layout by looking at the subdirectories
+created in [`/tmp/data/users`](http://localhost:8888/filebrowser/#/tmp/data/users).
+
+```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGenericOnePartition"
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
@@ -89,11 +91,14 @@ advantages over row-oriented formats like Avro data files (which is the default 
 when the number of columns is large (typically dozens) and the typical queries that you perform
 over the data only retrieve a small number of the columns.
 
-Note that Parquet support is still experimental in this release.
-
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetGenericParquet"
-hadoop fs -ls -R /tmp/data/users # see the parquet file extension
+```
+
+You can see the parquet file extension for files in
+[`/tmp/data/users`](http://localhost:8888/filebrowser/#/tmp/data/users).
+
+```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
 ```
@@ -113,23 +118,17 @@ mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateHCatalogUse
 Note: This example assumes a local (not embedded) metastore running on the local machine. You can
 change the default to use a different metastore by editing _src/main/resources/hive-site.xml_.
 
-Now inspect the dataset storage area:
-
-```bash
-hadoop fs -ls -R /user/hive/warehouse/
-```
+Now inspect the dataset storage area in
+[`/user/hive/warehouse/users`](http://localhost:8888/filebrowser/#/user/hive/warehouse/users).
 
 Notice that there is no metadata stored there, since the metadata is stored in
-Hive/HCatalog's metastore:
+[Hive/HCatalog's metastore](http://localhost:8888/metastore/tables/).
 
-```bash
-hive -e 'describe users'
+You can use SQL to query the data directly using the
+[Hive UI (Beeswax)](http://localhost:8888/beeswax/) in Hue. For example:
+
 ```
-
-You can use Hive to query the data directly:
-
-```bash
-hive -e 'select * from users'
+select * from users
 ```
 
 Alternatively, you can use the Java API to read the data:
