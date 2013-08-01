@@ -56,6 +56,7 @@ for further information.) In Cloudera Manager, for the [HDFS service](http://loc
 click "View and Edit" under the Configuration tab then
 search for "Cluster-wide Configuration Safety Valve for core-site.xml"
 and add the following XML snippet, then save changes.
+
 ```
 <property>
   <name>hadoop.proxyuser.flume.groups</name>
@@ -78,6 +79,7 @@ in each case the host port and the guest port should be the same.
     * 8020, 50010, 50020, 50070, 50075 (HDFS NameNode and DataNode)
     * 8021 (MapReduce JobTracker)
     * 8888 (Hue web UI)
+    * 9083 (Hive/HCatalog metastore)
     * 41415 (Flume agent)
     * 11000 (Oozie server)
 * __Bind daemons to the wildcard address__ Daemons that are accessed from the host need
