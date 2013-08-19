@@ -75,7 +75,7 @@ QuickStart VM, listed below.
 * __Enable port forwarding__ For VirtualBox, open the Settings dialog for the VM,
 select the Network tab, and click the Port Forwarding button. Map the following ports -
 in each case the host port and the guest port should be the same.
-    * 7081 (Cloudera Manager web UI)
+    * 7180 (Cloudera Manager web UI)
     * 8020, 50010, 50020, 50070, 50075 (HDFS NameNode and DataNode)
     * 8021 (MapReduce JobTracker)
     * 8888 (Hue web UI)
