@@ -22,7 +22,7 @@
 
   <groupId>com.cloudera.cdk.examples</groupId>
   <artifactId>demo</artifactId>
-  <version>0.5.1-SNAPSHOT</version>
+  <version>0.6.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>demo</name>
@@ -54,6 +54,17 @@
       <url>http://download.java.net/maven/2</url>
     </repository>
   </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>cdh.repo</id>
+      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+      <name>Cloudera Repositories</name>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <plugins>
