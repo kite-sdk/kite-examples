@@ -42,7 +42,7 @@ The log data ends up in a dataset named "events". Before running the logger we n
 to create the dataset on the filesystem with the following command:
 
 ```bash
-java -cp target/*:target/jars/* com.cloudera.cdk.examples.logging.CreateDataset
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.logging.CreateDataset"
 ```
 
 You can see the dataset directory hierarchy in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events),
@@ -52,7 +52,7 @@ In particular, the schema for the events is stored in
 Now we can run the application to do the logging.
 
 ```bash
-java -cp target/*:target/jars/* com.cloudera.cdk.examples.logging.App
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.logging.App"
 ```
 
 The program writes 10 log events to the logger. The events are sent to the Flume agent
@@ -65,6 +65,6 @@ After a few seconds the file will be renamed so it no longer has the _.tmp_ exte
 Run the following program to dump the contents of the dataset to the console:
 
 ```bash
-java -cp target/*:target/jars/* com.cloudera.cdk.examples.logging.ReadDataset
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.logging.ReadDataset"
 ```
 
