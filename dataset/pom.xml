@@ -27,6 +27,11 @@
 
   <name>CDK Dataset Examples</name>
 
+  <properties>
+    <!-- Keep this updated to the latest CDK release! -->
+    <cdk-version>0.6.0</cdk-version>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -45,12 +50,12 @@
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-core</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
     </dependency>
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-hcatalog</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

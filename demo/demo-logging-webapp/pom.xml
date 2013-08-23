@@ -35,7 +35,7 @@
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-core</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
       <exclusions>
         <exclusion>
           <groupId>com.sun.jersey</groupId>
@@ -95,7 +95,7 @@
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-flume</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>

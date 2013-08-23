@@ -37,7 +37,7 @@
       <plugin>
         <groupId>com.cloudera.cdk</groupId>
         <artifactId>cdk-maven-plugin</artifactId>
-        <version>0.5.1-SNAPSHOT</version>
+      	<version>${cdk-version}</version>
         <configuration>
           <toolClass>com.cloudera.cdk.examples.demo.CreateSessions</toolClass>
           <hadoopConfiguration>
@@ -64,25 +64,25 @@
     <dependency>
       <groupId>com.cloudera.cdk.examples</groupId>
       <artifactId>demo-core</artifactId>
-      <version>0.6.1-SNAPSHOT</version>
+      <version>${parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-core</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-crunch</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-hcatalog</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
     </dependency>
 
     <dependency>

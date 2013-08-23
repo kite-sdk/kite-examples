@@ -59,7 +59,7 @@
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-core</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
     </dependency>
   </dependencies>
 

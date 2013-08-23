@@ -11,13 +11,15 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Keep this updated to the latest CDK release! -->
+    <cdk-version>0.6.0</cdk-version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-core</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
       <exclusions>
         <exclusion>
           <groupId>com.sun.jersey</groupId>
@@ -77,7 +79,7 @@
     <dependency>
       <groupId>com.cloudera.cdk</groupId>
       <artifactId>cdk-data-flume</artifactId>
-      <version>0.5.1-SNAPSHOT</version>
+      <version>${cdk-version}</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
