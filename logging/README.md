@@ -58,10 +58,14 @@ mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.logging.App"
 The program writes 10 log events to the logger. The events are sent to the Flume agent
 over IPC, and the agent writes the events to the HDFS file sink. (Even though it is
 called the HDFS sink, it can actually write to any Hadoop filesystem,
-including the local filesystem.)
+including the local filesystem.) Log4j is using the CDK's Flume [`Log4jAppender`](https://github.com/cloudera/cdk/blob/master/cdk-data/cdk-data-flume/src/main/java/org/apache/flume/clients/log4jappender/Log4jAppender.java)
+in the project's [`log4j.properties`](https://github.com/cloudera/cdk-examples/blob/master/logging/src/main/resources/log4j.properties)
 
 The Flume sink will write a temporary file in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events).
-After a few seconds the file will be renamed so it no longer has the _.tmp_ extension.
+After a few seconds the file will be renamed so it no longer has the _.tmp_
+extension. If you don't see new files, make sure you have followed the [Setting up the QuickStart VM](https://github.com/cloudera/cdk-examples#setting-up-the-quickstart-vm)
+directions.
+
 Run the following program to dump the contents of the dataset to the console:
 
 ```bash
