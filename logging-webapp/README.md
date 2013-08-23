@@ -27,11 +27,12 @@ The message events are sent to the Flume agent
 over IPC, and the agent writes the events to the HDFS file sink.
 
 The Flume sink will write a temporary file in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events).
-Send 10 messages using the web form. Then wait a few seconds for the file to be renamed
-so it no longer has the _.tmp_ extension.
+Send 10 messages using the web form; Flume is set to release files once there
+are 10 records (the configuration's sink batch size). Then wait a few seconds
+for the file to be renamed so it no longer has the _.tmp_ extension.
 
-Then run the following program from the `logging` example to dump the contents of the
-dataset to the console:
+Then run the following program from the `logging` example to dump the contents
+of the dataset to the console:
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.logging.ReadDataset"
