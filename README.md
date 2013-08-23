@@ -28,6 +28,7 @@ Checkout the latest [branch](https://github.com/cloudera/cdk-examples/branches) 
 ```bash
 git clone git://github.com/cloudera/cdk-examples.git
 cd cdk-examples
+git checkout <latest-branch>
 ```
 
 (Alternatively, if you want to use the master branch, then build the [CDK](https://github.com/cloudera/cdk) locally first.)
