@@ -37,7 +37,7 @@
       <plugin>
         <groupId>org.apache.avro</groupId>
         <artifactId>avro-maven-plugin</artifactId>
-        <version>1.7.4</version>
+        <version>1.7.5</version>
         <configuration>
           <stringType>String</stringType>
           <createSetters>false</createSetters>
