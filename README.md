@@ -32,6 +32,7 @@ git checkout <latest-branch>
 ```
 
 (Alternatively, if you want to use the master branch, then build the [CDK](https://github.com/cloudera/cdk) locally first.)
+
 Then choose the example you want to try and refer to the README in the relevant subdirectory.
 
 ### Setting up the QuickStart VM
@@ -42,36 +43,11 @@ There are two ways to run the examples with the QuickStart VM:
 2. From your host computer.
 
 The advantage of the first approach is that you don't need to install anything extra on
-your host computer, such as Java or Maven. However the second approach may be
-easier since in this case you can use tools from your own development environment
-(browser, IDE, command line). It's also more representative of how you would interact
-with a real cluster.
+your host computer, such as Java or Maven, so there are no extra set up steps.
 
-For the first approach, follow these extra set-up steps (we plan to include the extra
-set-up in a future release of the QuickStart VM, where possible):
-
-* __Enable Flume user impersonation__ Flume needs to be able to impersonate the owner of
-the dataset it is writing to. (This is like Unix `sudo`, see
-[Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
-for further information.) In Cloudera Manager, for the [HDFS service](http://localhost:7180/cmf/services/status),
-click "View and Edit" under the Configuration tab then
-search for "Cluster-wide Configuration Safety Valve for core-site.xml"
-and add the following XML snippet, then save changes.
-
-```
-<property>
-  <name>hadoop.proxyuser.flume.groups</name>
-  <value>*</value>
-</property>
-<property>
-  <name>hadoop.proxyuser.flume.hosts</name>
-  <value>*</value>
-</property>
-```
-* __Restart updated services__ Restart the updated services in Cloudera Manager.
-
-For the second approach, there are a few extra steps you need to take to configure the
-QuickStart VM, listed below.
+The second approach is preferable when you want to use tools from your own development
+environment (browser, IDE, command line). However, there are a few extra steps you
+need to take to configure the QuickStart VM, listed below.
 
 * __Enable port forwarding__ For VirtualBox, open the Settings dialog for the VM,
 select the Network tab, and click the Port Forwarding button. Map the following ports -

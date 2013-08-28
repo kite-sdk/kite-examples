@@ -7,8 +7,9 @@ session data with SQL using Impala or Hive.
 
 ## Pre-requisites
 
-Before trying this example, you need to have installed the CDK event serializer module in
-Flume (this is explained in the `logging` example).
+Before trying this example, you need to have enabled Flume user impersonation and
+installed the CDK event serializer module in Flume (this is explained in the `logging`
+example).
 
 Next, start a Flume agent on the QuickStart VM. You can do this via Cloudera Manager by
 selecting "View and Edit" under the Flume service Configuration tab, then clicking on the
