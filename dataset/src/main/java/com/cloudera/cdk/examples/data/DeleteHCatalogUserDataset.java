@@ -24,7 +24,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 /**
- * Drop the users dataset and HCatalog metadata.
+ * Delete the users dataset and HCatalog metadata.
  */
 public class DeleteHCatalogUserDataset extends Configured implements Tool {
 
@@ -34,7 +34,7 @@ public class DeleteHCatalogUserDataset extends Configured implements Tool {
     // Construct an HCatalog dataset repository using managed Hive tables
     DatasetRepository repo = new HCatalogDatasetRepository();
 
-    // Drop the users dataset
+    // Delete the users dataset
     boolean success = repo.delete("users");
 
     return success ? 0 : 1;

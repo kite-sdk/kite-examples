@@ -23,7 +23,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 /**
- * Drop the products dataset.
+ * Delete the products dataset.
  */
 public class DeleteProductDataset extends Configured implements Tool {
 
@@ -34,7 +34,7 @@ public class DeleteProductDataset extends Configured implements Tool {
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
         .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
-    // Drop the products dataset
+    // Delete the products dataset
     boolean success = repo.delete("products");
 
     return success ? 0 : 1;

@@ -23,7 +23,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 /**
- * Drop the users dataset.
+ * Delete the users dataset.
  */
 public class DeleteUserDataset extends Configured implements Tool {
 
@@ -34,7 +34,7 @@ public class DeleteUserDataset extends Configured implements Tool {
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
         .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
-    // Drop the users dataset
+    // Delete the users dataset
     boolean success = repo.delete("users");
 
     return success ? 0 : 1;
