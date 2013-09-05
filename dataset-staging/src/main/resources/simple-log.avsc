@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "simple.log",
+  "namespace": "com.cloudera.cdk.examples.staging",
+  "doc": "A simple log message with basic metadata",
+  "fields": [
+    { "name": "timestamp", "type": "long" },
+    { "name": "level", "type": "string", "default": "INFO" },
+    { "name": "component", "type": "string", "default": "" },
+    { "name": "message", "type": "string", "default": "" }
+  ]
+}
