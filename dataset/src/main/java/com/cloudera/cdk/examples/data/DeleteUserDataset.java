@@ -17,31 +17,31 @@ package com.cloudera.cdk.examples.data;
 
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
-import com.cloudera.cdk.data.hcatalog.HCatalogDatasetRepository;
 import java.net.URI;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 /**
- * Drop the users dataset and HCatalog metadata.
+ * Delete the users dataset.
  */
-public class DropHCatalogUserDataset extends Configured implements Tool {
+public class DeleteUserDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct an HCatalog dataset repository using managed Hive tables
-    DatasetRepository repo = new HCatalogDatasetRepository();
+    // Construct a local filesystem dataset repository rooted at /tmp/data
+    DatasetRepository repo = new FileSystemDatasetRepository.Builder()
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
-    // Drop the users dataset
-    boolean success = repo.drop("users");
+    // Delete the users dataset
+    boolean success = repo.delete("users");
 
     return success ? 0 : 1;
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new DropHCatalogUserDataset(), args);
+    int rc = ToolRunner.run(new DeleteUserDataset(), args);
     System.exit(rc);
   }
 }

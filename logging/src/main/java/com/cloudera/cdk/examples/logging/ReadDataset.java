@@ -44,8 +44,7 @@ public class ReadDataset extends Configured implements Tool {
     DatasetReader<GenericRecord> reader = events.getReader();
     try {
       reader.open();
-      while (reader.hasNext()) {
-        GenericRecord event = reader.read();
+      for (GenericRecord event : reader) {
         System.out.println(event);
       }
     } finally {

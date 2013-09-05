@@ -43,8 +43,7 @@ public class ReadProductDatasetPojo extends Configured implements Tool {
     DatasetReader<Product> reader = products.getReader();
     try {
       reader.open();
-      while (reader.hasNext()) {
-        Product product = reader.read();
+      for (Product product : reader) {
         System.out.println(product);
       }
     } finally {
