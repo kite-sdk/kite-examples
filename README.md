@@ -7,6 +7,7 @@ Each example is a standalone Maven module with associated documentation.
 ## Basic Examples
 
 * `dataset` shows how to create datasets and perform streaming writes and reads over them.
+* `dataset-staging` shows how to use two datasets to manage Parquet-formatted data
 * `logging` is an example of logging events from a command-line programs to Hadoop via Flume, using log4j as the logging API.
 * `logging-webapp` is like `logging`, but the logging source is a webapp.
 
