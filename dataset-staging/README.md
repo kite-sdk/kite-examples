@@ -20,7 +20,7 @@ second step. This simulates an environment where log data is constantly being
 written (probably by Flume), and eventually gets stored in Parquet.
 
 [par]: http://parquet.io/
-[schema]: http://github.com/cdk/cdk-examples/dataset-staging/src/main/resources/simple-log.avsc
+[schema]: https://github.com/cloudera/cdk-examples/blob/staging-example/dataset-staging/src/main/resources/simple-log.avsc
 
 ### Creating the datasets
 
