@@ -26,7 +26,7 @@ import org.apache.hadoop.util.ToolRunner;
 /**
  * Drop the users dataset and HCatalog metadata.
  */
-public class DropHCatalogUserDataset extends Configured implements Tool {
+public class DeleteHCatalogUserDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
@@ -35,13 +35,13 @@ public class DropHCatalogUserDataset extends Configured implements Tool {
     DatasetRepository repo = new HCatalogDatasetRepository();
 
     // Drop the users dataset
-    boolean success = repo.drop("users");
+    boolean success = repo.delete("users");
 
     return success ? 0 : 1;
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new DropHCatalogUserDataset(), args);
+    int rc = ToolRunner.run(new DeleteHCatalogUserDataset(), args);
     System.exit(rc);
   }
 }

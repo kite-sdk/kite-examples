@@ -25,7 +25,7 @@ import org.apache.hadoop.util.ToolRunner;
 /**
  * Drop the users dataset.
  */
-public class DropUserDataset extends Configured implements Tool {
+public class DeleteUserDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
@@ -35,13 +35,13 @@ public class DropUserDataset extends Configured implements Tool {
         .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Drop the users dataset
-    boolean success = repo.drop("users");
+    boolean success = repo.delete("users");
 
     return success ? 0 : 1;
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new DropUserDataset(), args);
+    int rc = ToolRunner.run(new DeleteUserDataset(), args);
     System.exit(rc);
   }
 }
