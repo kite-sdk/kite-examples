@@ -29,10 +29,10 @@ read it back. We can do this with the `ReadProductDatasetPojo` program.
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadProductDatasetPojo"
 ```
 
-Finally, drop the dataset:
+Finally, delete the dataset:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropProductDataset"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteProductDataset"
 ```
 
 ### Using the local filesystem
@@ -66,7 +66,7 @@ Run the following to use the generic writer and reader:
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetGeneric"
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteUserDataset"
 ```
 
 ### Partitioning
@@ -84,7 +84,7 @@ created in [`/tmp/data/users`](http://localhost:8888/filebrowser/#/tmp/data/user
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGenericOnePartition"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteUserDataset"
 ```
 
 ### Parquet Columnar Format
@@ -103,7 +103,7 @@ You can see the parquet file extension for files in
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteUserDataset"
 ```
 
 ### HCatalog
@@ -140,11 +140,11 @@ Alternatively, you can use the Java API to read the data:
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadHCatalogUserDatasetGeneric"
 ```
 
-Dropping the dataset deletes the metadata from the metastore and the data from the
+Deleting the dataset deletes the metadata from the metastore and the data from the
 filesystem:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropHCatalogUserDataset"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteHCatalogUserDataset"
 ```
 
 ## Scala
@@ -161,9 +161,9 @@ Or for the generic example:
 scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')" src/main/scala/creategeneric.scala
 ```
 
-The Java examples can be used to read (and drop) the dataset written from Scala:
+The Java examples can be used to read (and delete) the dataset written from Scala:
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DropUserDataset"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteUserDataset"
 ```
