@@ -44,8 +44,7 @@ public class ReadUserDatasetGeneric extends Configured implements Tool {
     DatasetReader<GenericRecord> reader = users.getReader();
     try {
       reader.open();
-      while (reader.hasNext()) {
-        GenericRecord user = reader.read();
+      for (GenericRecord user : reader) {
         System.out.println(user);
       }
     } finally {
