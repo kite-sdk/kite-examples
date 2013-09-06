@@ -106,14 +106,14 @@
             <webapp>
               <groupId>com.cloudera.cdk.examples</groupId>
               <artifactId>demo-logging-webapp</artifactId>
-              <version>0.5.1-SNAPSHOT</version>
+              <version>${project.version}</version>
               <type>war</type>
               <asWebapp>true</asWebapp>
             </webapp>
             <webapp>
               <groupId>com.cloudera.cdk.examples</groupId>
               <artifactId>demo-reports-webapp</artifactId>
-              <version>0.5.1-SNAPSHOT</version>
+              <version>${project.version}</version>
               <type>war</type>
               <asWebapp>true</asWebapp>
             </webapp>
