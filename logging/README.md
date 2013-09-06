@@ -34,6 +34,8 @@ needed for that version of Flume or later.
 ```bash
 sudo wget https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar \
   -P /usr/lib/flume-ng/lib/
+# or if wget is not available:
+( cd /usr/lib/flume-ng/lib/ ; sudo curl -O https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar ; )
 ```
 *   __Start a Flume agent__ You can do this via Cloudera Manager by
 selecting "View and Edit" under the Flume service Configuration tab, then clicking on the

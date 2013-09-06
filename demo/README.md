@@ -7,39 +7,60 @@ session data with SQL using Impala or Hive.
 
 ## Pre-requisites
 
-Before trying this example, you need to have enabled Flume user impersonation and
-installed the CDK event serializer module in Flume (this is explained in the `logging`
-example).
+*   __Enable Flume user impersonation__ Flume needs to be able to impersonate the owner
+ of the dataset it is writing to. (This is like Unix `sudo`, see
+[Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
+for further information.) In Cloudera Manager, for the [HDFS service](http://localhost:7180/cmf/services/status),
+click "View and Edit" under the Configuration tab then
+search for "Cluster-wide Configuration Safety Valve for core-site.xml"
+and add the following XML snippet, then save changes.
 
-Next, start a Flume agent on the QuickStart VM. You can do this via Cloudera Manager by
+```
+<property>
+  <name>hadoop.proxyuser.flume.groups</name>
+  <value>*</value>
+</property>
+<property>
+  <name>hadoop.proxyuser.flume.hosts</name>
+  <value>*</value>
+</property>
+```
+*   __Install the CDK event serializer module__ This is necessary
+since Flume 1.3.0 does not come with a HDFS sink that can write Avro data files.
+Note that the HDFS sink in Flume 1.4.0 can write Avro data files so this step is not
+needed for that version of Flume or later.
+
+```bash
+sudo wget https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar \
+  -P /usr/lib/flume-ng/lib/
+# or if wget is not available:
+( cd /usr/lib/flume-ng/lib/ ; sudo curl -O https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar ; )
+```
+*   __Start a Flume agent__ You can do this via Cloudera Manager by
 selecting "View and Edit" under the Flume service Configuration tab, then clicking on the
 "Agent (Default)" category, and pasting the contents of the `flume.properties` file in
 this project into the text area for the "Configuration File" property.
 
-If you are running this example from you machine and not from a QuickStart VM login,
+    If you are running this example from you machine and not from a QuickStart VM login,
 then make sure you change the value of the `proxyUser` setting in the agent
 configuration to the user that you are logged in as. Save changes,
 then start the Flume agent.
 
-To use Impala in this example you need to be running Impala 1.1 or later. If the
-version of QuickStart VM you are running is earlier than Impala 1.1, you can upgrade it
-using [these instructions](http://www.cloudera.com/content/cloudera-content/cloudera-docs/Impala/latest/Installing-and-Using-Impala/ciiu_upgrading.html)
-Make sure you follow the instructions under the heading "To upgrade Impala in a
-Cloudera Managed environment, using parcels". You should also upgrade CDH at the same
-time.
-
-For Oozie you need to have Oozie's sharelib installed (which is taken care of already in
-the QuickStart VM) and the Oozie service must be running - so start it using Cloudera
-Manager.
-
-Finally add the HCatalog Core JAR to the Hive Oozie sharelib,
-by logging in to the VM and running:
+*   __Set up Hive Oozie sharelib__ Add the HCatalog Core JAR to the Hive Oozie
+sharelib, by logging in to the VM and running:
 
 ```bash
 sudo -u oozie hadoop fs -put \
   /usr/lib/hcatalog/share/hcatalog/hcatalog-core-0.5.0-cdh4.3.0.jar \
   /user/oozie/share/lib/hive
 ```
+*   __(Optional) Upgrade Impala__ To use Impala in this example you need to be running
+Impala 1.1 or later. If the
+version of QuickStart VM you are running is earlier than Impala 1.1, you can upgrade it
+using [these instructions](http://www.cloudera.com/content/cloudera-content/cloudera-docs/Impala/latest/Installing-and-Using-Impala/ciiu_upgrading.html)
+Make sure you follow the instructions under the heading "To upgrade Impala in a
+Cloudera Managed environment, using parcels". You should also upgrade CDH at the same
+time.
 
 ## Building
 
