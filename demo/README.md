@@ -175,7 +175,11 @@ to explore the results.
 One way is to use the `demo-reports-webapp` running at
 [http://localhost:8080/demo-reports-webapp/](http://localhost:8080/demo-reports-webapp/),
 which uses JDBC to run Impala queries for a few pre-defined reports. (Note this only
-work with Impala 1.1 or later, see instructions above.)
+work with Impala 1.1 or later, see instructions above.) Impala caches dataset
+metadata on startup and, as a result, you may receive errors about the `sessions`
+table not existing. To force Impala to reload its metadata cache, issue the command
+`INVALIDATE METADATA` from the Impala shell or the Impala Hue application before
+running any other SQL queries.
 
 Another way is to run ad hoc SQL queries using the Hue interfaces to
 [Impala](http://localhost:8888/impala/) or [Hive](http://localhost:8888/beeswax/).
