@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "User",
+  "namespace": "com.cloudera.cdk.examples.data",
+  "doc": "A user record",
+  "fields": [
+    {
+      "name": "username",
+      "type": "string",
+      "mapping": { "type": "column", "value": "meta:username" }
+    },
+    {
+      "name": "creationDate",
+      "type": "long",
+      "mapping": { "type": "column", "value": "meta:creationDate" }
+    },
+    {
+      "name": "favoriteColor",
+      "type": "string",
+      "mapping": { "type": "column", "value": "meta:favoriteColor" }
+    }
+  ]
+}
