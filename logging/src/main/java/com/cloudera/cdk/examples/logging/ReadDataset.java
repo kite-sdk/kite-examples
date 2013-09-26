@@ -37,8 +37,8 @@ public class ReadDataset extends Configured implements Tool {
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
         .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
-    // Get the events dataset
-    Dataset events = repo.get("events");
+    // Load the events dataset
+    Dataset events = repo.load("events");
 
     // Get a reader for the dataset and read all the events
     DatasetReader<GenericRecord> reader = events.getReader();

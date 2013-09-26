@@ -35,8 +35,8 @@ public class ReadHCatalogUserDatasetGeneric extends Configured implements Tool {
     // Construct an HCatalog dataset repository using managed Hive tables
     DatasetRepository repo = new HCatalogDatasetRepository();
 
-    // Get the users dataset
-    Dataset users = repo.get("users");
+    // Load the users dataset
+    Dataset users = repo.load("users");
 
     // Get a reader for the dataset and read all the users
     DatasetReader<GenericRecord> reader = users.getReader();

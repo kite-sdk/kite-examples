@@ -39,8 +39,8 @@ public class ReadUserDatasetGenericOnePartition extends Configured implements To
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
         .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
-    // Get the users dataset
-    Dataset users = repo.get("users");
+    // Load the users dataset
+    Dataset users = repo.load("users");
 
     // Get the partition strategy and use it to construct a partition key for
     // hash(username)=0

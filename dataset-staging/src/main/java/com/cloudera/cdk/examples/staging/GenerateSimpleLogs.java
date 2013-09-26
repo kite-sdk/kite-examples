@@ -23,6 +23,7 @@ import com.google.common.collect.DiscreteDomains;
 import com.google.common.collect.Ranges;
 import java.util.Calendar;
 import java.util.Random;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -58,7 +59,7 @@ public class GenerateSimpleLogs extends Configured implements Tool {
 
     // data is written to the staging dataset
     final Dataset staging = repo.load("logs-staging");
-    final DatasetWriter writer = staging.getWriter();
+    final DatasetWriter<GenericRecord> writer = staging.getWriter();
 
     // this is going to build our simple log records
     final GenericRecordBuilder builder = new GenericRecordBuilder(

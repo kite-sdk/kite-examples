@@ -37,8 +37,8 @@ public class ReadUserDatasetGeneric extends Configured implements Tool {
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
         .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
-    // Get the users dataset
-    Dataset users = repo.get("users");
+    // Load the users dataset
+    Dataset users = repo.load("users");
 
     // Get a reader for the dataset and read all the users
     DatasetReader<GenericRecord> reader = users.getReader();

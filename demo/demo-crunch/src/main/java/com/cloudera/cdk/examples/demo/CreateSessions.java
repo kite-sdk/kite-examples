@@ -55,7 +55,7 @@ public class CreateSessions extends CrunchTool implements Serializable {
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
     // Process the specified dataset partition, or the latest one, if none specified
-    Dataset eventsDataset = fsRepo.get("events");
+    Dataset eventsDataset = fsRepo.load("events");
     Dataset partition;
     if (args.length == 0 || (args.length == 1 && args[0].equals("LATEST"))) {
       partition = getLatestPartition(eventsDataset);
@@ -125,7 +125,7 @@ public class CreateSessions extends CrunchTool implements Serializable {
           }
         }, Avros.specifics(Session.class));
 
-    getPipeline().write(sessions, CrunchDatasets.asTarget(hcatRepo.get("sessions")),
+    getPipeline().write(sessions, CrunchDatasets.asTarget(hcatRepo.load("sessions")),
         Target.WriteMode.APPEND);
 
     return run().succeeded() ? 0 : 1;

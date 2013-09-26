@@ -36,8 +36,8 @@ public class ReadProductDatasetPojo extends Configured implements Tool {
     DatasetRepository repo = new FileSystemDatasetRepository.Builder()
         .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
-    // Get the products dataset
-    Dataset products = repo.get("products");
+    // Load the products dataset
+    Dataset products = repo.load("products");
 
     // Get a reader for the dataset and read all the products
     DatasetReader<Product> reader = products.getReader();
