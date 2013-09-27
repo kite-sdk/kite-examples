@@ -44,7 +44,6 @@ public class CreateUserDataset extends Configured implements Tool {
     Configuration conf = HBaseConfiguration.create();
     HTablePool pool = new HTablePool(conf, 10);
     HBaseAdmin admin = new HBaseAdmin(conf);
-    createSystemTables(admin); // TODO: this should be taken care of by the repo
     DatasetRepository repo = new HBaseDatasetRepository(admin, pool);
 
     // Create a dataset of users with the Avro schema of User in the repository.
@@ -64,14 +63,6 @@ public class CreateUserDataset extends Configured implements Tool {
     accessor.put(user("belinda", "yellow"));
 
     return 0;
-  }
-
-  private void createSystemTables(HBaseAdmin admin) throws Exception {
-    HTableDescriptor table = new HTableDescriptor("managed_schemas");
-    table.addFamily(new HColumnDescriptor("meta"));
-    table.addFamily(new HColumnDescriptor("schema"));
-    table.addFamily(new HColumnDescriptor("_s"));
-    admin.createTable(table);
   }
 
   private static User user(String username, String favoriteColor) {
