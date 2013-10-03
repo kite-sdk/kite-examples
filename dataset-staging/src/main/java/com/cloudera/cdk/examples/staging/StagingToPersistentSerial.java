@@ -17,16 +17,15 @@ package com.cloudera.cdk.examples.staging;
 
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetReader;
+import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.DatasetWriter;
 import com.cloudera.cdk.data.PartitionKey;
 import com.cloudera.cdk.data.PartitionStrategy;
-import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
 import java.util.Calendar;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
@@ -57,9 +56,7 @@ public class StagingToPersistentSerial extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
     // open the repository
-    final DatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new Path("/tmp/data"))
-        .get();
+    final DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
 
     final Calendar now = Calendar.getInstance();
     final long yesterdayTimestamp = now.getTimeInMillis() - DAY_IN_MILLIS;

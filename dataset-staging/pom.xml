@@ -29,7 +29,7 @@
 
   <properties>
     <!-- Keep this updated to the latest CDK release! -->
-    <cdk-version>0.7.0-SNAPSHOT</cdk-version>
+    <cdk-version>0.7.1-SNAPSHOT</cdk-version>
   </properties>
 
   <build>

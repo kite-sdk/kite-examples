@@ -16,13 +16,12 @@
 package com.cloudera.cdk.examples.staging;
 
 import com.cloudera.cdk.data.DatasetDescriptor;
+import com.cloudera.cdk.data.DatasetRepositories;
+import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.Formats;
 import com.cloudera.cdk.data.PartitionStrategy;
-import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
-import com.google.common.io.Resources;
 import java.net.URI;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -30,16 +29,15 @@ public class CreateStagedDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-    FileSystemDatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new Path("/tmp/data"))
-        .get();
+    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
 
-    URI schemaURI = Resources.getResource("simple-log.avsc").toURI();
+    // where the schema is stored
+    URI schemaURI = URI.create("resources:simple-log.avsc");
 
     // create a Parquet dataset for long-term storage
     repo.create("logs", new DatasetDescriptor.Builder()
         .format(Formats.PARQUET)
-        .schema(schemaURI)
+        .schemaUri(schemaURI)
         .partitionStrategy(new PartitionStrategy.Builder()
             .year("timestamp", "year")
             .month("timestamp", "month")
@@ -50,7 +48,7 @@ public class CreateStagedDataset extends Configured implements Tool {
     // create an Avro dataset to temporarily hold data
     repo.create("logs-staging", new DatasetDescriptor.Builder()
         .format(Formats.AVRO)
-        .schema(schemaURI)
+        .schemaUri(schemaURI)
         .partitionStrategy(new PartitionStrategy.Builder()
             .day("timestamp", "day")
             .get())
