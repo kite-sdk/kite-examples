@@ -17,11 +17,10 @@ package com.cloudera.cdk.examples.data;
 
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetDescriptor;
+import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.DatasetWriter;
-import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
 import com.google.common.io.Resources;
-import java.net.URI;
 import java.util.Random;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
@@ -39,9 +38,8 @@ public class CreateUserDatasetGeneric extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a local filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
+    // Construct a filesystem dataset repository rooted at /tmp/data
+    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
 
     // Read an Avro schema from the user.avsc file on the classpath
     Schema schema = new Schema.Parser().parse(

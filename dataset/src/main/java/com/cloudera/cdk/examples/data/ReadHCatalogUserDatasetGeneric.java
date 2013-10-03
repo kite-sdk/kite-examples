@@ -17,8 +17,8 @@ package com.cloudera.cdk.examples.data;
 
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetReader;
+import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
-import com.cloudera.cdk.data.hcatalog.HCatalogDatasetRepository;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
@@ -33,7 +33,7 @@ public class ReadHCatalogUserDatasetGeneric extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Construct an HCatalog dataset repository using managed Hive tables
-    DatasetRepository repo = new HCatalogDatasetRepository();
+    DatasetRepository repo = DatasetRepositories.open("repo:hive");
 
     // Load the users dataset
     Dataset users = repo.load("users");
