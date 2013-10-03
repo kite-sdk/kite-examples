@@ -15,8 +15,8 @@
  */
 package com.cloudera.cdk.examples.logging;
 
-import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
-import java.net.URI;
+import com.cloudera.cdk.data.DatasetRepositories;
+import com.cloudera.cdk.data.DatasetRepository;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
@@ -37,9 +37,8 @@ public class App extends Configured implements Tool {
     Logger logger = Logger.getLogger(App.class);
 
     // Find the schema from the repository
-    FileSystemDatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
-    Schema schema = repo.getMetadataProvider().load("events").getSchema();
+    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
+    Schema schema = repo.load("events").getDescriptor().getSchema();
 
     // Build some events using the generic Avro API and log them using log4j
     GenericRecordBuilder builder = new GenericRecordBuilder(schema);
