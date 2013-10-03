@@ -33,7 +33,7 @@ public class ReadHCatalogUserDatasetGeneric extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Construct an HCatalog dataset repository using managed Hive tables
-    DatasetRepository repo = new HCatalogDatasetRepository();
+    DatasetRepository repo = new HCatalogDatasetRepository.Builder().get();
 
     // Load the users dataset
     Dataset users = repo.load("users");
