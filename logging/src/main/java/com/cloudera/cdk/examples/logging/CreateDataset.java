@@ -16,8 +16,11 @@
 package com.cloudera.cdk.examples.logging;
 
 import com.cloudera.cdk.data.DatasetDescriptor;
-import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
+import com.google.common.io.Resources;
+import java.net.URI;
+import org.apache.avro.Schema;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -31,12 +34,15 @@ public class CreateDataset extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Construct a local filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
+    DatasetRepository repo = new FileSystemDatasetRepository.Builder()
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
+
+    // Read an Avro schema from the event.avsc file on the classpath
+    Schema schema = new Schema.Parser().parse(
+        Resources.getResource("event.avsc").openStream());
 
     // Create a dataset of events with the Avro schema in the repository
-    DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
-        .schemaUri("resource:event.avsc")
-        .get();
+    DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(schema).get();
     repo.create("events", descriptor);
 
     return 0;

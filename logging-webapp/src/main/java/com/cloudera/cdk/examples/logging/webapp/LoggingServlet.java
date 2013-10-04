@@ -1,9 +1,10 @@
 package com.cloudera.cdk.examples.logging.webapp;
 
-import com.cloudera.cdk.data.DatasetRepositories;
-import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,9 +24,14 @@ public class LoggingServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    // Find the schema from the repository
-    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
-    this.schema = repo.load("events").getDescriptor().getSchema();
+    try {
+      // Find the schema from the repository
+      FileSystemDatasetRepository repo = new FileSystemDatasetRepository.Builder()
+          .rootDirectory(new URI("/tmp/data")).get();
+      this.schema = repo.getMetadataProvider().load("events").getSchema();
+    } catch (URISyntaxException e) {
+      throw new ServletException(e);
+    }
   }
 
   @Override

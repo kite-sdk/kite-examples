@@ -17,8 +17,9 @@ package com.cloudera.cdk.examples.data;
 
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetReader;
-import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
+import java.net.URI;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
@@ -32,8 +33,9 @@ public class ReadUserDatasetGeneric extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
+    // Construct a local filesystem dataset repository rooted at /tmp/data
+    DatasetRepository repo = new FileSystemDatasetRepository.Builder()
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Load the users dataset
     Dataset users = repo.load("users");

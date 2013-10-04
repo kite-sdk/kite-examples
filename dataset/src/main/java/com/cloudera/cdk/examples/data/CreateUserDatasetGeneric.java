@@ -17,10 +17,13 @@ package com.cloudera.cdk.examples.data;
 
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetDescriptor;
-import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.DatasetWriter;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
+import com.google.common.io.Resources;
+import java.net.URI;
 import java.util.Random;
+import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
 import org.apache.hadoop.conf.Configured;
@@ -36,13 +39,16 @@ public class CreateUserDatasetGeneric extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
+    // Construct a local filesystem dataset repository rooted at /tmp/data
+    DatasetRepository repo = new FileSystemDatasetRepository.Builder()
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
+
+    // Read an Avro schema from the user.avsc file on the classpath
+    Schema schema = new Schema.Parser().parse(
+        Resources.getResource("user.avsc").openStream());
 
     // Create a dataset of users with the Avro schema in the repository
-    DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
-        .schemaUri("resource:user.avsc")
-        .get();
+    DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(schema).get();
     Dataset users = repo.create("users", descriptor);
 
     // Get a writer for the dataset and write some users to it
@@ -51,7 +57,7 @@ public class CreateUserDatasetGeneric extends Configured implements Tool {
       writer.open();
       String[] colors = { "green", "blue", "pink", "brown", "yellow" };
       Random rand = new Random();
-      GenericRecordBuilder builder = new GenericRecordBuilder(descriptor.getSchema());
+      GenericRecordBuilder builder = new GenericRecordBuilder(schema);
       for (int i = 0; i < 100; i++) {
         GenericRecord record = builder.set("username", "user-" + i)
             .set("creationDate", System.currentTimeMillis())

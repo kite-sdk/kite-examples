@@ -16,9 +16,9 @@
 package com.cloudera.cdk.examples.staging;
 
 import com.cloudera.cdk.data.Dataset;
-import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.DatasetWriter;
+import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
 import com.google.common.collect.DiscreteDomains;
 import com.google.common.collect.Ranges;
 import java.util.Calendar;
@@ -26,6 +26,7 @@ import java.util.Random;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
@@ -52,7 +53,9 @@ public class GenerateSimpleLogs extends Configured implements Tool {
     final Random rand = new Random();
 
     // open the repository
-    final DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
+    final DatasetRepository repo = new FileSystemDatasetRepository.Builder()
+        .rootDirectory(new Path("/tmp/data"))
+        .get();
 
     // data is written to the staging dataset
     final Dataset staging = repo.load("logs-staging");

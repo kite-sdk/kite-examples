@@ -16,7 +16,6 @@
 package com.cloudera.cdk.examples.demo;
 
 import com.cloudera.cdk.data.Dataset;
-import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.PartitionKey;
 import com.cloudera.cdk.data.crunch.CrunchDatasets;
@@ -44,11 +43,12 @@ public class CreateSessions extends CrunchTool implements Serializable {
   public int run(String[] args) throws Exception {
 
     // Construct a local filesystem dataset repository rooted at /tmp/data
-    DatasetRepository fsRepo = DatasetRepositories.open("repo:file:/tmp/data");
-
+    DatasetRepository fsRepo = new FileSystemDatasetRepository.Builder()
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Construct an HCatalog dataset repository using external Hive tables
-    DatasetRepository hcatRepo = DatasetRepositories.open("repo:hive:/tmp/data");
+    DatasetRepository hcatRepo = new HCatalogDatasetRepository.Builder()
+        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
 
     // Turn debug on while in development.
     getPipeline().enableDebug();
