@@ -22,7 +22,7 @@
 
   <groupId>com.cloudera.cdk.examples</groupId>
   <artifactId>dataset-staging</artifactId>
-  <version>0.7.0-SNAPSHOT</version>
+  <version>0.7.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>CDK Dataset Staging Example</name>
