@@ -22,14 +22,14 @@
 
   <groupId>com.cloudera.cdk.examples</groupId>
   <artifactId>dataset</artifactId>
-  <version>0.7.1-SNAPSHOT</version>
+  <version>0.8.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>CDK Dataset Examples</name>
 
   <properties>
     <!-- Keep this updated to the latest CDK release! -->
-    <cdk-version>0.7.1-SNAPSHOT</cdk-version>
+    <cdk-version>0.8.1-SNAPSHOT</cdk-version>
   </properties>
 
   <build>
