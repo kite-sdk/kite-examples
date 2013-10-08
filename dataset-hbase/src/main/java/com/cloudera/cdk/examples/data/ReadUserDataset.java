@@ -18,14 +18,10 @@ package com.cloudera.cdk.examples.data;
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetAccessor;
 import com.cloudera.cdk.data.DatasetReader;
-import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.PartitionKey;
 import com.cloudera.cdk.data.hbase.HBaseDatasetRepository;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.HTablePool;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -38,10 +34,8 @@ public class ReadUserDataset extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Construct an HBase dataset repository using the local HBase database
-    Configuration conf = HBaseConfiguration.create();
-    HTablePool pool = new HTablePool(conf, 10);
-    HBaseAdmin admin = new HBaseAdmin(conf);
-    DatasetRepository repo = new HBaseDatasetRepository(admin, pool);
+    HBaseDatasetRepository repo = new HBaseDatasetRepository.Builder()
+        .configuration(HBaseConfiguration.create()).get();
 
     // Load the users dataset
     Dataset users = repo.load("users");
