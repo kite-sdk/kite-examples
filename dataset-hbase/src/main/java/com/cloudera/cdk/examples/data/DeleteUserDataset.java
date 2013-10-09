@@ -15,10 +15,9 @@
  */
 package com.cloudera.cdk.examples.data;
 
-import org.apache.hadoop.conf.Configuration;
+import com.cloudera.cdk.data.hbase.HBaseDatasetRepository;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -30,20 +29,14 @@ public class DeleteUserDataset extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    // For the moment we just delete the HBase tables directly
+    // Construct an HBase dataset repository using the local HBase database
+    HBaseDatasetRepository repo = new HBaseDatasetRepository.Builder()
+        .configuration(HBaseConfiguration.create()).get();
 
-    Configuration conf = HBaseConfiguration.create();
-    HBaseAdmin admin = new HBaseAdmin(conf);
-    if (admin.tableExists("users")) {
-      admin.disableTable("users");
-      admin.deleteTable("users");
-    }
-    if (admin.tableExists("managed_schemas")) {
-      admin.disableTable("managed_schemas");
-      admin.deleteTable("managed_schemas");
-    }
+    // Delete the users dataset
+    boolean success = repo.delete("users");
 
-    return 0;
+    return success ? 0 : 1;
   }
 
   public static void main(String... args) throws Exception {

@@ -30,6 +30,14 @@ read it back. We can do this with the `ReadUserDataset` program.
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDataset"
 ```
 
+You can also have a look at the raw data in HBase by typing `hbase shell` in a terminal
+(e.g. on the QuickStart VM) followed by:
+
+```bash
+list # show the tables
+scan 'users' # dump all rows and columns
+```
+
 Finally, delete the dataset:
 
 ```bash
