@@ -41,7 +41,7 @@ public class ReadUserDataset extends Configured implements Tool {
     Dataset users = repo.load("users");
 
     // Get an accessor for the dataset and look up a user by username
-    DatasetAccessor<Object> accessor = users.newAccessor();
+    DatasetAccessor<User> accessor = users.newAccessor();
     PartitionKey key = users.getDescriptor().getPartitionStrategy().partitionKey("bill");
     System.out.println(accessor.get(key));
 

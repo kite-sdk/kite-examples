@@ -39,11 +39,8 @@ public class CreateUserDataset extends Configured implements Tool {
         .configuration(HBaseConfiguration.create()).get();
 
     // Create a dataset of users with the Avro schema of User in the repository.
-    // The key for the entities is defined as the username by means of the partition
-    // strategy.
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schema(User.getClassSchema())
-        .partitionStrategy(new PartitionStrategy.Builder().identity("username", 1).get())
         .get();
     Dataset users = repo.create("users", descriptor);
 
