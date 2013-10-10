@@ -7,7 +7,7 @@
     {
       "name": "username",
       "type": "string",
-      "mapping": { "type": "key", "value": "" }
+      "mapping": { "type": "key", "value": "0" }
     },
     {
       "name": "creationDate",

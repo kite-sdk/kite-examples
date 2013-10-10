@@ -18,7 +18,6 @@ package com.cloudera.cdk.examples.data;
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetAccessor;
 import com.cloudera.cdk.data.DatasetDescriptor;
-import com.cloudera.cdk.data.PartitionStrategy;
 import com.cloudera.cdk.data.hbase.HBaseDatasetRepository;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.hbase.HBaseConfiguration;
