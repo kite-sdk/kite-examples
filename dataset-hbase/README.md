@@ -50,12 +50,12 @@ Finally, delete the dataset:
 mvn cdk:delete-dataset
 ```
 
-## Schema Migrations
+## Schema Evolution
 
 Over time, the user model will likely change, as new properties are added,
-and old ones are no longer used. Schemas can be migrated to a new version,
-as long as certain schema migration rules are followed. We can see this by trying a
-migration that is not allowed. Start by re-creating the dataset and writing some data:
+and old ones are no longer used. Schemas can be updated to a new version,
+as long as certain schema evolution rules are followed. We can see this by trying an
+update that is not allowed. Start by re-creating the dataset and writing some data:
 
 ```bash
 mvn cdk:create-dataset
@@ -80,7 +80,11 @@ and try to update the dataset's schema:
 mvn cdk:update-dataset
 ```
 
-This time it should succeed. Recompile the code so that the generated `User` class has
+This time it should succeed. Updating a dataset is an idempotent operation,
+so you can run it again without it having any further effect. This is useful when you
+want to make sure that you are using the latest version of the schema in your workspace.
+
+Recompile the code so that the generated `User` class has
 the new field, then run the `ReadUserDataset` program. It should show the new field,
 age, with its default value (0) for each entity.
 
@@ -89,7 +93,7 @@ mvn compile
 mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDataset"
 ```
 
-You could also try changing `WriteUserDataset` to set the field and check that it runs,
+You can also try changing `WriteUserDataset` to set the new field and check that it runs,
 and that the new entities can be read back.
 
 ```bash
