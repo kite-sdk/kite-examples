@@ -17,7 +17,6 @@ package com.cloudera.cdk.examples.data;
 
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetAccessor;
-import com.cloudera.cdk.data.DatasetDescriptor;
 import com.cloudera.cdk.data.hbase.HBaseDatasetRepository;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -25,10 +24,9 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
 /**
- * Create a dataset in HBase and write some user objects to it,
- * using Avro specific records.
+ * Write some user objects to the users dataset using Avro specific records.
  */
-public class CreateUserDataset extends Configured implements Tool {
+public class WriteUserDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
@@ -37,11 +35,8 @@ public class CreateUserDataset extends Configured implements Tool {
     HBaseDatasetRepository repo = new HBaseDatasetRepository.Builder()
         .configuration(HBaseConfiguration.create()).get();
 
-    // Create a dataset of users with the Avro schema of User in the repository.
-    DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
-        .schema(User.getClassSchema())
-        .get();
-    Dataset users = repo.create("users", descriptor);
+    // Load the users dataset
+    Dataset users = repo.load("users");
 
     // Get an accessor for the dataset and write some users to it
     DatasetAccessor<User> accessor = users.newAccessor();
@@ -62,7 +57,7 @@ public class CreateUserDataset extends Configured implements Tool {
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new CreateUserDataset(), args);
+    int rc = ToolRunner.run(new WriteUserDataset(), args);
     System.exit(rc);
   }
 }

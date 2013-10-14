@@ -20,7 +20,13 @@ mvn compile
 Then create the dataset with:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDataset"
+mvn cdk:create-dataset
+```
+
+Write some data to it:
+
+```bash
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.WriteUserDataset"
 ```
 
 Once we have created a dataset and written some data to it, the next thing to do is to
@@ -41,5 +47,5 @@ scan 'users' # dump all rows and columns
 Finally, delete the dataset:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteUserDataset"
+mvn cdk:delete-dataset
 ```

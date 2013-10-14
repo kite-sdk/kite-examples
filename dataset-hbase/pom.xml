@@ -66,6 +66,17 @@
           <showWarnings>true</showWarnings>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>com.cloudera.cdk</groupId>
+        <artifactId>cdk-maven-plugin</artifactId>
+        <version>${cdk-version}</version>
+        <configuration>
+          <repositoryUri>repo:hbase:localhost.localdomain</repositoryUri>
+          <datasetName>users</datasetName>
+          <avroSchemaFile>src/main/avro/user.avsc</avroSchemaFile>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -94,6 +105,12 @@
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase</artifactId>
       <version>0.94.6-cdh4.3.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
