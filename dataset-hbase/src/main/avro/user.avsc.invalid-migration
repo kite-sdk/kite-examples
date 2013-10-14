@@ -22,7 +22,6 @@
     {
       "name": "age",
       "type": "int",
-      "default": 0,
       "mapping": { "type": "column", "value": "meta:age" }
     }
   ]

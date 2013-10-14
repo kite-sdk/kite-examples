@@ -49,3 +49,56 @@ Finally, delete the dataset:
 ```bash
 mvn cdk:delete-dataset
 ```
+
+## Schema Migrations
+
+Over time, the user model will likely change, as new properties are added,
+and old ones are no longer used. Schemas can be migrated to a new version,
+as long as certain schema migration rules are followed. We can see this by trying a
+migration that is not allowed. Start by re-creating the dataset and writing some data:
+
+```bash
+mvn cdk:create-dataset
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.WriteUserDataset"
+```
+
+The copy the contents of _src/main/avro/user.avsc.invalid-migration_ to
+_src/main/avro/user.avsc_, and try to update the dataset's schema:
+
+```bash
+mvn cdk:update-dataset
+```
+
+The command will fail with an error, since adding a new field without a default is not
+allowed.
+
+Next copy the contents of _src/main/avro/user.avsc.valid-migration_ (which specifies a
+default for the new field) to _src/main/avro/user.avsc_,
+and try to update the dataset's schema:
+
+```bash
+mvn cdk:update-dataset
+```
+
+This time it should succeed. Recompile the code so that the generated `User` class has
+the new field, then run the `ReadUserDataset` program. It should show the new field,
+age, with its default value (0) for each entity.
+
+```bash
+mvn compile
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDataset"
+```
+
+You could also try changing `WriteUserDataset` to set the field and check that it runs,
+and that the new entities can be read back.
+
+```bash
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.WriteUserDataset"
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDataset"
+```
+
+Finally, delete the dataset:
+
+```bash
+mvn cdk:delete-dataset
+```
