@@ -1,6 +1,6 @@
 # Cloudera Development Kit - Examples Module
 
-The Examples Module is a collection of examples for the CDK.
+The Examples Module is a collection of examples for the CDK. See [HelloCDK.java](src/main/java/com/cloudera/cdk/examples/data/HelloCDK.java) for a HelloWorld style example.
 
 ## Example - Products Dataset
 
