@@ -1,6 +1,57 @@
 # Cloudera Development Kit - Examples Module
 
-The Examples Module is a collection of examples for the CDK. See [HelloCDK.java](src/main/java/com/cloudera/cdk/examples/data/HelloCDK.java) for a HelloWorld style example.
+This module is a set of examples that demonstrate the `cdk-data` module, which
+makes manging data sets in Hadoop easy with a declarative API and good defaults
+based on Hadoop best practices.
+* Data sets you create with the CDK data API are ready to use with Hive,
+  Impala, and Crunch.
+* Records are automatically compressed and stored in splittable files for
+  Map/Reduce performance.
+* Data schema, storage format, and partition strategy are declared when
+  creating a data set, and work without hassle after that.
+
+## Example - Hello World!
+
+The simplest example is ["Hello CDK"][hello-java]. In this example, we will
+create a data set, "hellos", that stores `Hello` objects. The `Hello` class is
+defined at the end of [`HelloCDK.java`][hello-java], and has a single field,
+`name`, and a method called `sayHello`. To create a `Dataset` for these, we need to:
+
+1. Create metadata that describes the data set (a `DatasetDescriptor`)
+2. Open a repository to create the data set
+
+For step 1, we use the `DatasetDescriptor.Builder` class to make a
+`DatasetDescriptor` that holds the description of this data set. The only
+required property is the schema (what the data looks like) and we can set that
+by using a Builder that automatically inspects the `Hello` class:
+
+```java
+DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Hello.class).get();
+```
+
+For step 2, we are going to use a repository in the local file system with data
+(and metadata) stored in `/tmp/hello-cdk`. We can open this repository with
+this line:
+
+```java
+DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-cdk");
+```
+
+With the repository and descriptor, we can now create a dataset.
+
+```java
+Dataset hellos = repo.create("hellos", descriptor);
+```
+
+After creating the data set, the example creates a `Hello` object and writes it
+out. Then, it reads it back in, calls `sayHello`, and finally, deletes the data
+set. After you read through the rest of [`HelloCDK code`][hello-java], you can
+run the example from the `dataset/` folder with this command:
+```bash
+mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateProductDatasetPojo"
+```
+
+[hello-java]: src/main/java/com/cloudera/cdk/examples/data/HelloCDK.java
 
 ## Example - Products Dataset
 

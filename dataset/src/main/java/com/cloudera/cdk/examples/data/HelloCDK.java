@@ -9,6 +9,7 @@ import org.apache.hadoop.util.ToolRunner;
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetDescriptor;
 import com.cloudera.cdk.data.DatasetReader;
+import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.DatasetWriter;
 import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
@@ -22,8 +23,7 @@ public class HelloCDK extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Construct a local filesystem dataset repository rooted at /tmp/hellocdk
-    DatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new URI("/tmp/hellocdk")).configuration(getConf()).get();
+    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-cdk");
 
     // Create a dataset of Hellos
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Hello.class).get();
@@ -45,7 +45,7 @@ public class HelloCDK extends Configured implements Tool {
     try {
       reader.open();
       for (Hello hello : reader) {
-        System.out.println("Hello " + hello.getName());
+        hello.sayHello();
       }
     } finally {
       reader.close();
@@ -81,5 +81,9 @@ class Hello {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public void sayHello() {
+    System.out.println("Hello, " + name + "!");
   }
 }
