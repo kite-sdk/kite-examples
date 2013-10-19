@@ -78,3 +78,40 @@ mapping for `localhost.localdomain`, then add a line like the following to `/etc
 guest times are in sync. To synchronize the guest, login and type
 `sudo ntpdate pool.ntp.org`.
 * __Restart the cluster__ Restart the whole cluster in Cloudera Manager.
+
+# Troubleshooting
+
+## Working with the VM
+
+* __What are the usernames/passwords for the VM?__
+  * Cloudera manager: admin/admin
+  * Login: cloudera/cloudera
+
+* __I can't find the file in VirtualBox (or VMWare)!__
+  * You probably need to unpack it: In Windows, install 7zip, _extract_ the
+    `.tar` file from the `.bz2`, then extract the VM files from the `.tar`. In
+    linux or mac, `cd` to where you copied the file and run
+    `tar xjf cloudera-quickstart-vm-4.3.0-cdk-vbox-1.0.0.tar.bz2`
+  * You should be able to add the extracted files to VirtualBox or VMWare
+
+* __How do I open a `.vbox` file?__
+  * Install and open [VirtualBox][vbox] on your computer
+  * Under the menu "Machine", select "Add..."
+  * Navigate to where you unpacked the `.vbox` file and select it
+
+* __How do I fix "VTx" errors?__
+  * Reboot your computer and enter BIOS
+  * Find the "Virtualization" settings, usually under "Security" and _enable_
+    all of the virtualization options
+
+* __How do I get my mouse back?__
+  * If your mouse/keyboard is stuck in the VM (captured), you can usually
+    release it by pressing the right `CTRL` key. If you don't have one (or that
+    didn't work), then the release key will be in the __lower-right__ of the
+    VirtualBox window
+
+* __Other problems__
+  * Using VirtualBox? Try the VMWare image.
+  * Using VMWare? Try the VirtualBox image.
+
+[vbox]: https://www.virtualbox.org/wiki/Downloads

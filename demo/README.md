@@ -5,15 +5,40 @@ via Flume (using log4j as the logging API), extracting session data from the eve
 Crunch, running the Crunch job periodically using Oozie, and analyzing the
 session data with SQL using Impala or Hive.
 
-## Pre-requisites
+If you run into trouble, check out the [Troubleshooting section](../README.md#troubleshooting).
 
-*   __Enable Flume user impersonation__ Flume needs to be able to impersonate the owner
+## Getting started
+
+1. This example assumes that you have VirtualBox or VMWare installed and have a
+   running [Cloudera QuickStart VM][getvm]. See the
+   [Getting Started](../README.md#getting-started) and
+   [Troubleshooting](../README.md#troubleshooting) sections for help.
+2. In that VM, check out a copy of this demo so you can build the code and
+   follow along:
+  * Open "Applications" > "System Tools" > "Terminal"
+  * Then run:
+
+```bash
+git checkout https://github.com/cloudera/cdk-examples.git
+cd cdk-examples
+git checkout <latest-branch>
+cd demo
+```
+
+[getvm]: https://ccp.cloudera.com/display/SUPPORT/Cloudera+QuickStart+VM
+
+## Configuring the VM
+
+### __Enable Flume user impersonation__
+Flume needs to be able to impersonate the owner
  of the dataset it is writing to. (This is like Unix `sudo`, see
 [Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
-for further information.) In Cloudera Manager, for the [HDFS service](http://localhost:7180/cmf/services/status),
-click "View and Edit" under the Configuration tab then
-search for "Cluster-wide Configuration Safety Valve for core-site.xml"
-and add the following XML snippet, then save changes.
+for further information.) In Cloudera Manager,
+* __Update the configuration__
+  * Click on the "hdfs1" service in [CM services](http://localhost:7180/cmf/services/status)
+  * Under the "Configuration" drop-down, select "View and Edit"
+  * Search for "valve"
+  * Add the following XML snippet as the "Cluster-wide Configuration Safety Valve for core-site.xml" and click "Save Changes"
 
 ```
 <property>
@@ -25,7 +50,16 @@ and add the following XML snippet, then save changes.
   <value>*</value>
 </property>
 ```
-*   __Install the CDK event serializer module__ This is necessary
+
+* __(Re)Start the Flume agent__
+  * Click on the "Cloudera Manager" logo in the upper-left corner of CM, which
+    takes you to [CM services](http://localhost:7180/cmf/services/status)
+  * Find the "flume1" service
+  * Under the "Actions" drop-down on the right side, select "Restart"
+
+### __Install the CDK event serializer module__
+
+This is necessary
 since Flume 1.3.0 does not come with a HDFS sink that can write Avro data files.
 Note that the HDFS sink in Flume 1.4.0 can write Avro data files so this step is not
 needed for that version of Flume or later.
@@ -36,16 +70,30 @@ sudo wget https://repository.cloudera.com/artifactory/libs-release-local/com/clo
 # or if wget is not available:
 ( cd /usr/lib/flume-ng/lib/ ; sudo curl -O https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar ; )
 ```
-*   __Start a Flume agent__ You can do this via Cloudera Manager by
-selecting "View and Edit" under the Flume service Configuration tab, then clicking on the
-"Agent (Default)" category, and pasting the contents of the `flume.properties` file in
-this project into the text area for the "Configuration File" property.
+
+### Configure the flume agent
+
+* __Update the Flume agent configuration__
+  * Click on the "Cloudera Manager" logo in the upper-left corner of CM, which
+    takes you to [CM services](http://localhost:7180/cmf/services/status)
+  * Click on the "flume1" service
+  * Under the "Configuration" drop-down, select "View and Edit"
+  * Search for "Configuration file"
+  * Replace the contents of of the "Configuration file" with the
+    `flume.properties` file from this repository
+  * Click "Save Changes"
+* __(Re)Start the Flume agent__
+  * Go back to the "flume1" service
+  * Under the "Actions" drop-down on the right side, select "Restart"
 
     If you are running this example from you machine and not from a QuickStart VM login,
 then make sure you change the value of the `proxyUser` setting in the agent
 configuration to the user that you are logged in as. Save changes,
 then start the Flume agent.
-*   __Set up Hive Oozie sharelib__ Add the HCatalog Core JAR to the Hive Oozie
+
+### __Set up Hive Oozie sharelib__
+
+Add the HCatalog Core JAR to the Hive Oozie
 sharelib, by logging in to the VM and running:
 
 ```bash
@@ -53,8 +101,12 @@ sudo -u oozie hadoop fs -put \
   /usr/lib/hcatalog/share/hcatalog/hcatalog-core-0.5.0-cdh4.3.0.jar \
   /user/oozie/share/lib/hive
 ```
-*   __Ensure Oozie is running__ From Cloudera Manager, start the Oozie service.
-*   __(Optional) Upgrade Impala__ To use Impala in this example you need to be running
+
+Next: __Ensure Oozie is running__ From Cloudera Manager, start the Oozie service.
+
+###  __(Optional) Upgrade Impala__
+
+To use Impala in this example you need to be running
 Impala 1.1 or later. If the
 version of QuickStart VM you are running is earlier than Impala 1.1, you can upgrade it
 using [these instructions](http://www.cloudera.com/content/cloudera-content/cloudera-docs/Impala/latest/Installing-and-Using-Impala/ciiu_upgrading.html)
@@ -175,11 +227,7 @@ to explore the results.
 One way is to use the `demo-reports-webapp` running at
 [http://localhost:8080/demo-reports-webapp/](http://localhost:8080/demo-reports-webapp/),
 which uses JDBC to run Impala queries for a few pre-defined reports. (Note this only
-work with Impala 1.1 or later, see instructions above.) Impala caches dataset
-metadata on startup and, as a result, you may receive errors about the `sessions`
-table not existing. To force Impala to reload its metadata cache, issue the command
-`INVALIDATE METADATA` from the Impala shell or the Impala Hue application before
-running any other SQL queries.
+work with Impala 1.1 or later, see instructions above.)
 
 Another way is to run ad hoc SQL queries using the Hue interfaces to
 [Impala](http://localhost:8888/impala/) or [Hive](http://localhost:8888/beeswax/).
@@ -268,3 +316,4 @@ When you see new files appear, then try running the session analysis from above.
 
 When you have finished, stop the user simulation script by killing the process
 (with Ctrl-C). Kill the Oozie coordinator job through the Hue web interface.
+
