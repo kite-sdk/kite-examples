@@ -26,7 +26,7 @@ import com.cloudera.cdk.examples.demo.event.Session;
 import com.google.common.collect.Iterables;
 import java.io.Serializable;
 import java.net.URI;
-import org.apache.crunch.CombineFn;
+import java.util.Iterator;
 import org.apache.crunch.DoFn;
 import org.apache.crunch.Emitter;
 import org.apache.crunch.MapFn;
@@ -54,81 +54,76 @@ public class CreateSessions extends CrunchTool implements Serializable {
     getPipeline().enableDebug();
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
-    // Process the specified dataset partition, or the latest one, if none specified
+    // Load the events dataset and get the correct partition to sessionize
     Dataset eventsDataset = fsRepo.load("events");
     Dataset partition;
     if (args.length == 0 || (args.length == 1 && args[0].equals("LATEST"))) {
       partition = getLatestPartition(eventsDataset);
     } else {
-      String partitionUri = args[0];
-      PartitionKey partitionKey = FileSystemDatasetRepository.partitionKeyForPath(
-          eventsDataset, new URI(partitionUri));
-      partition = eventsDataset.getPartition(partitionKey, false);
-      if (partition == null) {
-        throw new IllegalArgumentException("Partition not found: " + partitionUri);
-      }
+      partition = getPartitionForURI(eventsDataset, args[0]);
     }
 
+    // Create a parallel collection from the working partition
     PCollection<StandardEvent> events = read(
         CrunchDatasets.asSource(partition, StandardEvent.class));
 
+    // Group events by user and cookie id, then create a session for each group
     PCollection<Session> sessions = events
-        .parallelDo(new DoFn<StandardEvent, Session>() {
-          @Override
-          public void process(StandardEvent event, Emitter<Session> emitter) {
-            emitter.emit(Session.newBuilder()
-                .setUserId(event.getUserId())
-                .setSessionId(event.getSessionId())
-                .setIp(event.getIp())
-                .setStartTimestamp(event.getTimestamp())
-                .setDuration(0)
-                .setSessionEventCount(1)
-                .build());
-          }
-        }, Avros.specifics(Session.class))
-        .by(new MapFn<Session, Pair<Long, String>>() {
-          @Override
-          public Pair<Long, String> map(Session session) {
-            return Pair.of(session.getUserId(), session.getSessionId());
-          }
-        }, Avros.pairs(Avros.longs(), Avros.strings()))
+        .by(new GetSessionKey(), Avros.strings())
         .groupByKey()
-        .combineValues(new CombineFn<Pair<Long, String>, Session>() {
-          @Override
-          public void process(Pair<Pair<Long, String>, Iterable<Session>> pairIterable,
-              Emitter<Pair<Pair<Long, String>, Session>> emitter) {
-            String ip = null;
-            long startTimestamp = Long.MAX_VALUE;
-            long endTimestamp = Long.MIN_VALUE;
-            int sessionEventCount = 0;
-            for (Session s : pairIterable.second()) {
-              ip = s.getIp();
-              startTimestamp = Math.min(startTimestamp, s.getStartTimestamp());
-              endTimestamp = Math.max(endTimestamp, s.getStartTimestamp() + s.getDuration());
-              sessionEventCount += s.getSessionEventCount();
-            }
-            emitter.emit(Pair.of(pairIterable.first(), Session.newBuilder()
-                .setUserId(pairIterable.first().first())
-                .setSessionId(pairIterable.first().second())
-                .setIp(ip)
-                .setStartTimestamp(startTimestamp)
-                .setDuration(endTimestamp - startTimestamp)
-                .setSessionEventCount(sessionEventCount)
-                .build()));
-          }
-        })
-        .parallelDo(new DoFn<Pair<Pair<Long, String>, Session>, Session>() {
-          @Override
-          public void process(Pair<Pair<Long, String>, Session> pairSession,
-              Emitter<Session> emitter) {
-            emitter.emit(pairSession.second());
-          }
-        }, Avros.specifics(Session.class));
+        .parallelDo(new MakeSession(), Avros.specifics(Session.class));
 
+    // Write the sessions to the "sessions" Dataset
     getPipeline().write(sessions, CrunchDatasets.asTarget(hcatRepo.load("sessions")),
         Target.WriteMode.APPEND);
 
     return run().succeeded() ? 0 : 1;
+  }
+
+  private static class GetSessionKey extends MapFn<StandardEvent, String> {
+    @Override
+    public String map(StandardEvent event) {
+      // Create a key from the session id and user id
+      return event.getSessionId() + event.getUserId();
+    }
+  }
+
+  private static class MakeSession
+      extends DoFn<Pair<String, Iterable<StandardEvent>>, Session> {
+
+    @Override
+    public void process(
+        Pair<String, Iterable<StandardEvent>> keyAndEvents,
+        Emitter<Session> emitter) {
+      final Iterator<StandardEvent> events = keyAndEvents.second().iterator();
+      if (!events.hasNext()) {
+        return;
+      }
+
+      // Initialize the values needed to create a session for this group
+      final StandardEvent firstEvent = events.next();
+      long startTime = firstEvent.getTimestamp();
+      long endTime = firstEvent.getTimestamp();
+      int numEvents = 1;
+
+      // Inspect each event and keep track of start time, end time, and count
+      while (events.hasNext()) {
+        final StandardEvent event = events.next();
+        startTime = Math.min(startTime, event.getTimestamp());
+        endTime = Math.max(endTime, event.getTimestamp());
+        numEvents += 1;
+      }
+
+      // Create a session. Use the first event for fields that do not change
+      emitter.emit(Session.newBuilder()             // same on all events:
+          .setUserId(firstEvent.getUserId())        // the user id (grouped by)
+          .setSessionId(firstEvent.getSessionId())  // session id (grouped by)
+          .setIp(firstEvent.getIp())                // the source IP address
+          .setStartTimestamp(startTime)
+          .setDuration(endTime - startTime)
+          .setSessionEventCount(numEvents)
+          .build());
+    }
   }
 
   private Dataset getLatestPartition(Dataset eventsDataset) {
@@ -137,6 +132,16 @@ public class CreateSessions extends CrunchTool implements Serializable {
       ds = Iterables.getLast(ds.getPartitions());
     }
     return ds;
+  }
+
+  private Dataset getPartitionForURI(Dataset eventsDataset, String uri) {
+    PartitionKey partitionKey = FileSystemDatasetRepository.partitionKeyForPath(
+        eventsDataset, URI.create(uri));
+    Dataset partition = eventsDataset.getPartition(partitionKey, false);
+    if (partition == null) {
+      throw new IllegalArgumentException("Partition not found: " + uri);
+    }
+    return partition;
   }
 
   public static void main(String... args) throws Exception {
