@@ -17,9 +17,9 @@ package com.cloudera.cdk.examples.data;
 
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetDescriptor;
+import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.DatasetWriter;
-import com.cloudera.cdk.data.hcatalog.HCatalogDatasetRepository;
 import java.util.Random;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
@@ -37,7 +37,7 @@ public class CreateHCatalogUserDatasetGeneric extends Configured implements Tool
   public int run(String[] args) throws Exception {
 
     // Construct an HCatalog dataset repository using managed Hive tables
-    DatasetRepository repo = new HCatalogDatasetRepository.Builder().get();
+    DatasetRepository repo = DatasetRepositories.open("repo:hive");
 
     // Create a dataset of users with the Avro schema in the repository
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()

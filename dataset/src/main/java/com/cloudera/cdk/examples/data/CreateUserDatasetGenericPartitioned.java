@@ -17,11 +17,10 @@ package com.cloudera.cdk.examples.data;
 
 import com.cloudera.cdk.data.Dataset;
 import com.cloudera.cdk.data.DatasetDescriptor;
+import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.DatasetWriter;
 import com.cloudera.cdk.data.PartitionStrategy;
-import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
-import java.net.URI;
 import java.util.Random;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
@@ -38,9 +37,8 @@ public class CreateUserDatasetGenericPartitioned extends Configured implements T
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a local filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = new FileSystemDatasetRepository.Builder()
-        .rootDirectory(new URI("/tmp/data")).configuration(getConf()).get();
+    // Construct a filesystem dataset repository rooted at /tmp/data
+    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
 
     // Create a partition strategy that hash partitions on username with 10 buckets
     PartitionStrategy partitionStrategy =
