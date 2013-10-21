@@ -41,7 +41,7 @@ public class ReadDataset extends Configured implements Tool {
     Dataset events = repo.load("events");
 
     // Get a reader for the dataset and read all the events
-    DatasetReader<GenericRecord> reader = events.getReader();
+    DatasetReader<GenericRecord> reader = events.newReader();
     try {
       reader.open();
       for (GenericRecord event : reader) {

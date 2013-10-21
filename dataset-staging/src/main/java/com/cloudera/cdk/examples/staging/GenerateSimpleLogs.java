@@ -59,7 +59,7 @@ public class GenerateSimpleLogs extends Configured implements Tool {
 
     // data is written to the staging dataset
     final Dataset staging = repo.load("logs-staging");
-    final DatasetWriter<GenericRecord> writer = staging.getWriter();
+    final DatasetWriter<GenericRecord> writer = staging.newWriter();
 
     // this is going to build our simple log records
     final GenericRecordBuilder builder = new GenericRecordBuilder(

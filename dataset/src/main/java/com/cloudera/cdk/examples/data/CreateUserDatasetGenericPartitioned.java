@@ -53,7 +53,7 @@ public class CreateUserDatasetGenericPartitioned extends Configured implements T
     Dataset users = repo.create("users", descriptor);
 
     // Get a writer for the dataset and write some users to it
-    DatasetWriter<GenericRecord> writer = users.getWriter();
+    DatasetWriter<GenericRecord> writer = users.newWriter();
     try {
       writer.open();
       String[] colors = { "green", "blue", "pink", "brown", "yellow" };

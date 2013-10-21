@@ -66,14 +66,14 @@ public class StagingToPersistentSerial extends Configured implements Tool {
 
     // the destination dataset
     final Dataset persistent = repo.load("logs");
-    final DatasetWriter<GenericRecord> writer = persistent.getWriter();
+    final DatasetWriter<GenericRecord> writer = persistent.newWriter();
     writer.open();
 
     // the source dataset: yesterday's partition in the staging area
     final Dataset staging = repo.load("logs-staging");
     final PartitionKey yesterday = getPartitionKey(staging, yesterdayTimestamp);
     final DatasetReader<GenericRecord> reader = staging
-        .getPartition(yesterday, false).getReader();
+        .getPartition(yesterday, false).newReader();
 
     try {
       reader.open();

@@ -30,7 +30,7 @@ public class HelloCDK extends Configured implements Tool {
     Dataset hellos = repo.create("hellos", descriptor);
 
     // Write some Hellos in to the dataset
-    DatasetWriter<Hello> writer = hellos.getWriter();
+    DatasetWriter<Hello> writer = hellos.newWriter();
     try {
       writer.open();
       
@@ -41,7 +41,7 @@ public class HelloCDK extends Configured implements Tool {
     }
     
     // Read the Hellos from the dataset
-    DatasetReader<Hello> reader = hellos.getReader();
+    DatasetReader<Hello> reader = hellos.newReader();
     try {
       reader.open();
       for (Hello hello : reader) {

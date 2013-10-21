@@ -48,7 +48,7 @@ val descriptor = new DatasetDescriptor.Builder().schema(schema).get()
 val users = repo.create("users", descriptor)
 
 // Get a writer for the dataset and write some users to it
-val writer = users.getWriter().asInstanceOf[DatasetWriter[GenericRecord]]
+val writer = users.newWriter().asInstanceOf[DatasetWriter[GenericRecord]]
 writer.open()
 val colors = Array("green", "blue", "pink", "brown", "yellow")
 val rand = new Random()

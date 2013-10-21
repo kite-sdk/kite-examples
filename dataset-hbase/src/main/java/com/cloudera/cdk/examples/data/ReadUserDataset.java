@@ -46,7 +46,7 @@ public class ReadUserDataset extends Configured implements Tool {
     System.out.println(accessor.get(key));
 
     // Get a reader for the dataset and read all the users
-    DatasetReader<User> reader = users.getReader();
+    DatasetReader<User> reader = users.newReader();
     try {
       reader.open();
       for (User user : reader) {

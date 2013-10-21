@@ -51,7 +51,7 @@ public class ReadUserDatasetGenericOnePartition extends Configured implements To
     Dataset partition = users.getPartition(partitionKey, false);
 
     // Get a reader for the partition and read all the users
-    DatasetReader<GenericRecord> reader = partition.getReader();
+    DatasetReader<GenericRecord> reader = partition.newReader();
     try {
       reader.open();
       for (GenericRecord user : reader) {

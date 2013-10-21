@@ -41,7 +41,7 @@ public class ReadUserDatasetGeneric extends Configured implements Tool {
     Dataset users = repo.load("users");
 
     // Get a reader for the dataset and read all the users
-    DatasetReader<GenericRecord> reader = users.getReader();
+    DatasetReader<GenericRecord> reader = users.newReader();
     try {
       reader.open();
       for (GenericRecord user : reader) {

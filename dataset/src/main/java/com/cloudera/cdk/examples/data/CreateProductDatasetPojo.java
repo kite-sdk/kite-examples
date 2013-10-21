@@ -43,7 +43,7 @@ public class CreateProductDatasetPojo extends Configured implements Tool {
     Dataset products = repo.create("products", descriptor);
 
     // Get a writer for the dataset and write some products to it
-    DatasetWriter<Product> writer = products.getWriter();
+    DatasetWriter<Product> writer = products.newWriter();
     try {
       writer.open();
       String[] names = { "toaster", "teapot", "butter dish" };

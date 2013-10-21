@@ -40,7 +40,7 @@ public class ReadProductDatasetPojo extends Configured implements Tool {
     Dataset products = repo.load("products");
 
     // Get a reader for the dataset and read all the products
-    DatasetReader<Product> reader = products.getReader();
+    DatasetReader<Product> reader = products.newReader();
     try {
       reader.open();
       for (Product product : reader) {
