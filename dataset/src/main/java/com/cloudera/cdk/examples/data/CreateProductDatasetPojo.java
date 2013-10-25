@@ -37,7 +37,7 @@ public class CreateProductDatasetPojo extends Configured implements Tool {
 
     // Create a dataset of products with the Avro schema in the repository
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Product.class).get();
-    Dataset products = repo.create("products", descriptor);
+    Dataset<Product> products = repo.create("products", descriptor);
 
     // Get a writer for the dataset and write some products to it
     DatasetWriter<Product> writer = products.newWriter();

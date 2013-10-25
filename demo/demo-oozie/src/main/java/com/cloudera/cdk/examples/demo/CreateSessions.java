@@ -22,7 +22,6 @@ import com.cloudera.cdk.data.PartitionKey;
 import com.cloudera.cdk.data.crunch.CrunchDatasets;
 import com.cloudera.cdk.data.event.StandardEvent;
 import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
-import com.cloudera.cdk.data.hcatalog.HCatalogDatasetRepository;
 import com.cloudera.cdk.examples.demo.event.Session;
 import com.google.common.collect.Iterables;
 import java.io.Serializable;
@@ -54,24 +53,20 @@ public class CreateSessions extends CrunchTool implements Serializable {
     getPipeline().enableDebug();
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
-    // Process the specified dataset partition, or the latest one, if none specified
-    Dataset eventsDataset = fsRepo.load("events");
-    Dataset partition;
+    // Load the events dataset and get the correct partition to sessionize
+    Dataset<StandardEvent> eventsDataset = fsRepo.load("events");
+    Dataset<StandardEvent> partition;
     if (args.length == 0 || (args.length == 1 && args[0].equals("LATEST"))) {
       partition = getLatestPartition(eventsDataset);
     } else {
-      String partitionUri = args[0];
-      PartitionKey partitionKey = FileSystemDatasetRepository.partitionKeyForPath(
-          eventsDataset, new URI(partitionUri));
-      partition = eventsDataset.getPartition(partitionKey, false);
-      if (partition == null) {
-        throw new IllegalArgumentException("Partition not found: " + partitionUri);
-      }
+      partition = getPartitionForURI(eventsDataset, args[0]);
     }
 
+    // Create a parallel collection from the working partition
     PCollection<StandardEvent> events = read(
         CrunchDatasets.asSource(partition, StandardEvent.class));
 
+    // Process the events into sessions, using a combiner
     PCollection<Session> sessions = events
       .parallelDo(new DoFn<StandardEvent, Session>() {
         @Override
@@ -125,18 +120,29 @@ public class CreateSessions extends CrunchTool implements Serializable {
         }
       }, Avros.specifics(Session.class));
 
+    // Write the sessions to the "sessions" Dataset
     getPipeline().write(sessions, CrunchDatasets.asTarget(hcatRepo.load("sessions")),
         Target.WriteMode.APPEND);
 
     return run().succeeded() ? 0 : 1;
   }
 
-  private Dataset getLatestPartition(Dataset eventsDataset) {
-    Dataset ds = eventsDataset;
+  private <E> Dataset<E> getLatestPartition(Dataset<E> eventsDataset) {
+    Dataset<E> ds = eventsDataset;
     while (ds.getDescriptor().isPartitioned()) {
       ds = Iterables.getLast(ds.getPartitions());
     }
     return ds;
+  }
+
+  private <E> Dataset<E> getPartitionForURI(Dataset<E> eventsDataset, String uri) {
+    PartitionKey partitionKey = FileSystemDatasetRepository.partitionKeyForPath(
+        eventsDataset, URI.create(uri));
+    Dataset<E> partition = eventsDataset.getPartition(partitionKey, false);
+    if (partition == null) {
+      throw new IllegalArgumentException("Partition not found: " + uri);
+    }
+    return partition;
   }
 
   public static void main(String... args) throws Exception {

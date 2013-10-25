@@ -48,7 +48,7 @@ public class CreateUserDatasetGenericPartitioned extends Configured implements T
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
         .partitionStrategy(partitionStrategy).get();
-    Dataset users = repo.create("users", descriptor);
+    Dataset<GenericRecord> users = repo.create("users", descriptor);
 
     // Get a writer for the dataset and write some users to it
     DatasetWriter<GenericRecord> writer = users.newWriter();

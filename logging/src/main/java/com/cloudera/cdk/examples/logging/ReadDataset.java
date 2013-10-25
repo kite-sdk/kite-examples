@@ -36,7 +36,7 @@ public class ReadDataset extends Configured implements Tool {
     DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
 
     // Load the events dataset
-    Dataset events = repo.load("events");
+    Dataset<GenericRecord> events = repo.load("events");
 
     // Get a reader for the dataset and read all the events
     DatasetReader<GenericRecord> reader = events.newReader();

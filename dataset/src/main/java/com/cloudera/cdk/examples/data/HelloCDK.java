@@ -1,6 +1,5 @@
 package com.cloudera.cdk.examples.data;
 
-import java.net.URI;
 
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
@@ -12,7 +11,6 @@ import com.cloudera.cdk.data.DatasetReader;
 import com.cloudera.cdk.data.DatasetRepositories;
 import com.cloudera.cdk.data.DatasetRepository;
 import com.cloudera.cdk.data.DatasetWriter;
-import com.cloudera.cdk.data.filesystem.FileSystemDatasetRepository;
 
 /**
  * Create a dataset then write and read from it.
@@ -27,7 +25,7 @@ public class HelloCDK extends Configured implements Tool {
 
     // Create a dataset of Hellos
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Hello.class).get();
-    Dataset hellos = repo.create("hellos", descriptor);
+    Dataset<Hello> hellos = repo.create("hellos", descriptor);
 
     // Write some Hellos in to the dataset
     DatasetWriter<Hello> writer = hellos.newWriter();

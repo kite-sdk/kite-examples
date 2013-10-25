@@ -43,7 +43,7 @@ public class CreateHCatalogUserDatasetGeneric extends Configured implements Tool
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
         .get();
-    Dataset users = repo.create("users", descriptor);
+    Dataset<GenericRecord> users = repo.create("users", descriptor);
 
     // Get a writer for the dataset and write some users to it
     DatasetWriter<GenericRecord> writer = users.newWriter();

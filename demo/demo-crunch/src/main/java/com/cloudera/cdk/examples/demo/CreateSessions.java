@@ -53,8 +53,8 @@ public class CreateSessions extends CrunchTool implements Serializable {
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
     // Load the events dataset and get the correct partition to sessionize
-    Dataset eventsDataset = fsRepo.load("events");
-    Dataset partition;
+    Dataset<StandardEvent> eventsDataset = fsRepo.load("events");
+    Dataset<StandardEvent> partition;
     if (args.length == 0 || (args.length == 1 && args[0].equals("LATEST"))) {
       partition = getLatestPartition(eventsDataset);
     } else {
@@ -124,18 +124,18 @@ public class CreateSessions extends CrunchTool implements Serializable {
     }
   }
 
-  private Dataset getLatestPartition(Dataset eventsDataset) {
-    Dataset ds = eventsDataset;
+  private <E> Dataset<E> getLatestPartition(Dataset<E> eventsDataset) {
+    Dataset<E> ds = eventsDataset;
     while (ds.getDescriptor().isPartitioned()) {
       ds = Iterables.getLast(ds.getPartitions());
     }
     return ds;
   }
 
-  private Dataset getPartitionForURI(Dataset eventsDataset, String uri) {
+  private <E> Dataset<E> getPartitionForURI(Dataset<E> eventsDataset, String uri) {
     PartitionKey partitionKey = FileSystemDatasetRepository.partitionKeyForPath(
         eventsDataset, URI.create(uri));
-    Dataset partition = eventsDataset.getPartition(partitionKey, false);
+    Dataset<E> partition = eventsDataset.getPartition(partitionKey, false);
     if (partition == null) {
       throw new IllegalArgumentException("Partition not found: " + uri);
     }

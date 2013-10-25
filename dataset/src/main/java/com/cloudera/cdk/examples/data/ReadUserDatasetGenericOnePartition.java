@@ -38,7 +38,7 @@ public class ReadUserDatasetGenericOnePartition extends Configured implements To
     DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
 
     // Load the users dataset
-    Dataset users = repo.load("users");
+    Dataset<GenericRecord> users = repo.load("users");
 
     // Get the partition strategy and use it to construct a partition key for
     // hash(username)=0

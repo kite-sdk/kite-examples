@@ -36,7 +36,7 @@ public class WriteUserDataset extends Configured implements Tool {
         .configuration(HBaseConfiguration.create()).get();
 
     // Load the users dataset
-    Dataset users = repo.load("users");
+    Dataset<User> users = repo.load("users");
 
     // Get an accessor for the dataset and write some users to it
     DatasetAccessor<User> accessor = users.newAccessor();

@@ -35,7 +35,7 @@ public class ReadProductDatasetPojo extends Configured implements Tool {
     DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
 
     // Load the products dataset
-    Dataset products = repo.load("products");
+    Dataset<Product> products = repo.load("products");
 
     // Get a reader for the dataset and read all the products
     DatasetReader<Product> reader = products.newReader();

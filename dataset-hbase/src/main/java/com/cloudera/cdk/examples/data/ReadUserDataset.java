@@ -38,7 +38,7 @@ public class ReadUserDataset extends Configured implements Tool {
         .configuration(HBaseConfiguration.create()).get();
 
     // Load the users dataset
-    Dataset users = repo.load("users");
+    Dataset<User> users = repo.load("users");
 
     // Get an accessor for the dataset and look up a user by username
     DatasetAccessor<User> accessor = users.newAccessor();

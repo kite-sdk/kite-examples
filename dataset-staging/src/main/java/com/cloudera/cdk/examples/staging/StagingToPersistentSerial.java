@@ -37,6 +37,7 @@ public class StagingToPersistentSerial extends Configured implements Tool {
 
   public static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
+  @SuppressWarnings("deprecation")
   private static PartitionKey getPartitionKey(Dataset data, long timestamp) {
     // need to build a fake record to get a partition key
     final GenericRecordBuilder builder = new GenericRecordBuilder(
@@ -62,12 +63,12 @@ public class StagingToPersistentSerial extends Configured implements Tool {
     final long yesterdayTimestamp = now.getTimeInMillis() - DAY_IN_MILLIS;
 
     // the destination dataset
-    final Dataset persistent = repo.load("logs");
+    final Dataset<GenericRecord> persistent = repo.load("logs");
     final DatasetWriter<GenericRecord> writer = persistent.newWriter();
     writer.open();
 
     // the source dataset: yesterday's partition in the staging area
-    final Dataset staging = repo.load("logs-staging");
+    final Dataset<GenericRecord> staging = repo.load("logs-staging");
     final PartitionKey yesterday = getPartitionKey(staging, yesterdayTimestamp);
     final DatasetReader<GenericRecord> reader = staging
         .getPartition(yesterday, false).newReader();

@@ -36,7 +36,7 @@ public class ReadUserDatasetGeneric extends Configured implements Tool {
     DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
 
     // Load the users dataset
-    Dataset users = repo.load("users");
+    Dataset<GenericRecord> users = repo.load("users");
 
     // Get a reader for the dataset and read all the users
     DatasetReader<GenericRecord> reader = users.newReader();
