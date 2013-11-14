@@ -11,10 +11,13 @@ Before trying this example, you need to have a Flume agent running.
 *   __Enable Flume user impersonation__ Flume needs to be able to impersonate the owner
  of the dataset it is writing to. (This is like Unix `sudo`, see
 [Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
-for further information.) In Cloudera Manager, for the [HDFS service](http://localhost:7180/cmf/services/status),
-click "View and Edit" under the Configuration tab then
-search for "Cluster-wide Configuration Safety Valve for core-site.xml"
-and add the following XML snippet, then save changes.
+for further information.) 
+    * In Cloudera Manager, for the [HDFS service](http://localhost:7180/cmf/services/status),
+      click "View and Edit" under the Configuration tab then
+      search for "Cluster-wide Configuration Safety Valve for core-site.xml"
+      and add the following XML snippet, then save changes. 
+    * If not using Cloudera Manager, just add the following XML snippet to your `core-site.xml` file 
+      and then restart the HDFS daemons.
 
 ```
 <property>
@@ -26,26 +29,31 @@ and add the following XML snippet, then save changes.
   <value>*</value>
 </property>
 ```
-*   __Install the CDK event serializer module__ This is necessary
-since Flume 1.3.0 does not come with a HDFS sink that can write Avro data files.
-Note that the HDFS sink in Flume 1.4.0 can write Avro data files so this step is not
-needed for that version of Flume or later.
+*  __Configure Avro Event serializations for Flume__
+   * If you are running __Flume 1.4.0 or later__, edit the `flume.properties` file and change the 
+     value of the `tier1.sinks.sink-1.serializer` property from `org.apache.flume.serialization.AvroEventSerializer$Builder`
+     to `org.apache.flume.sink.hdfs.AvroEventSerializer$Builder` since this version of Flume has a built-in HDFS sink for 
+     writing Avro data files.
+   * If you are running __Flume 1.3.0 or earlier,__ you must instead use the CDK event serializer module to support writing 
+     Flume events as Avro data files in HDFS.
+       * [Download the JAR file](https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.8.1/cdk-flume-avro-event-serializer-0.8.1.jar) (you may need to change the URL to reflect the CDK version you're using).
+       * Install that JAR file by copying it to the `/usr/lib/flume-ng/lib/` directory
 
-```bash
-sudo wget https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar \
-  -P /usr/lib/flume-ng/lib/
-# or if wget is not available:
-( cd /usr/lib/flume-ng/lib/ ; sudo curl -O https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar ; )
-```
-*   __Start a Flume agent__ You can do this via Cloudera Manager by
-selecting "View and Edit" under the Flume service Configuration tab, then clicking on the
-"Agent (Default)" category, and pasting the contents of the `flume.properties` file in
-this project into the text area for the "Configuration File" property.
-
-    If you are running this example from you machine and not from a QuickStart VM login,
-then make sure you change the value of the `proxyUser` setting in the agent
-configuration to the user that you are logged in as. Save changes,
-then start the Flume agent.
+*   __Start a Flume agent__ 
+    * First, check the value of the `tier1.sinks.sink-1.hdfs.proxyUser` in the `flume.properties` 
+      file to ensure it matches your login username. The default value is `cloudera`, which is correct
+      for the QuickStart VM, but you'll likely need to change this when running the example from another system.
+    * If using Cloudera Manager, configure the Flume agent by following these steps:
+        * Select "View and Edit" under the Flume service Configuration tab
+        * Click on the "Agent (Default)" category
+        * Paste the contents of the `flume.properties` file into the text area for the "Configuration File" property. 
+        * Save your change
+        * Start (or restart) the Flume agent
+    * If not using Cloudera Manager, configure the Flume agent by following these steps:
+        * Edit the `/etc/default/flume-ng-agent` file and add a line containing `FLUME_AGENT_NAME=tier1` 
+          (this sets the default Flume agent name to match the one defined in the `flume.properties` file).
+        * Run `sudo cp flume.properties /etc/flume-ng/conf/flume.conf` so the Flume agent uses our configuration file.
+        * Run `sudo /etc/init.d/flume-ng-agent restart` to restart the Flume agent with this new configuration
 
 ## Running
 
