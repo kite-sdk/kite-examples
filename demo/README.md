@@ -19,7 +19,7 @@ If you run into trouble, check out the [Troubleshooting section](../README.md#tr
   * Then run:
 
 ```bash
-git checkout https://github.com/cloudera/cdk-examples.git
+git clone https://github.com/cloudera/cdk-examples.git
 cd cdk-examples
 git checkout <latest-branch>
 cd demo
@@ -221,10 +221,13 @@ When it's complete you should see a file in [`/tmp/data/sessions`]
 
 ### Run session analysis
 
-The `sessions` dataset is now populated with data, and there are a variety of ways
-to explore the results.
+The `sessions` dataset is now populated with data, but we need to tell Impala to refresh its metastore so the new `sessions` table will be visible:
 
-One way is to use the `demo-reports-webapp` running at
+```bash
+`impala-shell -q 'invalidate metadata'`
+```
+
+One way to explore the results is by using the `demo-reports-webapp` running at
 [http://localhost:8080/demo-reports-webapp/](http://localhost:8080/demo-reports-webapp/),
 which uses JDBC to run Impala queries for a few pre-defined reports. (Note this only
 work with Impala 1.1 or later, see instructions above.)
