@@ -15,11 +15,10 @@
  */
 package com.cloudera.cdk.examples.data;
 
-import com.cloudera.cdk.data.Dataset;
-import com.cloudera.cdk.data.DatasetAccessor;
-import com.cloudera.cdk.data.hbase.HBaseDatasetRepository;
+import com.cloudera.cdk.data.DatasetRepositories;
+import com.cloudera.cdk.data.RandomAccessDataset;
+import com.cloudera.cdk.data.RandomAccessDatasetRepository;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -32,18 +31,17 @@ public class WriteUserDataset extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Construct an HBase dataset repository using the local HBase database
-    HBaseDatasetRepository repo = new HBaseDatasetRepository.Builder()
-        .configuration(HBaseConfiguration.create()).get();
+    RandomAccessDatasetRepository repo =
+        DatasetRepositories.openRandomAccess("repo:hbase:localhost.localdomain");
 
     // Load the users dataset
-    Dataset<User> users = repo.load("users");
+    RandomAccessDataset<User> users = repo.load("users");
 
     // Get an accessor for the dataset and write some users to it
-    DatasetAccessor<User> accessor = users.newAccessor();
-    accessor.put(user("bill", "green"));
-    accessor.put(user("alice", "blue"));
-    accessor.put(user("cuthbert", "pink"));
-    accessor.put(user("belinda", "yellow"));
+    users.put(user("bill", "green"));
+    users.put(user("alice", "blue"));
+    users.put(user("cuthbert", "pink"));
+    users.put(user("belinda", "yellow"));
 
     return 0;
   }

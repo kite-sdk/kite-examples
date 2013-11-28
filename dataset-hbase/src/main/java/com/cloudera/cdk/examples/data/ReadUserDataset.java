@@ -15,13 +15,12 @@
  */
 package com.cloudera.cdk.examples.data;
 
-import com.cloudera.cdk.data.Dataset;
-import com.cloudera.cdk.data.DatasetAccessor;
 import com.cloudera.cdk.data.DatasetReader;
-import com.cloudera.cdk.data.PartitionKey;
-import com.cloudera.cdk.data.hbase.HBaseDatasetRepository;
+import com.cloudera.cdk.data.DatasetRepositories;
+import com.cloudera.cdk.data.Marker;
+import com.cloudera.cdk.data.RandomAccessDataset;
+import com.cloudera.cdk.data.RandomAccessDatasetRepository;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -34,16 +33,15 @@ public class ReadUserDataset extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Construct an HBase dataset repository using the local HBase database
-    HBaseDatasetRepository repo = new HBaseDatasetRepository.Builder()
-        .configuration(HBaseConfiguration.create()).get();
+    RandomAccessDatasetRepository repo =
+        DatasetRepositories.openRandomAccess("repo:hbase:localhost.localdomain");
 
     // Load the users dataset
-    Dataset<User> users = repo.load("users");
+    RandomAccessDataset<User> users = repo.load("users");
 
     // Get an accessor for the dataset and look up a user by username
-    DatasetAccessor<User> accessor = users.newAccessor();
-    PartitionKey key = users.getDescriptor().getPartitionStrategy().partitionKey("bill");
-    System.out.println(accessor.get(key));
+    Marker key = new Marker.Builder().add("username", "bill").build();
+    System.out.println(users.get(key));
 
     // Get a reader for the dataset and read all the users
     DatasetReader<User> reader = users.newReader();
