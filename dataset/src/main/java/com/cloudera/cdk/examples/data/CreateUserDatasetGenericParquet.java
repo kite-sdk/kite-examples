@@ -45,7 +45,7 @@ public class CreateUserDatasetGenericParquet extends Configured implements Tool 
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
         .format(Formats.PARQUET)
-        .get();
+        .build();
     Dataset<GenericRecord> users = repo.create("users", descriptor);
 
     // Get a writer for the dataset and write some users to it

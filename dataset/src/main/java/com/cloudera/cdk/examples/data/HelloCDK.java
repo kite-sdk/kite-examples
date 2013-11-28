@@ -20,11 +20,12 @@ public class HelloCDK extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a local filesystem dataset repository rooted at /tmp/hellocdk
+    // Construct a local filesystem dataset repository rooted at /tmp/hello-cdk
     DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-cdk");
 
     // Create a dataset of Hellos
-    DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Hello.class).get();
+    DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
+        .schema(Hello.class).build();
     Dataset<Hello> hellos = repo.create("hellos", descriptor);
 
     // Write some Hellos in to the dataset

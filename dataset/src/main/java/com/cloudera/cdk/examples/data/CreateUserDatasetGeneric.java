@@ -42,7 +42,7 @@ public class CreateUserDatasetGeneric extends Configured implements Tool {
     // Create a dataset of users with the Avro schema in the repository
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
-        .get();
+        .build();
     Dataset<GenericRecord> users = repo.create("users", descriptor);
 
     // Get a writer for the dataset and write some users to it

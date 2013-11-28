@@ -36,7 +36,7 @@ public class CreateDataset extends Configured implements Tool {
     // Create a dataset of events with the Avro schema in the repository
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:event.avsc")
-        .get();
+        .build();
     repo.create("events", descriptor);
 
     return 0;

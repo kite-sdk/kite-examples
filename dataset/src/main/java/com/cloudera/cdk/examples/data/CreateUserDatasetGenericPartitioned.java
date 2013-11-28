@@ -42,12 +42,13 @@ public class CreateUserDatasetGenericPartitioned extends Configured implements T
 
     // Create a partition strategy that hash partitions on username with 10 buckets
     PartitionStrategy partitionStrategy =
-        new PartitionStrategy.Builder().hash("username", 10).get();
+        new PartitionStrategy.Builder().hash("username", 10).build();
 
     // Create a dataset of users with the Avro schema in the repository
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
-        .partitionStrategy(partitionStrategy).get();
+        .partitionStrategy(partitionStrategy)
+        .build();
     Dataset<GenericRecord> users = repo.create("users", descriptor);
 
     // Get a writer for the dataset and write some users to it
