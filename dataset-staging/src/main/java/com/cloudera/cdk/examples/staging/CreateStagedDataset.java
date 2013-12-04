@@ -42,8 +42,8 @@ public class CreateStagedDataset extends Configured implements Tool {
             .year("timestamp", "year")
             .month("timestamp", "month")
             .day("timestamp", "day")
-            .get())
-        .get());
+            .build())
+        .build());
 
     // create an Avro dataset to temporarily hold data
     repo.create("logs-staging", new DatasetDescriptor.Builder()
@@ -51,8 +51,8 @@ public class CreateStagedDataset extends Configured implements Tool {
         .schemaUri(schemaURI)
         .partitionStrategy(new PartitionStrategy.Builder()
             .day("timestamp", "day")
-            .get())
-        .get());
+            .build())
+        .build());
 
     return 0;
   }

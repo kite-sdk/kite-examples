@@ -17,7 +17,7 @@ package com.cloudera.cdk.examples.data;
 
 import com.cloudera.cdk.data.DatasetReader;
 import com.cloudera.cdk.data.DatasetRepositories;
-import com.cloudera.cdk.data.Marker;
+import com.cloudera.cdk.data.Key;
 import com.cloudera.cdk.data.RandomAccessDataset;
 import com.cloudera.cdk.data.RandomAccessDatasetRepository;
 import org.apache.hadoop.conf.Configured;
@@ -40,7 +40,7 @@ public class ReadUserDataset extends Configured implements Tool {
     RandomAccessDataset<User> users = repo.load("users");
 
     // Get an accessor for the dataset and look up a user by username
-    Marker key = new Marker.Builder().add("username", "bill").build();
+    Key key = new Key.Builder(users).add("username", "bill").build();
     System.out.println(users.get(key));
 
     // Get a reader for the dataset and read all the users
