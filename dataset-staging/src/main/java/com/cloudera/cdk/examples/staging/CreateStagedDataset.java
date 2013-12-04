@@ -29,10 +29,10 @@ public class CreateStagedDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
+    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
 
     // where the schema is stored
-    URI schemaURI = URI.create("resources:simple-log.avsc");
+    URI schemaURI = URI.create("resource:simple-log.avsc");
 
     // create a Parquet dataset for long-term storage
     repo.create("logs", new DatasetDescriptor.Builder()

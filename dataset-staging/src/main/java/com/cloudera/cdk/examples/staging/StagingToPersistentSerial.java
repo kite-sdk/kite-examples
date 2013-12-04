@@ -57,7 +57,7 @@ public class StagingToPersistentSerial extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
     // open the repository
-    final DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
+    final DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
 
     final Calendar now = Calendar.getInstance();
     final long yesterdayTimestamp = now.getTimeInMillis() - DAY_IN_MILLIS;

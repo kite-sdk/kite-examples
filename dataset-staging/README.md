@@ -109,6 +109,13 @@ Keep in mind that this example uses a day-long partitions to keep the finished
 data in staging (yesterday) separate from the currently appended data (today),
 but a different partition scheme could be used instead.
 
+Finish up by deleting the data with
+
+```bash
+rm -rf /tmp/data/logs /tmp/data/logs-staging
+```
+
 ## To do
 
-* Staging to persistent in parallel - this requires a crunch parquet sink.
+* Staging to persistent in parallel - this requires a crunch parquet sink,
+see [CDK-247](https://issues.cloudera.org/browse/CDK-247).

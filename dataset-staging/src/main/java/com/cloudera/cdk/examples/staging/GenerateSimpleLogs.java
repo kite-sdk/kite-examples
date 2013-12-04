@@ -52,7 +52,7 @@ public class GenerateSimpleLogs extends Configured implements Tool {
     final Random rand = new Random();
 
     // open the repository
-    final DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
+    final DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
 
     // data is written to the staging dataset
     final Dataset<GenericRecord> staging = repo.load("logs-staging");
