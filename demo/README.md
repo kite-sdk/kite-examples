@@ -224,7 +224,7 @@ When it's complete you should see a file in [`/tmp/data/sessions`]
 The `sessions` dataset is now populated with data, but we need to tell Impala to refresh its metastore so the new `sessions` table will be visible:
 
 ```bash
-`impala-shell -q 'invalidate metadata'`
+impala-shell -q 'invalidate metadata'
 ```
 
 One way to explore the results is by using the `demo-reports-webapp` running at
