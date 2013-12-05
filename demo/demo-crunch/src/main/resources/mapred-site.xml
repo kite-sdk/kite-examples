@@ -16,7 +16,7 @@
 -->
 <configuration>
   <property>
-    <name>hive.metastore.uris</name>
-    <value>thrift://localhost:9083</value>
+    <name>mapred.job.tracker</name>
+    <value>localhost.localdomain:8021</value>
   </property>
 </configuration>
