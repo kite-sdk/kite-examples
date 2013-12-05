@@ -38,23 +38,6 @@
         <groupId>com.cloudera.cdk</groupId>
         <artifactId>cdk-maven-plugin</artifactId>
       	<version>${cdk-version}</version>
-        <configuration>
-          <toolClass>com.cloudera.cdk.examples.demo.CreateSessions</toolClass>
-          <hadoopConfiguration>
-            <property>
-              <name>fs.default.name</name>
-              <value>hdfs://localhost.localdomain:8020</value>
-            </property>
-            <property>
-              <name>mapred.job.tracker</name>
-              <value>localhost.localdomain:8021</value>
-            </property>
-            <property>
-              <name>hive.metastore.uris</name>
-              <value>thrift://localhost:9083</value>
-            </property>
-          </hadoopConfiguration>
-        </configuration>
       </plugin>
     </plugins>
   </build>

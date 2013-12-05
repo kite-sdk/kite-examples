@@ -60,10 +60,6 @@
               <name>mapred.job.tracker</name>
               <value>localhost.localdomain:8021</value>
             </property>
-            <property>
-              <name>hive.metastore.uris</name>
-              <value>thrift://localhost:9083</value>
-            </property>
           </hadoopConfiguration>
           <jobProperties> <!-- job properties for parameters in workflow.xml -->
             <property>
