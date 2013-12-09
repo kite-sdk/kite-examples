@@ -22,7 +22,7 @@
   <artifactId>demo-logging-webapp</artifactId>
 
   <parent>
-    <groupId>com.cloudera.cdk.examples</groupId>
+    <groupId>org.kitesdk.examples</groupId>
     <artifactId>demo</artifactId>
     <version>0.9.1-SNAPSHOT</version>
   </parent>
@@ -33,9 +33,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.cloudera.cdk</groupId>
-      <artifactId>cdk-data-core</artifactId>
-      <version>${cdk-version}</version>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-core</artifactId>
+      <version>${kite-version}</version>
       <exclusions>
         <exclusion>
           <groupId>com.sun.jersey</groupId>
@@ -93,9 +93,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.cloudera.cdk</groupId>
-      <artifactId>cdk-data-flume</artifactId>
-      <version>${cdk-version}</version>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-flume</artifactId>
+      <version>${kite-version}</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>

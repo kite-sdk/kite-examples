@@ -22,7 +22,7 @@
   <artifactId>demo-reports-webapp</artifactId>
 
   <parent>
-    <groupId>com.cloudera.cdk.examples</groupId>
+    <groupId>org.kitesdk.examples</groupId>
     <artifactId>demo</artifactId>
     <version>0.9.1-SNAPSHOT</version>
   </parent>

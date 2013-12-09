@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "simple.log",
-  "namespace": "com.cloudera.cdk.examples.staging",
+  "namespace": "org.kitesdk.examples.staging",
   "doc": "A simple log message with basic metadata",
   "fields": [
     { "name": "timestamp", "type": "long" },

@@ -23,7 +23,7 @@
   <artifactId>demo-oozie</artifactId>
 
   <parent>
-    <groupId>com.cloudera.cdk.examples</groupId>
+    <groupId>org.kitesdk.examples</groupId>
     <artifactId>demo</artifactId>
     <version>0.9.1-SNAPSHOT</version>
   </parent>
@@ -40,14 +40,14 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>com.cloudera.cdk</groupId>
-        <artifactId>cdk-maven-plugin</artifactId>
-        <version>${cdk-version}</version>
+        <groupId>org.kitesdk</groupId>
+        <artifactId>kite-maven-plugin</artifactId>
+        <version>${kite-version}</version>
         <configuration>
           <deployFileSystem>hdfs://localhost:8020/</deployFileSystem><!-- the Hadoop filesystem to deploy Oozie apps on -->
           <oozieUrl>http://localhost:11000/oozie</oozieUrl> <!-- where to send Oozie commands to -->
           <updateApplication>true</updateApplication> <!-- update already-deployed apps -->
-          <toolClass>com.cloudera.cdk.examples.demo.CreateSessions</toolClass>
+          <toolClass>org.kitesdk.examples.demo.CreateSessions</toolClass>
           <args>
             <arg>$${workflowInput}</arg> <!-- double dollar to escape, since this property comes from the Oozie coordinator, it's not a Maven property -->
           </args>
@@ -100,27 +100,27 @@
   <dependencies>
 
     <dependency>
-      <groupId>com.cloudera.cdk.examples</groupId>
+      <groupId>org.kitesdk.examples</groupId>
       <artifactId>demo-core</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.cloudera.cdk</groupId>
-      <artifactId>cdk-data-core</artifactId>
-      <version>${cdk-version}</version>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-core</artifactId>
+      <version>${kite-version}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.cloudera.cdk</groupId>
-      <artifactId>cdk-data-crunch</artifactId>
-      <version>${cdk-version}</version>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-crunch</artifactId>
+      <version>${kite-version}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.cloudera.cdk</groupId>
-      <artifactId>cdk-data-hcatalog</artifactId>
-      <version>${cdk-version}</version>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-hcatalog</artifactId>
+      <version>${kite-version}</version>
     </dependency>
 
     <dependency>

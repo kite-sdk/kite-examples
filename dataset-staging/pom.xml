@@ -20,16 +20,16 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.cloudera.cdk.examples</groupId>
+  <groupId>org.kitesdk.examples</groupId>
   <artifactId>dataset-staging</artifactId>
   <version>0.9.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>CDK Dataset Staging Example</name>
+  <name>Kite Dataset Staging Example</name>
 
   <properties>
-    <!-- Keep this updated to the latest CDK release! -->
-    <cdk-version>0.9.1-SNAPSHOT</cdk-version>
+    <!-- Keep this updated to the latest Kite release! -->
+    <kite-version>0.9.1-SNAPSHOT</kite-version>
   </properties>
 
   <build>
@@ -51,9 +51,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.cloudera.cdk</groupId>
-      <artifactId>cdk-data-core</artifactId>
-      <version>${cdk-version}</version>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-core</artifactId>
+      <version>${kite-version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "event",
-  "namespace": "com.cloudera.cdk.examples.logging",
+  "namespace": "org.kitesdk.examples.logging",
   "doc": "An application event",
   "fields": [
     {

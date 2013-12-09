@@ -1,6 +1,6 @@
 {
   "name": "Session",
-  "namespace": "com.cloudera.cdk.examples.demo.event",
+  "namespace": "org.kitesdk.examples.demo.event",
   "type": "record",
   "doc": "A session derived from a standard event log.",
   "fields": [

@@ -23,7 +23,7 @@
   <artifactId>demo-core</artifactId>
 
   <parent>
-    <groupId>com.cloudera.cdk.examples</groupId>
+    <groupId>org.kitesdk.examples</groupId>
     <artifactId>demo</artifactId>
     <version>0.9.1-SNAPSHOT</version>
   </parent>
@@ -57,9 +57,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.cloudera.cdk</groupId>
-      <artifactId>cdk-data-core</artifactId>
-      <version>${cdk-version}</version>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-core</artifactId>
+      <version>${kite-version}</version>
     </dependency>
   </dependencies>
 
