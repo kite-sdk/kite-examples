@@ -35,7 +35,7 @@ public class LoggingServlet extends HttpServlet {
     response.setContentType("text/html");
     PrintWriter pw = response.getWriter();
     pw.println("<html>");
-    pw.println("<head><title>CDK Example</title></title>");
+    pw.println("<head><title>Kite Example</title></title>");
     pw.println("<body>");
 
     String message = request.getParameter("message");

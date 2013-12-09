@@ -1,4 +1,4 @@
-CDK webapp logging example
+Kite webapp logging example
 ==========================
 
 This module provides an example of logging application events from a webapp to Hadoop
@@ -35,5 +35,5 @@ Then run the following program from the `logging` example to dump the contents
 of the dataset to the console:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.logging.ReadDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.ReadDataset"
 ```

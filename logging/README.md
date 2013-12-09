@@ -1,4 +1,4 @@
-CDK logging example
+Kite logging example
 =========================
 
 This module provides an example of logging application events to Hadoop via Flume, using
@@ -34,9 +34,9 @@ for further information.)
      value of the `tier1.sinks.sink-1.serializer` property from `org.apache.flume.serialization.AvroEventSerializer$Builder`
      to `org.apache.flume.sink.hdfs.AvroEventSerializer$Builder` since this version of Flume has a built-in HDFS sink for 
      writing Avro data files.
-   * If you are running __Flume 1.3.0 or earlier,__ you must instead use the CDK event serializer module to support writing 
+   * If you are running __Flume 1.3.0 or earlier,__ you must instead use the Kite event serializer module to support writing
      Flume events as Avro data files in HDFS.
-       * [Download the JAR file](https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.8.1/cdk-flume-avro-event-serializer-0.8.1.jar) (you may need to change the URL to reflect the CDK version you're using).
+       * [Download the JAR file](https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.8.1/cdk-flume-avro-event-serializer-0.8.1.jar) (you may need to change the URL to reflect the Kite version you're using).
        * Install that JAR file by copying it to the `/usr/lib/flume-ng/lib/` directory
 
 *   __Start a Flume agent__ 
@@ -67,7 +67,7 @@ The log data ends up in a dataset named "events". Before running the logger we n
 to create the dataset on the filesystem with the following command:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.logging.CreateDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.CreateDataset"
 ```
 
 You can see the dataset directory hierarchy in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events),
@@ -77,23 +77,24 @@ In particular, the schema for the events is stored in
 Now we can run the application to do the logging.
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.logging.App"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.App"
 ```
 
 The program writes 10 log events to the logger. The events are sent to the Flume agent
 over IPC, and the agent writes the events to the HDFS file sink. (Even though it is
 called the HDFS sink, it can actually write to any Hadoop filesystem,
-including the local filesystem.) Log4j is using the CDK's Flume [`Log4jAppender`](https://github.com/cloudera/cdk/blob/master/cdk-data/cdk-data-flume/src/main/java/org/apache/flume/clients/log4jappender/Log4jAppender.java)
-in the project's [`log4j.properties`](https://github.com/cloudera/cdk-examples/blob/master/logging/src/main/resources/log4j.properties)
+including the local filesystem.) Log4j is using Kite's Flume
+[`Log4jAppender`](https://github.com/kite-sdk/kite/blob/master/kite-data/kite-data-flume/src/main/java/org/kitesdk/data/flume/Log4jAppender.java)
+in the project's [`log4j.properties`](https://github.com/kite-sdk/kite-examples/blob/master/logging/src/main/resources/log4j.properties)
 
 The Flume sink will write a temporary file in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events).
 After a few seconds the file will be renamed so it no longer has the _.tmp_
-extension. If you don't see new files, make sure you have followed the [Setting up the QuickStart VM](https://github.com/cloudera/cdk-examples#setting-up-the-quickstart-vm)
+extension. If you don't see new files, make sure you have followed the [Setting up the QuickStart VM](https://github.com/kite-sdk/kite-examples#setting-up-the-quickstart-vm)
 directions.
 
 Run the following program to dump the contents of the dataset to the console:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.logging.ReadDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.ReadDataset"
 ```
 
