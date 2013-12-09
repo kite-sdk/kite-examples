@@ -18,10 +18,10 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-    <display-name>CDK Example</display-name>
+    <display-name>Kite Example</display-name>
     <servlet>
         <servlet-name>logging-servlet</servlet-name>
-        <servlet-class>com.cloudera.cdk.examples.demo.LoggingServlet</servlet-class>
+        <servlet-class>org.kitesdk.examples.demo.LoggingServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

@@ -37,7 +37,10 @@
       <plugin>
         <groupId>org.kitesdk</groupId>
         <artifactId>kite-maven-plugin</artifactId>
-      	<version>${kite-version}</version>
+        <version>${kite-version}</version>
+        <configuration>
+          <toolClass>org.kitesdk.examples.demo.CreateSessions</toolClass>
+        </configuration>
       </plugin>
     </plugins>
   </build>

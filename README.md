@@ -1,12 +1,12 @@
-# Cloudera Development Kit Examples
+# Kite SDK Examples
 
-The CDK Examples project provides examples of how to use the CDK.
+The Kite Examples project provides examples of how to use the Kite SDK.
 
 Each example is a standalone Maven module with associated documentation.
 
 ## Basic Examples
 
-* `dataset` is the closest to a HelloWorld example of CDK. It shows how to create datasets and perform streaming writes and reads over them.
+* `dataset` is the closest to a HelloWorld example of Kite. It shows how to create datasets and perform streaming writes and reads over them.
 * `dataset-hbase` shows how to store entities in HBase using the `RandomAccessDataset` API.
 * `dataset-staging` shows how to use two datasets to manage Parquet-formatted data
 * `logging` is an example of logging events from a command-line programs to Hadoop via Flume, using log4j as the logging API.
@@ -25,15 +25,15 @@ running locally. See the notes below for any initial setup steps you should take
 
 The current examples run on version 4.3.0 of the QuickStart VM.
 
-Checkout the latest [branch](https://github.com/cloudera/cdk-examples/branches) of this repository in the VM:
+Checkout the latest [branch](https://github.com/kite-sdk/kite-examples/branches) of this repository in the VM:
 
 ```bash
-git clone git://github.com/cloudera/cdk-examples.git
-cd cdk-examples
+git clone git://github.com/kite-sdk/kite-examples.git
+cd kite-examples
 git checkout <latest-branch>
 ```
 
-(Alternatively, if you want to use the master branch, then build the [CDK](https://github.com/cloudera/cdk) locally first.)
+(Alternatively, if you want to use the master branch, then build [Kite](https://github.com/kite-sdk/kite) locally first.)
 
 Then choose the example you want to try and refer to the README in the relevant subdirectory.
 

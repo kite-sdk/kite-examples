@@ -17,10 +17,10 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql" %>
 <html>
 <head>
-<title>CDK Demo</title>
+<title>Kite Demo</title>
 <head>
 <body>
-<h2>CDK Demo</h2>
+<h2>Kite Demo</h2>
 <p>
 Available reports:
 <p>

@@ -1,4 +1,4 @@
-# CDK End-to-End Demo
+# Kite End-to-End Demo
 
 This module provides an example of logging application events from a webapp to Hadoop
 via Flume (using log4j as the logging API), extracting session data from the events using
@@ -19,8 +19,8 @@ If you run into trouble, check out the [Troubleshooting section](../README.md#tr
   * Then run:
 
 ```bash
-git clone https://github.com/cloudera/cdk-examples.git
-cd cdk-examples
+git clone https://github.com/kite-sdk/kite-examples.git
+cd kite-examples
 git checkout <latest-branch>
 cd demo
 ```
@@ -57,7 +57,7 @@ for further information.) In Cloudera Manager,
   * Find the "flume1" service
   * Under the "Actions" drop-down on the right side, select "Restart"
 
-### __Install the CDK event serializer module__
+### __Install the Kite event serializer module__
 
 This is necessary
 since Flume 1.3.0 does not come with a HDFS sink that can write Avro data files.
@@ -145,21 +145,21 @@ The sessions dataset metadata is stored using HCatalog, which will allow us to q
 via Hive.
 
 ```bash
-mvn cdk:create-dataset \
-  -Dcdk.rootDirectory=/tmp/data \
-  -Dcdk.datasetName=events \
-  -Dcdk.avroSchemaFile=standard_event.avsc \
-  -Dcdk.hcatalog=false \
-  -Dcdk.partitionExpression='[year("timestamp", "year"), month("timestamp", "month"), day("timestamp", "day"), hour("timestamp", "hour"), minute("timestamp", "minute")]'
+mvn kite:create-dataset \
+  -Dkite.rootDirectory=/tmp/data \
+  -Dkite.datasetName=events \
+  -Dkite.avroSchemaFile=standard_event.avsc \
+  -Dkite.hcatalog=false \
+  -Dkite.partitionExpression='[year("timestamp", "year"), month("timestamp", "month"), day("timestamp", "day"), hour("timestamp", "hour"), minute("timestamp", "minute")]'
 
-mvn cdk:create-dataset \
-  -Dcdk.rootDirectory=/tmp/data \
-  -Dcdk.datasetName=sessions \
-  -Dcdk.avroSchemaFile=demo-core/src/main/avro/session.avsc
+mvn kite:create-dataset \
+  -Dkite.rootDirectory=/tmp/data \
+  -Dkite.datasetName=sessions \
+  -Dkite.avroSchemaFile=demo-core/src/main/avro/session.avsc
 ```
 
 A few comments about these commands. The schema for the `events` dataset,
-`standard_event.avsc`, is loaded from the classpath (it's in the CDK JAR),
+`standard_event.avsc`, is loaded from the classpath (it's in the Kite JAR),
 whereas the schema for `sessions` is a local file.
 
 The `--partition-expression` argument is used to specify how the data is partitioned.
@@ -168,8 +168,8 @@ Here we partition by time fields, using JEXL to specify the field partitioners.
 Note that you can drop the datasets if you created them on a previous attempt with:
 
 ```bash
-mvn cdk:drop-dataset -Dcdk.rootDirectory=/tmp/data -Dcdk.datasetName=events -Dcdk.hcatalog=false
-mvn cdk:drop-dataset -Dcdk.rootDirectory=/tmp/data -Dcdk.datasetName=sessions
+mvn kite:drop-dataset -Dkite.rootDirectory=/tmp/data -Dkite.datasetName=events -Dkite.hcatalog=false
+mvn kite:drop-dataset -Dkite.rootDirectory=/tmp/data -Dkite.datasetName=sessions
 ```
 
 You can check that the data directories were created, using Hue (login as `cloudera` if
@@ -207,14 +207,14 @@ Wait about 30 seconds for Flume to flush the events to the
 then run the Crunch job to generate derived session data from the events:
 
 ```bash
-(cd demo-crunch; mvn cdk:run-tool)
+(cd demo-crunch; mvn kite:run-tool)
 ```
 
-The `cdk:run-tool` Maven goal executes the `run` method of the `Tool`,
+The `kite:run-tool` Maven goal executes the `run` method of the `Tool`,
 in this case `CreateSessions`, which launches a Crunch job on the cluster.
 
 The `Tool` class to run, as well as the cluster settings, are found from the configuration
-of the `cdk-maven-plugin`.
+of the `kite-maven-plugin`.
 
 When it's complete you should see a file in [`/tmp/data/sessions`]
 (http://localhost:8888/filebrowser/#/tmp/data/sessions).
@@ -260,7 +260,7 @@ describe a workflow of actions; coordinator applications that run workflows base
 time and data triggers; and bundle applications that run batches of coordinator
 applications. An Oozie _job_ is the running instantiation of an Oozie _application_.
 
-The `cdk-maven-plugin` provides Maven goals for packaging, deploying,
+The `kite-maven-plugin` provides Maven goals for packaging, deploying,
 and running Oozie applications.
 
 Oozie applications are stored in HDFS to allow Oozie to access and run them, so
@@ -268,11 +268,11 @@ the first thing we do is deploy the Oozie application to HDFS.
 
 ```bash
 cd demo-oozie
-mvn cdk:deploy-app
+mvn kite:deploy-app
 ```
 
 The filesystem to deploy to is specified by the `deployFileSystem` setting for the
-`cdk-maven-plugin`. By default, Oozie applications are stored in the
+`kite-maven-plugin`. By default, Oozie applications are stored in the
 `/user/<user>/apps` directory on
 HDFS. You can navigate to this location using the
 [web interface](http://localhost:8888/filebrowser/#/user) to see if the
@@ -282,7 +282,7 @@ Before running an Oozie coordinator application, let's run a one-off workflow. T
 Oozie server to use is specified by `oozieUrl` in the plugin configuration.
 
 ```bash
-mvn cdk:run-app -Dcdk.applicationType=workflow
+mvn kite:run-app -Dkite.applicationType=workflow
 ```
 
 Monitor the workflow job using the [Oozie application in Hue](http://localhost:8888/oozie/list_oozie_workflows/).
@@ -293,7 +293,7 @@ Next, let's run a coordinator application that runs the workflow application onc
 every minute. Build the coordinator version of the app:
 
 ```bash
-mvn package cdk:deploy-app -Dcdk.applicationType=coordinator
+mvn package kite:deploy-app -Dkite.applicationType=coordinator
 ```
 
 We need to create events continuously, which we do by running the
@@ -307,7 +307,7 @@ of events to create, so it runs indefinitely.
 Now we can run the Oozie coordinator application.
 
 ```bash
-mvn cdk:run-app -Dcdk.applicationType=coordinator -Dstart="$(date -u +"%Y-%m-%dT%H:%MZ")"
+mvn kite:run-app -Dkite.applicationType=coordinator -Dstart="$(date -u +"%Y-%m-%dT%H:%MZ")"
 ```
 
 Monitor the coordinator and resulting workflow jobs using the [Oozie application in Hue](http://localhost:8888/oozie/list_oozie_coordinators).

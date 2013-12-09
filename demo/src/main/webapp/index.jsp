@@ -19,10 +19,10 @@
 --%>
 <html>
 <head>
-<title>CDK Demo</title>
+<title>Kite Demo</title>
 <head>
 <body>
-<h2>CDK Demo</h2>
+<h2>Kite Demo</h2>
 <p>
 Start by <a href="../demo-logging-webapp/">logging event messages</a> to HDFS via Flume.
 </p>
