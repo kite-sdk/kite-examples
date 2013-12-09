@@ -1,9 +1,9 @@
-# Cloudera Development Kit - Examples Module
+# Kite - Examples Module
 
-This module is a set of examples that demonstrate the `cdk-data` module, which
+This module is a set of examples that demonstrate the `kite-data` module, which
 makes manging data sets in Hadoop easy with a declarative API and good defaults
 based on Hadoop best practices.
-* Data sets you create with the CDK data API are ready to use with Hive,
+* Data sets you create with the Kite data API are ready to use with Hive,
   Impala, and Crunch.
 * Records are automatically compressed and stored in splittable files for
   Map/Reduce performance.
@@ -12,9 +12,9 @@ based on Hadoop best practices.
 
 ## Example - Hello World!
 
-The simplest example is ["Hello CDK"][hello-java]. In this example, we will
+The simplest example is ["Hello Kite"][hello-java]. In this example, we will
 create a data set, "hellos", that stores `Hello` objects. The `Hello` class is
-defined at the end of [`HelloCDK.java`][hello-java], and has a single field,
+defined at the end of [`HelloKite.java`][hello-java], and has a single field,
 `name`, and a method called `sayHello`. To create a `Dataset` for these, we need to:
 
 1. Create metadata that describes the data set (a `DatasetDescriptor`)
@@ -30,11 +30,11 @@ DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Hello.clas
 ```
 
 For step 2, we are going to use a repository in the local file system with data
-(and metadata) stored in `/tmp/hello-cdk`. We can open this repository with
+(and metadata) stored in `/tmp/hello-kite`. We can open this repository with
 this line:
 
 ```java
-DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-cdk");
+DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-kite");
 ```
 
 With the repository and descriptor, we can now create a dataset.
@@ -45,17 +45,17 @@ Dataset hellos = repo.create("hellos", descriptor);
 
 After creating the data set, the example creates a `Hello` object and writes it
 out. Then, it reads it back in, calls `sayHello`, and finally, deletes the data
-set. After you read through the rest of [`HelloCDK code`][hello-java], you can
+set. After you read through the rest of [`HelloKite code`][hello-java], you can
 run the example from the `dataset/` folder with this command:
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateProductDatasetPojo"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.HelloKite"
 ```
 
-[hello-java]: src/main/java/com/cloudera/cdk/examples/data/HelloCDK.java
+[hello-java]: src/main/java/org/kitesdk/examples/data/HelloKite.java
 
 ## Example - Products Dataset
 
-This example shows basic usage of the CDK Data API for performing streaming writes
+This example shows basic usage of the Kite Data API for performing streaming writes
 to (and reads from) a dataset.
 
 Build the code with:
@@ -67,7 +67,7 @@ mvn compile
 Then create the dataset with:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateProductDatasetPojo"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.CreateProductDatasetPojo"
 ```
 
 You can look at the files that were created in
@@ -77,13 +77,13 @@ Once we have created a dataset and written some data to it, the next thing to do
 read it back. We can do this with the `ReadProductDatasetPojo` program.
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadProductDatasetPojo"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadProductDatasetPojo"
 ```
 
 Finally, delete the dataset:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteProductDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteProductDataset"
 ```
 
 ### Using the local filesystem
@@ -95,7 +95,7 @@ If this is not the case, then you can change `fs.default.name` in
 Alternatively, you can pass in extra arguments to the command, as follows:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateProductDatasetPojo" \
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.CreateProductDatasetPojo" \
   -Dexec.args="-fs file:///"
 ```
 
@@ -115,9 +115,9 @@ we model a dataset of users rather than products.
 Run the following to use the generic writer and reader:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetGeneric"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteUserDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.CreateUserDatasetGeneric"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadUserDatasetGeneric"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteUserDataset"
 ```
 
 ### Partitioning
@@ -126,35 +126,35 @@ The API supports partitioning, so that records are written to different partitio
 according to the value of particular partition fields.
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetGenericPartitioned"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.CreateUserDatasetGenericPartitioned"
 ```
 
 You can see how partitioning affects the data layout by looking at the subdirectories
 created in [`/tmp/data/users`](http://localhost:8888/filebrowser/#/tmp/data/users).
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGenericOnePartition"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteUserDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadUserDatasetGeneric"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadUserDatasetGenericOnePartition"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteUserDataset"
 ```
 
 ### Parquet Columnar Format
 
 Parquet is a new columnar format for data. Columnar formats provide performance
-advantages over row-oriented formats like Avro data files (which is the default in CDK),
+advantages over row-oriented formats like Avro data files (which is the default in Kite),
 when the number of columns is large (typically dozens) and the typical queries that you perform
 over the data only retrieve a small number of the columns.
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateUserDatasetGenericParquet"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.CreateUserDatasetGenericParquet"
 ```
 
 You can see the parquet file extension for files in
 [`/tmp/data/users`](http://localhost:8888/filebrowser/#/tmp/data/users).
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteUserDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadUserDatasetGeneric"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteUserDataset"
 ```
 
 ### HCatalog
@@ -166,7 +166,7 @@ like Hive can make use of it.
 Run the following to create the dataset:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.CreateHCatalogUserDatasetGeneric"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.CreateHCatalogUserDatasetGeneric"
 ```
 
 Note: This example assumes a local (not embedded) metastore running on the local machine. You can
@@ -188,14 +188,14 @@ select * from users
 Alternatively, you can use the Java API to read the data:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadHCatalogUserDatasetGeneric"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadHCatalogUserDatasetGeneric"
 ```
 
 Deleting the dataset deletes the metadata from the metastore and the data from the
 filesystem:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteHCatalogUserDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteHCatalogUserDataset"
 ```
 
 ## Scala
@@ -215,6 +215,6 @@ scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')" src/main/scala/cre
 The Java examples can be used to read (and delete) the dataset written from Scala:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadUserDatasetGeneric"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DeleteUserDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadUserDatasetGeneric"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteUserDataset"
 ```

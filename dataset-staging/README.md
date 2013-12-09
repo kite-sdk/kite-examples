@@ -1,11 +1,11 @@
-# Cloudera Development Kit - Examples Module
+# Kite - Examples Module
 
-The Examples Module is a collection of CDK examples that demonstrate how the
-CDK can help you solve your problems using Hadoop.
+The Examples Module is a collection of Kite examples that demonstrate how
+Kite can help you solve your problems using Hadoop.
 
 ## Example - Staging data into persistent storage
 
-CDK Datasets can store data in [Parquet][par], which is a file format that
+Kite Datasets can store data in [Parquet][par], which is a file format that
 stores data organized by column rather than by record. Because Parquet files
 keep the data in contiguous chunks by column, appending new records to a
 dataset requires rewriting substantial portions of existing an file or
@@ -20,7 +20,7 @@ second step. This simulates an environment where log data is constantly being
 written (probably by Flume), and eventually gets stored in Parquet.
 
 [par]: http://parquet.io/
-[schema]: https://github.com/cloudera/cdk-examples/blob/staging-example/dataset-staging/src/main/resources/simple-log.avsc
+[schema]: https://github.com/kite-sdk/kite-examples/blob/staging-example/dataset-staging/src/main/resources/simple-log.avsc
 
 ### Creating the datasets
 
@@ -36,7 +36,7 @@ For simplicity, this example partitions the staging dataset by day.
 
 To create the two datasets, run `CreateStagedDataset`:
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.staging.CreateStagedDataset"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.staging.CreateStagedDataset"
 ```
 
 Now `tree` shows that there are two empty datasets in `/tmp/data`:
@@ -54,12 +54,12 @@ starting with timestamps 24 hours ago and each spaced 5 seconds apart. This is
 a little less than 24 hours worth of messages, so there should be messages for
 yesterday and today.
 
-This step is identical to writing data in the other dataset examples; the CDK
+This step is identical to writing data in the other dataset examples; Kite
 handles the partitioning logic set up when the tables were created.
 
 To generate these messages in your repository, run:
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.staging.GenerateSimpleLogs"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.staging.GenerateSimpleLogs"
 ```
 
 Using `tree` again, we can see that there are avro files for yesterday (the
@@ -89,7 +89,7 @@ closed last, after the partition is successfully deleted.
 To run `StagingToPersistentSerial`, run:
 
 ```bash
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.staging.StagingToPersistentSerial"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.staging.StagingToPersistentSerial"
 ```
 
 After the move completes, the repository should look like this:

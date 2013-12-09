@@ -1,33 +1,33 @@
 ## Working with existing data sets
 
 Sometimes you already have data in your cluster and would like to read it using
-CDK. This tutorial explains how to point CDK at your existing dataset and work
+Kite. This tutorial explains how to point Kite at your existing dataset and work
 with it, either to copy it into a recommended format or to use it as-is.
 
 ### Example data
 
-This example works with the MovieLens data set from the GroupLens Resarch
+This example works with the MovieLens data set from the GroupLens Research
 Project at the University of Minnesota. The data set is made of viewer ratings,
 1-5, of about 1600 movies. The data set is available from
 [GroupLens](http://grouplens.org/datasets/movielens/).
 
 This example uses the smallest dataset of 100,000 ratings. First, download the
 `ml-100k.zip` file and unpack it. That zip file contains a `u.data` file with
-all of the rating data and a `u.item` file with informationa about each movie.
+all of the rating data and a `u.item` file with information about each movie.
 To add these file to HDFS:
 
 1. Unzip the file: `unzip ml-100k.zip`
 2. Copy the `u.data` file into HDFS: `hadoop fs -copyFromLocal ml-100k/u.data`
 3. Copy the `u.item` file into HDFS: `hadoop fs -copyFromLocal ml-100k/u.item`
 
-### Configuring CDK Datasets
+### Configuring Kite Datasets
 
-The first step is to configure CDK so that it knows how to read the two data
+The first step is to configure Kite so that it knows how to read the two data
 files we just added. We do this by building a DatasetDescriptor with
 information about each data set and saving that description.
 
 The rating data has 4 columns: user id, movie id, rating, and time. All of
-these fields are integers, and we want CDK to read them as integers. We can
+these fields are integers, and we want Kite to read them as integers. We can
 create a Schema to describe the file using a SchemaBuilder:
 
 ```java
@@ -68,7 +68,7 @@ information, like location and format:
 DatasetDescriptor ratings = DatasetDescriptor.Builder()
     .location("hdfs:u.data")
     .format(Formats.CSV)
-    .property("cdk.csv.delimiter", "\t")
+    .property("kite.csv.delimiter", "\t")
     .schema(csvSchema)
     .build();
 ```
@@ -97,23 +97,23 @@ Schema movieSchema = SchemaBuilder.record("Movie")
 repo.create("movies", new DatasetDescriptor.Builder()
     .location("hdfs:u.item")
     .format(Formats.CSV)
-    .property("cdk.csv.delimiter", "|")
+    .property("kite.csv.delimiter", "|")
     .schema(movieSchema)
     .build());
 ```
 
-*This doesn't currently work becasue the files need to be in directories
+*This doesn't currently work because the files need to be in directories
 already under the repo root.* We need to fix this by allowing the user to pass
 a location to the FS repository. To get this working right now, just put the
 data files in directories named "movies" and "ratings" under the repository
 root.
 
-These steps are done in the `com.cloudera.cdk.examples.data.DescribeDatasets`
+These steps are done in the `org.kitesdk.examples.data.DescribeDatasets`
 program. You can run this and then read the movies using these commands:
 ```bash
 mvn compile
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.DescribeDatasets"
-mvn exec:java -Dexec.mainClass="com.cloudera.cdk.examples.data.ReadMovies"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DescribeDatasets"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadMovies"
 ```
 
 You should see information for each movie printed out:
@@ -125,7 +125,7 @@ Movie: {"movieId": 3, "title": "Four Rooms (1995)", "releaseDate": "01-Jan-1995"
 
 ### Working with partitioned data
 
-This will mainly describe how to express your partition strategy in CDK terms and go over using `DateFormatPartitioner`
+This will mainly describe how to express your partition strategy in Kite terms and go over using `DateFormatPartitioner`
 
 ### Reformatting a Dataset
 

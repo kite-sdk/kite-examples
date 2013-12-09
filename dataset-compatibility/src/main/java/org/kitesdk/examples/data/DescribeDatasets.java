@@ -28,7 +28,7 @@ public class DescribeDatasets extends Configured implements Tool {
     repo.create("ratings", new DatasetDescriptor.Builder()
 //        .location("hdfs:u.data")
         .format(Formats.CSV)
-        .property("cdk.csv.delimiter", "\t")
+        .property("kite.csv.delimiter", "\t")
         .schema(ratingSchema)
         .build());
 
@@ -50,7 +50,7 @@ public class DescribeDatasets extends Configured implements Tool {
     repo.create("movies", new DatasetDescriptor.Builder()
 //        .location("hdfs:u.item")
         .format(Formats.CSV)
-        .property("cdk.csv.delimiter", "|")
+        .property("kite.csv.delimiter", "|")
         .schema(movieSchema)
         .build());
 

@@ -15,13 +15,13 @@ import org.kitesdk.data.DatasetWriter;
 /**
  * Create a dataset then write and read from it.
  */
-public class HelloCDK extends Configured implements Tool {
+public class HelloKite extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a local filesystem dataset repository rooted at /tmp/hello-cdk
-    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-cdk");
+    // Construct a local filesystem dataset repository rooted at /tmp/hello-kite
+    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-kite");
 
     // Create a dataset of Hellos
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
@@ -33,8 +33,8 @@ public class HelloCDK extends Configured implements Tool {
     try {
       writer.open();
       
-      Hello cdk = new Hello("CDK");
-      writer.write(cdk);
+      Hello hello = new Hello("Kite");
+      writer.write(hello);
     } finally {
       writer.close();
     }
@@ -57,7 +57,7 @@ public class HelloCDK extends Configured implements Tool {
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new HelloCDK(), args);
+    int rc = ToolRunner.run(new HelloKite(), args);
     System.exit(rc);
   }
 }
