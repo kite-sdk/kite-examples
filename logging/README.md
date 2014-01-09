@@ -29,15 +29,12 @@ for further information.)
   <value>*</value>
 </property>
 ```
-*  __Configure Avro Event serializations for Flume__
-   * If you are running __Flume 1.4.0 or later__, edit the `flume.properties` file and change the 
-     value of the `tier1.sinks.sink-1.serializer` property from `org.apache.flume.serialization.AvroEventSerializer$Builder`
-     to `org.apache.flume.sink.hdfs.AvroEventSerializer$Builder` since this version of Flume has a built-in HDFS sink for 
-     writing Avro data files.
-   * If you are running __Flume 1.3.0 or earlier,__ you must instead use the Kite event serializer module to support writing
-     Flume events as Avro data files in HDFS.
-       * [Download the JAR file](https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.8.1/cdk-flume-avro-event-serializer-0.8.1.jar) (you may need to change the URL to reflect the Kite version you're using).
-       * Install that JAR file by copying it to the `/usr/lib/flume-ng/lib/` directory
+
+* If you are running __Flume 1.3.0 or earlier,__ you must instead use the Kite event serializer module to support writing
+   Flume events as Avro data files in HDFS.
+    * [Download the JAR file](https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.8.1/cdk-flume-avro-event-serializer-0.8.1.jar) (you may need to change the URL to reflect the Kite version you're using).
+    * Install that JAR file by copying it to the `/usr/lib/flume-ng/lib/` directory
+    * Change the value of the `tier1.sinks.sink-1.serializer` property from `org.apache.flume.sink.hdfs.AvroEventSerializer$Builder` to `org.apache.flume.serialization.AvroEventSerializer$Builder` since this version of Flume has a built-in HDFS sink for writing Avro data files.
 
 *   __Start a Flume agent__ 
     * First, check the value of the `tier1.sinks.sink-1.hdfs.proxyUser` in the `flume.properties` 

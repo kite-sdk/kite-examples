@@ -21,13 +21,16 @@ If you run into trouble, check out the [Troubleshooting section](../README.md#tr
 ```bash
 git clone https://github.com/kite-sdk/kite-examples.git
 cd kite-examples
-git checkout <latest-branch>
 cd demo
 ```
+
+If you are using a prepared Kite VM, the `git clone` command is already done for you.
 
 [getvm]: https://ccp.cloudera.com/display/SUPPORT/Cloudera+QuickStart+VM
 
 ## Configuring the VM
+
+If you are using a prepared Kite VM, these configuration steps are already done for you.
 
 ### __Enable Flume user impersonation__
 Flume needs to be able to impersonate the owner
@@ -51,27 +54,7 @@ for further information.) In Cloudera Manager,
 </property>
 ```
 
-* __(Re)Start the Flume agent__
-  * Click on the "Cloudera Manager" logo in the upper-left corner of CM, which
-    takes you to [CM services](http://localhost:7180/cmf/services/status)
-  * Find the "flume1" service
-  * Under the "Actions" drop-down on the right side, select "Restart"
-
-### __Install the Kite event serializer module__
-
-This is necessary
-since Flume 1.3.0 does not come with a HDFS sink that can write Avro data files.
-Note that the HDFS sink in Flume 1.4.0 can write Avro data files so this step is not
-needed for that version of Flume or later.
-
-```bash
-sudo wget https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar \
-  -P /usr/lib/flume-ng/lib/
-# or if wget is not available:
-( cd /usr/lib/flume-ng/lib/ ; sudo curl -O https://repository.cloudera.com/artifactory/libs-release-local/com/cloudera/cdk/cdk-flume-avro-event-serializer/0.4.0/cdk-flume-avro-event-serializer-0.4.0.jar ; )
-```
-
-### Configure the flume agent
+### __Configure the flume agent__
 
 * __Update the Flume agent configuration__
   * Click on the "Cloudera Manager" logo in the upper-left corner of CM, which
@@ -98,21 +81,11 @@ sharelib, by logging in to the VM and running:
 
 ```bash
 sudo -u oozie hadoop fs -put \
-  /usr/lib/hcatalog/share/hcatalog/hcatalog-core-0.5.0-cdh4.3.0.jar \
+  /usr/lib/hcatalog/share/hcatalog/hcatalog-core-0.5.0-cdh4.4.0.jar \
   /user/oozie/share/lib/hive
 ```
 
 Next: __Ensure Oozie is running__ From Cloudera Manager, start the Oozie service.
-
-###  __(Optional) Upgrade Impala__
-
-To use Impala in this example you need to be running
-Impala 1.1 or later. If the
-version of QuickStart VM you are running is earlier than Impala 1.1, you can upgrade it
-using [these instructions](http://www.cloudera.com/content/cloudera-content/cloudera-docs/Impala/latest/Installing-and-Using-Impala/ciiu_upgrading.html)
-Make sure you follow the instructions under the heading "To upgrade Impala in a
-Cloudera Managed environment, using parcels". You should also upgrade CDH at the same
-time.
 
 ## Building
 
