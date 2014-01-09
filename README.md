@@ -23,17 +23,16 @@ The easiest way to run the examples is on the
 which has all the necessary Hadoop services pre-installed, configured, and
 running locally. See the notes below for any initial setup steps you should take.
 
-The current examples run on version 4.3.0 of the QuickStart VM.
+The current examples run on version 4.4.0 of the QuickStart VM.
 
 Checkout the latest [branch](https://github.com/kite-sdk/kite-examples/branches) of this repository in the VM:
 
 ```bash
 git clone git://github.com/kite-sdk/kite-examples.git
 cd kite-examples
-git checkout <latest-branch>
 ```
 
-(Alternatively, if you want to use the master branch, then build [Kite](https://github.com/kite-sdk/kite) locally first.)
+If you are using a prepared Kite VM, the `git clone` command is already done for you.
 
 Then choose the example you want to try and refer to the README in the relevant subdirectory.
 
@@ -85,15 +84,24 @@ guest times are in sync. To synchronize the guest, login and type
 ## Working with the VM
 
 * __What are the usernames/passwords for the VM?__
-  * Cloudera manager: admin/admin
+  * Cloudera manager: 4.4.0: cloudera/cloudera, 4.3.0: admin/admin
+  * HUE: cloudera/cloudera
   * Login: cloudera/cloudera
 
 * __I can't find the file in VirtualBox (or VMWare)!__
-  * You probably need to unpack it: In Windows, install 7zip, _extract_ the
-    `.tar` file from the `.bz2`, then extract the VM files from the `.tar`. In
-    linux or mac, `cd` to where you copied the file and run
-    `tar xjf cloudera-quickstart-vm-4.3.0-cdk-vbox-1.0.0.tar.bz2`
-  * You should be able to add the extracted files to VirtualBox or VMWare
+  * You probably need to unpack it: In Windows, install 7zip, and _extract_ the
+    VM files from the `.7z` file. In linux or mac, `cd` to where you copied the
+    file and run `7zr e cloudera-quickstart-vm-4.3.0-kite-vbox-4.4.0.7z`
+  * You should be able to import the extracted files to VirtualBox or VMWare
+
+* __How do I open a `.ovf` file?__
+  * Install and open [VirtualBox][vbox] on your computer
+  * Under the menu "File", select "Import..."
+  * Navigate to where you unpacked the `.ovf` file and select it
+
+* __What is a `.vmdk` file?__
+  * The `.vmdk` file is the virtual machine disk image that accompanies a
+    `.ovf` file, which is a portable VM description.
 
 * __How do I open a `.vbox` file?__
   * Install and open [VirtualBox][vbox] on your computer
@@ -112,7 +120,7 @@ guest times are in sync. To synchronize the guest, login and type
     VirtualBox window
 
 * __Other problems__
-  * Using VirtualBox? Try the VMWare image.
-  * Using VMWare? Try the VirtualBox image.
+  * Using VirtualBox? Try using VMWare.
+  * Using VMWare? Try using VirtualBox.
 
 [vbox]: https://www.virtualbox.org/wiki/Downloads
