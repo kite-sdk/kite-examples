@@ -138,11 +138,11 @@ whereas the schema for `sessions` is a local file.
 The `--partition-expression` argument is used to specify how the data is partitioned.
 Here we partition by time fields, using JEXL to specify the field partitioners.
 
-Note that you can drop the datasets if you created them on a previous attempt with:
+Note that you can delete the datasets if you created them on a previous attempt with:
 
 ```bash
-mvn kite:drop-dataset -Dkite.rootDirectory=/tmp/data -Dkite.datasetName=events -Dkite.hcatalog=false
-mvn kite:drop-dataset -Dkite.rootDirectory=/tmp/data -Dkite.datasetName=sessions
+mvn kite:delete-dataset -Dkite.rootDirectory=/tmp/data -Dkite.datasetName=events -Dkite.hcatalog=false
+mvn kite:delete-dataset -Dkite.rootDirectory=/tmp/data -Dkite.datasetName=sessions
 ```
 
 You can check that the data directories were created, using Hue (login as `cloudera` if
