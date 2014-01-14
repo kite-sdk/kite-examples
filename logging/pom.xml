@@ -4,7 +4,7 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>logging</artifactId>
-  <version>0.10.1-SNAPSHOT</version>
+  <version>0.10.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>logging</name>
@@ -12,7 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.10.1-SNAPSHOT</kite-version>
+    <kite-version>0.10.2-SNAPSHOT</kite-version>
   </properties>
 
   <dependencies>

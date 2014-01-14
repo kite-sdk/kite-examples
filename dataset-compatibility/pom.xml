@@ -22,14 +22,14 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>dataset-compatibility</artifactId>
-  <version>0.10.1-SNAPSHOT</version>
+  <version>0.10.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Kite Dataset Compatibility Example</name>
 
   <properties>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.10.1-SNAPSHOT</kite-version>
+    <kite-version>0.10.2-SNAPSHOT</kite-version>
   </properties>
 
   <build>
