@@ -69,7 +69,7 @@ search for "wildcard", check the box, then save changes.
     * HDFS NameNode and DataNode
     * Hue server
     * MapReduce JobTracker
-* __Add a host entry for localhost.localdomain__ If you host computer does not have a
+* __Add a host entry for localhost.localdomain__ If your host computer does not have a
 mapping for `localhost.localdomain`, then add a line like the following to `/etc/hosts`
 ```
 127.0.0.1       localhost       localhost.localdomain
