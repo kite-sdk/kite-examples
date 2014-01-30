@@ -52,7 +52,8 @@ need to take to configure the QuickStart VM, listed below.
 
 * __Enable port forwarding__ For VirtualBox, open the Settings dialog for the VM,
 select the Network tab, and click the Port Forwarding button. Map the following ports -
-in each case the host port and the guest port should be the same.
+in each case the host port and the guest port should be the same. Also, your VM should
+not be running when you are making these changes.
     * 7180 (Cloudera Manager web UI)
     * 8020, 50010, 50020, 50070, 50075 (HDFS NameNode and DataNode)
     * 8021 (MapReduce JobTracker)
@@ -61,6 +62,17 @@ in each case the host port and the guest port should be the same.
     * 41415 (Flume agent)
     * 11000 (Oozie server)
     * 21050 (Impala JDBC port)
+
+If you have `VBoxManage` installed on your host machine, you can do this via command line
+as well. In bash, this would look something like:
+```bash
+# Set VM_NAME to the name of your VM as it appears in VirtualBox
+VM_NAME="QuickStart VM"
+PORTS="7180 8020 50010 50020 50070 50075 8021 8888 9083 41415 11000 21050"
+for port in $PORTS; do
+  VBoxManage modifyvm "$VM_NAME" --natpf1 "Rule $port,tcp,,$port,,$port"
+done
+```
 * __Bind daemons to the wildcard address__ Daemons that are accessed from the host need
 to listen on all network interfaces. In [Cloudera Manager]
 (http://localhost:7180/cmf/services/status) for each of the services listed below,
