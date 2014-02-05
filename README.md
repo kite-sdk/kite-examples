@@ -73,14 +73,6 @@ for port in $PORTS; do
   VBoxManage modifyvm "$VM_NAME" --natpf1 "Rule $port,tcp,,$port,,$port"
 done
 ```
-* __Bind daemons to the wildcard address__ Daemons that are accessed from the host need
-to listen on all network interfaces. In [Cloudera Manager]
-(http://localhost:7180/cmf/services/status) for each of the services listed below,
-select the service, click "View and Edit" under the Configuration tab then
-search for "wildcard", check the box, then save changes.
-    * HDFS NameNode and DataNode
-    * Hue server
-    * MapReduce JobTracker
 * __Add a host entry for localhost.localdomain__ If your host computer does not have a
 mapping for `localhost.localdomain`, then add a line like the following to `/etc/hosts`
 ```
