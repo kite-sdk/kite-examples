@@ -29,7 +29,7 @@
 
   <properties>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.10.2-SNAPSHOT</kite-version>
+    <kite-version>0.10.1-SNAPSHOT</kite-version>
   </properties>
 
   <build>
@@ -73,12 +73,12 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
-      <version>2.0.0-cdh4.3.0</version>
+      <version>2.0.0-cdh4.4.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.hcatalog</groupId>
       <artifactId>hcatalog-core</artifactId>
-      <version>0.5.0-cdh4.3.0</version>
+      <version>0.5.0-cdh4.4.0</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
