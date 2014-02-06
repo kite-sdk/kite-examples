@@ -35,7 +35,8 @@ public class WriteUserDataset extends Configured implements Tool {
         DatasetRepositories.openRandomAccess("repo:hbase:localhost.localdomain");
 
     // Load the users dataset
-    RandomAccessDataset<User> users = repo.load("users");
+    // Dataset is named [table].[entity]
+    RandomAccessDataset<User> users = repo.load("users.User");
 
     // Get an accessor for the dataset and write some users to it
     users.put(user("bill", "green"));

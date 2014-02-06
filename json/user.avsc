@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "User",
+  "doc": "A user record",
+  "fields": [
+    {
+      "name": "username",
+      "type": "string"
+    },
+    {
+      "name": "timestamp",
+      "type": "long"
+    },
+    {
+      "name": "favoriteColor",
+      "type": "string"
+    }
+  ]
+}

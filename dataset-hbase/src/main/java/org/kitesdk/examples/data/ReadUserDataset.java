@@ -37,14 +37,16 @@ public class ReadUserDataset extends Configured implements Tool {
         DatasetRepositories.openRandomAccess("repo:hbase:localhost.localdomain");
 
     // Load the users dataset
-    RandomAccessDataset<User> users = repo.load("users");
+    // Dataset is named [table].[entity]
+    RandomAccessDataset<User> users = repo.load("users.User");
 
     // Get an accessor for the dataset and look up a user by username
     Key key = new Key.Builder(users).add("username", "bill").build();
     System.out.println(users.get(key));
+    System.out.println("----");
 
-    // Get a reader for the dataset and read all the users
-    DatasetReader<User> reader = users.newReader();
+    // Get a reader for the dataset and read the users from "bill" onwards
+    DatasetReader<User> reader = users.from("username", "bill").newReader();
     try {
       reader.open();
       for (User user : reader) {

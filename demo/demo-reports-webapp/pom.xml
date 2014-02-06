@@ -70,7 +70,7 @@
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-jdbc</artifactId>
-      <version>0.10.0-cdh4.3.0</version>
+      <version>0.10.0-cdh4.4.0</version>
       <!-- exclude server-side parts of Hive dependencies that conflict with running in a webapp -->
       <exclusions>
         <exclusion>
