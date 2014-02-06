@@ -40,7 +40,7 @@
         <artifactId>avro-maven-plugin</artifactId>
         <version>1.7.5</version>
         <configuration>
-          <!-- <stringType>String</stringType> -->
+          <stringType>String</stringType>
           <createSetters>false</createSetters>
           <fieldVisibility>private</fieldVisibility>
         </configuration>
@@ -73,7 +73,7 @@
         <version>${kite-version}</version>
         <configuration>
           <repositoryUri>repo:hbase:localhost.localdomain</repositoryUri>
-          <datasetName>users</datasetName>
+          <datasetName>users.User</datasetName>
           <avroSchemaFile>src/main/avro/user.avsc</avroSchemaFile>
         </configuration>
       </plugin>
