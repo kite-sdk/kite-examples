@@ -53,10 +53,12 @@ public final class MyToLowerCaseBuilder implements CommandBuilder {
     
     private final String fieldName;
     private final boolean reverse;
+    private final Locale locale;
 
     public MyToLowerCase(CommandBuilder builder, Config config, Command parent, Command child, MorphlineContext context) {
       super(builder, config, parent, child, context);
       this.fieldName = getConfigs().getString(config, "field");
+      this.locale = getConfigs().getLocale(config, "locale", Locale.ROOT);
       this.reverse = getConfigs().getBoolean(config, "reverse", false);
       LOG.debug("fieldName: {}", fieldName);
       validateArguments();
@@ -75,7 +77,7 @@ public final class MyToLowerCaseBuilder implements CommandBuilder {
     
     /** Transforms the given input value to some output value */
     private Object transformFieldValue(Object value) {
-      String str = value.toString().toLowerCase(Locale.ROOT);
+      String str = value.toString().toLowerCase(locale);
       if (reverse) {
         str = new StringBuilder(str).reverse().toString();
       }
