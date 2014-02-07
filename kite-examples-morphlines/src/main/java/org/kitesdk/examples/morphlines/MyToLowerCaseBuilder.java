@@ -18,6 +18,7 @@ package org.kitesdk.examples.morphlines;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.ListIterator;
+import java.util.Locale;
 
 import org.kitesdk.morphline.api.Command;
 import org.kitesdk.morphline.api.CommandBuilder;
@@ -74,7 +75,7 @@ public final class MyToLowerCaseBuilder implements CommandBuilder {
     
     /** Transforms the given input value to some output value */
     private Object transformFieldValue(Object value) {
-      String str = value.toString().toLowerCase();
+      String str = value.toString().toLowerCase(Locale.ROOT);
       if (reverse) {
         str = new StringBuilder(str).reverse().toString();
       }
