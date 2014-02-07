@@ -28,7 +28,7 @@ mvn eclipse:eclipse
 It will also download and attach the jars of all transitive dependencies and their source code to the eclipse
 projects, so you can readily browse around the source of the entire call stack.
 * Then in eclipse do Menu `File/Import/Maven/Existing Maven Project/` on the root parent
-directory `~/kite-examples/kite-morphlines-examples` and select all submodules, then "Next" and "Finish".
+directory `~/kite-examples/kite-examples-morphlines` and select all submodules, then "Next" and "Finish".
 * You will see some maven project errors that keep eclipse from building the workspace because
 the eclipse maven plugin has some weird quirks and limitations. To work around this, next, disable
 the maven "Nature" by clicking on the project in the browser, right clicking on Menu
