@@ -67,6 +67,8 @@ public final class MyToLowerCaseBuilder implements CommandBuilder {
       while (iter.hasNext()) {
         iter.set(transformFieldValue(iter.next()));
       }
+      
+      // pass record to next command in chain:
       return super.doProcess(record);
     }
     
