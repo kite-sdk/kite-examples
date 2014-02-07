@@ -11,7 +11,7 @@ git clone https://github.com/kite-sdk/kite-examples.git
 cd kite-examples/kite-examples-morphlines
 #git checkout master
 #git checkout 0.11.0 # or whatever the latest version is
-mvn clean test
+mvn clean package
 ```
 
 ## Integrating with Eclipse
