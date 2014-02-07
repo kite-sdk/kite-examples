@@ -52,8 +52,8 @@ public final class MyToLowerCaseBuilder implements CommandBuilder {
   private static final class MyToLowerCase extends AbstractCommand {
     
     private final String fieldName;
-    private final boolean reverse;
     private final Locale locale;
+    private final boolean reverse;
 
     public MyToLowerCase(CommandBuilder builder, Config config, Command parent, Command child, MorphlineContext context) {
       super(builder, config, parent, child, context);
