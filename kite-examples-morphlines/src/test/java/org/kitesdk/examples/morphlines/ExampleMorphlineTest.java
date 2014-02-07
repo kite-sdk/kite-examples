@@ -149,6 +149,8 @@ public class ExampleMorphlineTest extends AbstractMorphlineTest {
   @Test
   @Ignore
   /** Crude quick n' dirty benchmark */
+  // Before running this disable debug logging 
+  // via log4j.logger.org.kitesdk.morphline=INFO in log4j.properties
   public void benchmarkJson() throws Exception {
     String morphlineConfigFile = "test-morphlines/readJson";
     long durationSecs = 20;
