@@ -82,6 +82,28 @@
           <showWarnings>true</showWarnings>
         </configuration>
       </plugin>
+      
+      <!-- Optionally, generate list of all needed jar files -->
+      <!--      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <includeScope>runtime</includeScope>
+              <excludeScope>provided</excludeScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      -->
+      
     </plugins>
 
     <pluginManagement>
