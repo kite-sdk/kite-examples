@@ -4,7 +4,7 @@ This module contains examples for how to unit test Morphline config files and cu
 
 ## Building
 
-This step builds the software from source.
+This step builds the software from source. It also runs the unit tests.
 
 ```bash
 git clone https://github.com/kite-sdk/kite-examples.git
@@ -12,6 +12,24 @@ cd kite-examples/kite-examples-morphlines
 #git checkout master
 #git checkout 0.11.0 # or whatever the latest version is
 mvn clean package
+```
+
+## Using the Maven CLI to run test data through a morphline
+
+* This section describes how to use the mvn CLI to run test data through a morphline config file. 
+* Here we use the simple [MorphlineDemo](https://github.com/kite-sdk/kite/blob/master/kite-morphlines/kite-morphlines-core/src/test/java/org/kitesdk/morphline/api/MorphlineDemo.java) class.
+
+```bash
+cd kite-examples/kite-examples-morphlines
+mvn compile exec:java -Dexec.mainClass="org.kitesdk.morphline.api.MorphlineDemo" -Dexec.args="src/test/resources/test-morphlines/addValues.conf src/test/resources/test-documents/email.txt" -Dexec.classpathScope=test
+```
+
+* The first parameter in `exec.args` above is the morphline config file and the remaining parameters specify one or more data files to run over. At least one data file is required.
+* To print diagnostic information such as the content of records as they pass through the morphline commands, consider enabling TRACE log level, for example by adding the following line to your 
+`src/test/resources/log4j.properties' file:
+
+```
+log4j.logger.org.kitesdk.morphline=TRACE
 ```
 
 ## Integrating with Eclipse
@@ -39,3 +57,4 @@ Eclipse, and junit works and passes from within Eclipse as well.
 then run Menu `Eclipse/Refresh Project`. No need to disable the Maven "Nature" again and again.
 * To run junit tests from within eclipse click on the project (e.g. `kite-examples-morphlines`)
 in the eclipse project explorer, right click, `Run As/JUnit Test`.
+
