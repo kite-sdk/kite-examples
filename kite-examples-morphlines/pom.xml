@@ -46,6 +46,16 @@
       <type>pom</type>
     </dependency>
 
+    <!-- If your commands only use the core library features (no Avro, no Json, no XML, no Solr, etc,
+         see http://kitesdk.org/docs/current/kite-morphlines/morphlinesReferenceGuide.html)
+         you can replace the kite-morphlines-all above with kite-morphlines-core, as follows:
+    <dependency>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-morphlines-core</artifactId>
+      <version>${kite-version}</version>
+    </dependency>
+    -->
+    
     <dependency>
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-morphlines-core</artifactId>
