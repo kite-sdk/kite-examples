@@ -36,7 +36,8 @@ If you are using a prepared Kite VM, these configuration steps are already done 
 Flume needs to be able to impersonate the owner
  of the dataset it is writing to. (This is like Unix `sudo`, see
 [Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
-for further information.) In Cloudera Manager,
+for further information.) This is already configured for Cloudera Manager 5 onwards.
+For earlier versions, in the Cloudera Manager web interface,
 * __Update the configuration__
   * Click on the "hdfs1" service in [CM services](http://localhost:7180/cmf/services/status)
   * Under the "Configuration" drop-down, select "View and Edit"
