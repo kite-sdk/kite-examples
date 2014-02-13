@@ -1,6 +1,10 @@
 # Kite - Morphlines Examples
 
 This module contains examples for how to unit test Morphline config files and custom Morphline commands.
+For details consult the `pom.xml` build file, 
+as well as the Morphline config files in the `src/test/resources/test-morphlines` directory, 
+as well as the test data files in the `src/test/resources/test-documents` directory, 
+as well as the example custom morphline command implementations in the `src/main/java/` directory tree.
 
 ## Building
 
