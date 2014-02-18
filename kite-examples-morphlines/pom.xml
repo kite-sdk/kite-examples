@@ -114,6 +114,8 @@
       </plugin>
       -->
       
+      <!-- Also consider running 'mvn dependency:tree' to print which jar depends on which other jar -->
+      
     </plugins>
 
     <pluginManagement>
