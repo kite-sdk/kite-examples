@@ -24,7 +24,7 @@
 
   <properties>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.11.0</kite-version>
+    <kite-version>0.12.0</kite-version>
   </properties>
 
   <repositories>
