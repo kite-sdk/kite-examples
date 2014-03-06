@@ -85,8 +85,8 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
   
 ## Get to work
 
-1. Put your input file into the `resources/test-documents` directory, as a sibling to `simpleCSV.txt`
-2. Change the Java unit test code method `ExampleMorphlineTest.testSimpleCSV()` to use that file by replacing `simpleCSV.txt` with your file.
+1. Put your sample input data file into the `resources/test-documents` directory, as a sibling to `simpleCSV.txt`
+2. Change the Java unit test code method `ExampleMorphlineTest.testSimpleCSV()` to use that sample input data file by replacing `simpleCSV.txt` with said file.
 3. Now start adding commands to the `simpleCSV.conf` morphlines file in the `resources/test-morphlines` directory
   1. You can use a different morphlines file, just put it in the same directory
      as `simpleCSV.conf` and load it in the test by changing the `createMorphline` call.
