@@ -78,43 +78,40 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
 
 ##  Play around a bit _before_ changing anything!
 
-1a. Set some breakpoints and examine the Record for instance.
-1b. Examine the contents of the two Records.
-1c. Change one of the Asserts to insure failure to see what that looks like.
-1d. Skip all this of course if you're already familiar with jUnit etc.
+1. Set some breakpoints and examine the Record for instance.
+2. Examine the contents of the two Records.
+3. Change one of the Asserts to insure failure to see what that looks like.
+4. Skip all this of course if you're already familiar with jUnit etc.
   
 ## Get to work
 
-2a. Put your input file in to `resources/test-documents`, a sibling to `simpleCSV.txt`
-2b. Change the Java code to use that file by replacing `simpleCSV.txt` with your file.
-2c. Now start adding commands to the `simpleCSV.conf` morphlines file in the `resources/test-morphlines` directory
-  2c.a. You can use a different morphlines file, just put it in the same directory
-       as simpleCSV.conf and load it in the test by changing the `createMorphline` call.
-2d. In the simpleCSV.conf file, you'll see a SOLR_HOME_DIR variable. That points to the
+1. Put your input file in to `resources/test-documents`, a sibling to `simpleCSV.txt`
+2. Change the Java code to use that file by replacing `simpleCSV.txt` with your file.
+3. Now start adding commands to the `simpleCSV.conf` morphlines file in the `resources/test-morphlines` directory
+  1. You can use a different morphlines file, just put it in the same directory
+     as simpleCSV.conf and load it in the test by changing the `createMorphline` call.
+4. In the simpleCSV.conf file, you'll see a SOLR_HOME_DIR variable. That points to the
     resources/solr/collection1.conf directory (the .conf if implied). This is where your 
     Solr schema must live. As you add morphline commands to put new fields into the record,
     you'll _probably_ be changing the schema as well by adding those fields.
-  2d.1. If you examine your records and don't see fields that you _know_ you put in,
-      it's quite likely that you didn't add the to the schema and the Morphlines command
-      sanitizeUnknownSolrFields took the field out.
-2e. Pedantic recommendation: Just add one or two Morphlines commands at a time, adding
+  1. If you examine your records and don't see fields that you _know_ you put in,
+     it's quite likely that you didn't add the to the schema and the Morphlines command
+     sanitizeUnknownSolrFields took the field out.
+5. Pedantic recommendation: Just add one or two Morphlines commands at a time, adding
     lots of things at once is an easy way to get lost.
     
 ## Notice several things about the current simpleCSV.conf file.
 
-3a. Actually adding the record to Solr is commented out. We don't need the
-    complications of setting that up too at this stage.
-3b. Near the bottom of the Morphlines config file, there are the import statements,
-    one for kite and one for the cdk. Use the kite one! The pom is set up for kite. 
-    The cdk import is there for reference for use with CDH 4.
+1. Actually adding the record to Solr is commented out. We don't need the
+   complications of setting that up too at this stage.
+2. Near the bottom of the Morphlines config file, there are the import statements,
+   one for kite and one for the cdk. Use the kite one! The pom is set up for kite. 
+   The cdk import is there for reference for use with CDH 4.
 
 ## Deploy to Flume or MR
 
-Once this all runs to your satisfaction, copy the morphlines config 
-(and possibly the Solr schema file if you've modified it) to your Flume or MR 
-configuration and give it a spin.
-
-4a. It's probably useful to just copy/paste the bits in the “commands” section of 
+1. Once this all runs to your satisfaction, copy the morphlines config (and possibly the Solr schema file if you've modified it) to your Flume or MR configuration and give it a spin.
+2. It's probably useful to just copy/paste the bits in the “commands” section of 
     the morphlines configuration. Otherwise be careful to modify the SOLR_LOCATOR and 
     (perhaps) import statements to reflect your setup.
 
