@@ -87,17 +87,17 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
 
 1. Put your sample input data file into the `resources/test-documents` directory, as a sibling to `simpleCSV.txt`
 2. Change the Java unit test code method `ExampleMorphlineTest.testSimpleCSV()` to use that sample input data file by replacing `simpleCSV.txt` with said file.
-3. Now start adding commands to the `simpleCSV.conf` morphlines file in the `resources/test-morphlines` directory
-  1. You can use a different morphlines file, just put it in the same directory
+3. Now start adding commands to the `simpleCSV.conf` morphline config file in the `resources/test-morphlines` directory
+  1. You can use a different morphline config file, just put it in the same directory
      as `simpleCSV.conf` and load it in the test by changing the `createMorphline` call.
 4. In the `simpleCSV.conf` file, you'll see a `SOLR_HOME_DIR` variable. That points to the
     `resources/solr/collection1/conf` directory (the /conf is implied). This is where your 
     Solr `schema.xml` file must live. As you add morphline commands to put new fields into the record,
     you'll _probably_ be changing the schema as well by adding those fields.
   1. If you examine your records and don't see fields that you _know_ you put in,
-     it's quite likely that you didn't add them to the `schema.xml` file and thus the Morphlines command
-     `sanitizeUnknownSolrFields` took the field out.
-5. Pedantic recommendation: Just add one or two Morphlines commands at a time, adding
+     it's quite likely that you didn't add them to the `schema.xml` file and thus the morphline command
+     `sanitizeUnknownSolrFields` removed the field.
+5. Pedantic recommendation: Just add one or two morphline commands at a time, adding
     lots of things at once is an easy way to get lost.
     
 ## Notice several things
@@ -105,13 +105,13 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
 1. Notice several things about the current `simpleCSV.conf` file.
 2. Actually adding the record to Solr is commented out. We don't need the
    complications of setting that up too at this stage.
-3. Near the top of the Morphlines config file, there are the import statements,
-   one for kite and one for the cdk. Use the kite one! The pom is set up for kite (e.g. for use with CDH 5). 
-   The cdk import is there for reference (e.g. for use with CDH 4).
+3. Near the top of the morphline config file, there are the import statements,
+   one for Kite and one for the CDK. Use the Kite one! The pom is set up for Kite (e.g. for use with CDH 5). 
+   The CDK import is there for reference (e.g. for use with CDH 4).
 
 ## Deploy to Flume or MapReduce
 
-1. Once this all runs to your satisfaction, copy the morphlines config (and possibly the Solr schema file if you've modified it) to your Flume or MapReduce configuration and give it a spin.
+1. Once this all runs to your satisfaction, copy the morphline config (and possibly the Solr schema file if you've modified it) to your Flume or MapReduce configuration and give it a spin.
 2. It's probably useful to just copy/paste the bits in the "commands" section of 
     the morphlines configuration. Otherwise be careful to modify the SOLR_LOCATOR and 
     (perhaps) import statements to reflect your setup.
