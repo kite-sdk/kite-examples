@@ -200,8 +200,6 @@ public class ExampleMorphlineTest extends AbstractMorphlineTest {
       Record record = new Record();
       record.put(Fields.ATTACHMENT_BODY, bytes);      
       collector.reset();
-      startSession();
-      assertEquals(1, collector.getNumStartEvents());
       assertTrue(morphline.process(record));    
       iters++;
     }
