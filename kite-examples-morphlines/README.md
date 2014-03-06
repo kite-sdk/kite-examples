@@ -63,3 +63,15 @@ then run Menu `Eclipse/Refresh Project`. No need to disable the Maven "Nature" a
 * To run junit tests from within eclipse click on the project (e.g. `kite-examples-morphlines`)
 in the eclipse project explorer, right click, `Run As/JUnit Test`.
 
+## Integrating with IntelliJ
+
+* This section describes how to integrate the codeline with IntelliJ.
+* Build the software as described above. 
+* Open the `pom.xml` file in IntelliJ. This should create the entire project in the IDE. You
+  do not need to "import the project" or anything like that, just `file>>open` and pick the
+  `pom.xml` file.
+  * You may have to select `build>>rebuild` project to get all the dependencies.
+  * You may have to build the project externally via `mvn test` to resolve dependencies.  
+* In IntelliJ, you should be able to right-click on the `ExampleMorphlineTest.java` file and see a 
+   choice to "Run ExampleMorphlineTest" or "Debug ExampleMorphlineTest" to run the unit test and see
+   the magic green bar.

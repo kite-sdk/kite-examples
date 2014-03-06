@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.kitesdk.morphline.api.AbstractMorphlineTest;
 import org.kitesdk.morphline.api.Record;
 import org.kitesdk.morphline.base.Fields;
+import org.kitesdk.morphline.base.Notifications;
 
 import com.google.common.io.Files;
 
@@ -136,6 +137,39 @@ public class ExampleMorphlineTest extends AbstractMorphlineTest {
     in.close();
   }
 
+  @Test
+  public void testSimpleCSV() throws Exception {
+    morphline = createMorphline("test-morphlines/simpleCSV");
+
+    Notifications.notifyBeginTransaction(morphline);
+
+    InputStream in = new FileInputStream(new File(RESOURCES_DIR + "/test-documents/simpleCSV.txt"));
+    Record record = new Record();
+    record.put(Fields.ATTACHMENT_BODY, in);
+    record.put(Fields.ATTACHMENT_MIME_TYPE, "text/plain");
+
+    // Actually process the input file.
+    assertTrue(morphline.process(record));
+
+    assertEquals(collector.getRecords().size(), 2);
+    Record rec = collector.getRecords().get(0);
+
+    // Since id and timestamp vary with run, just see if they have anything in them
+    assertTrue(rec.get("id").toString().length() > 5);
+    assertTrue(rec.get("timestamp").toString().length() > 5);
+    assertEquals(rec.get("text").toString(), "[text for body]");
+
+    // Now look at second record
+    rec = collector.getRecords().get(1);
+
+    assertTrue(rec.get("id").toString().length() > 5);
+    assertTrue(rec.get("timestamp").toString().length() > 5);
+    assertEquals(rec.get("text").toString(), "[second record]");
+
+    in.close();
+    Notifications.notifyCommitTransaction(morphline);
+  }
+  
   @Test
   public void testMyLowerCase() throws Exception {
     morphline = createMorphline("test-morphlines/myToLowerCase");    
