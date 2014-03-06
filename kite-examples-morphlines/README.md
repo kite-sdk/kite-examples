@@ -105,7 +105,7 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
 1. Notice several things about the current `simpleCSV.conf` file.
 2. Actually adding the record to Solr is commented out. We don't need the
    complications of setting that up too at this stage.
-3. Near the bottom of the Morphlines config file, there are the import statements,
+3. Near the top of the Morphlines config file, there are the import statements,
    one for kite and one for the cdk. Use the kite one! The pom is set up for kite (e.g. for use with CDH 5). 
    The cdk import is there for reference (e.g. for use with CDH 4).
 
