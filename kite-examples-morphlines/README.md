@@ -92,10 +92,10 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
      as `simpleCSV.conf` and load it in the test by changing the `createMorphline` call.
 4. In the `simpleCSV.conf` file, you'll see a `SOLR_HOME_DIR` variable. That points to the
     `resources/solr/collection1/conf` directory (the /conf if implied). This is where your 
-    Solr schema must live. As you add morphline commands to put new fields into the record,
+    Solr `schema.xml` file must live. As you add morphline commands to put new fields into the record,
     you'll _probably_ be changing the schema as well by adding those fields.
   1. If you examine your records and don't see fields that you _know_ you put in,
-     it's quite likely that you didn't add the to the schema and the Morphlines command
+     it's quite likely that you didn't add them to the `schema.xml` file and thus the Morphlines command
      `sanitizeUnknownSolrFields` took the field out.
 5. Pedantic recommendation: Just add one or two Morphlines commands at a time, adding
     lots of things at once is an easy way to get lost.
