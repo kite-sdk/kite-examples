@@ -91,7 +91,7 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
   1. You can use a different morphlines file, just put it in the same directory
      as `simpleCSV.conf` and load it in the test by changing the `createMorphline` call.
 4. In the `simpleCSV.conf` file, you'll see a `SOLR_HOME_DIR` variable. That points to the
-    `resources/solr/collection1/conf` directory (the /conf if implied). This is where your 
+    `resources/solr/collection1/conf` directory (the /conf is implied). This is where your 
     Solr `schema.xml` file must live. As you add morphline commands to put new fields into the record,
     you'll _probably_ be changing the schema as well by adding those fields.
   1. If you examine your records and don't see fields that you _know_ you put in,
