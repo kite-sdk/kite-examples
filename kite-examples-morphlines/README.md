@@ -85,13 +85,13 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
   
 ## Get to work
 
-1. Put your input file in to `resources/test-documents`, a sibling to `simpleCSV.txt`
-2. Change the Java code to use that file by replacing `simpleCSV.txt` with your file.
+1. Put your input file into the `resources/test-documents` directory, as a sibling to `simpleCSV.txt`
+2. Change the Java unit test code to use that file by replacing `simpleCSV.txt` with your file.
 3. Now start adding commands to the `simpleCSV.conf` morphlines file in the `resources/test-morphlines` directory
   1. You can use a different morphlines file, just put it in the same directory
      as simpleCSV.conf and load it in the test by changing the `createMorphline` call.
-4. In the simpleCSV.conf file, you'll see a SOLR_HOME_DIR variable. That points to the
-    resources/solr/collection1.conf directory (the .conf if implied). This is where your 
+4. In the `simpleCSV.conf` file, you'll see a `SOLR_HOME_DIR` variable. That points to the
+    `resources/solr/collection1/conf` directory (the /conf if implied). This is where your 
     Solr schema must live. As you add morphline commands to put new fields into the record,
     you'll _probably_ be changing the schema as well by adding those fields.
   1. If you examine your records and don't see fields that you _know_ you put in,
@@ -102,17 +102,17 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
     
 ## Notice several things
 
-1. Notice several things about the current simpleCSV.conf file.
+1. Notice several things about the current `simpleCSV.conf` file.
 2. Actually adding the record to Solr is commented out. We don't need the
    complications of setting that up too at this stage.
 3. Near the bottom of the Morphlines config file, there are the import statements,
-   one for kite and one for the cdk. Use the kite one! The pom is set up for kite. 
-   The cdk import is there for reference for use with CDH 4.
+   one for kite and one for the cdk. Use the kite one! The pom is set up for kite (e.g. for use with CDH 5). 
+   The cdk import is there for reference (e.g. for use with CDH 4).
 
-## Deploy to Flume or MR
+## Deploy to Flume or MapReduce
 
-1. Once this all runs to your satisfaction, copy the morphlines config (and possibly the Solr schema file if you've modified it) to your Flume or MR configuration and give it a spin.
-2. It's probably useful to just copy/paste the bits in the “commands” section of 
+1. Once this all runs to your satisfaction, copy the morphlines config (and possibly the Solr schema file if you've modified it) to your Flume or MapReduce configuration and give it a spin.
+2. It's probably useful to just copy/paste the bits in the "commands" section of 
     the morphlines configuration. Otherwise be careful to modify the SOLR_LOCATOR and 
     (perhaps) import statements to reflect your setup.
 
