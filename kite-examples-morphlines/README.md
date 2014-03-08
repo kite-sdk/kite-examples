@@ -111,7 +111,7 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
 
 ## Deploy to Flume or MapReduce or HBase Indexer
 
-1. Once this all runs to your satisfaction, copy the morphline config (and possibly the Solr schema file if you've modified it) to your Flume or MapReduce configuration and give it a spin.
+1. Once this all runs to your satisfaction, copy the morphline config (and possibly the Solr schema file if you've modified it) to your Flume or MapReduce or HBase Indexer configuration and give it a spin.
 2. It's probably useful to just copy/paste the bits in the "commands" section of 
     the morphlines configuration. Otherwise be careful to modify the SOLR_LOCATOR and 
     (perhaps) import statements to reflect your setup.
