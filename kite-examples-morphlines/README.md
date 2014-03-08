@@ -63,25 +63,26 @@ then run Menu `Eclipse/Refresh Project`. No need to disable the Maven "Nature" a
 * To run junit tests from within eclipse click on the project (e.g. `kite-examples-morphlines`)
 in the eclipse project explorer, right click, `Run As/JUnit Test`.
 
-## Integrating with IntelliJ
+## Integrating with IntelliJ IDEA
 
 * This section describes how to integrate the codeline with IntelliJ.
 * Build the software as described above. 
 * Open the `pom.xml` file in IntelliJ. This should create the entire project in the IDE. You
-  do not need to "import the project" or anything like that, just `file>>open` and pick the
+  do not need to "Import the project" or anything like that, just do `File>>Open` and pick the
   `pom.xml` file.
   * You may have to select `build>>rebuild` project to get all the dependencies.
   * You may have to build the project externally via `mvn test` to resolve dependencies.  
-* In IntelliJ, you should be able to right-click on the `ExampleMorphlineTest.java` file and see a 
-   choice to "Run ExampleMorphlineTest" or "Debug ExampleMorphlineTest" to run the unit test and see
-   the magic green bar.
+* In IntelliJ, you should be able to right-click on the `testSimpleCSV()` method inside the `ExampleMorphlineTest.java` file and see a
+  choice to "Run testSimpleCSV" or "Debug testSimpleCSV" to run the unit test and see the magic green bar.
+* To run all unit tests contained in the `ExampleMorphlineTest` class right-click on the `ExampleMorphlineTest.java` file
+  and choose "Run ExampleMorphlineTest" or "Debug ExampleMorphlineTest".
 
 ##  Play around a bit _before_ changing anything!
 
-1. Set some breakpoints and examine the Record for instance.
-2. Examine the contents of the two Records.
+1. Set some breakpoints and examine the morphline record.
+2. Examine the contents of the two sample input file records.
 3. Change one of the Asserts to insure failure to see what that looks like.
-4. Skip all this of course if you're already familiar with jUnit etc.
+4. Skip all this of course if you're already familiar with JUnit etc.
   
 ## Get to work
 
