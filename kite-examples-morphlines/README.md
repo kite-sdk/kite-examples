@@ -109,7 +109,7 @@ in the eclipse project explorer, right click, `Run As/JUnit Test`.
    one for Kite and one for the CDK. Use the Kite one! The pom is set up for Kite (e.g. for use with CDH 5). 
    The CDK import is there for reference (e.g. for use with CDH 4).
 
-## Deploy to Flume or MapReduce
+## Deploy to Flume or MapReduce or HBase Indexer
 
 1. Once this all runs to your satisfaction, copy the morphline config (and possibly the Solr schema file if you've modified it) to your Flume or MapReduce configuration and give it a spin.
 2. It's probably useful to just copy/paste the bits in the "commands" section of 
