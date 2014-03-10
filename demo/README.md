@@ -75,17 +75,6 @@ then make sure you change the value of the `proxyUser` setting in the agent
 configuration to the user that you are logged in as. Save changes,
 then start the Flume agent.
 
-### __Set up Hive Oozie sharelib__
-
-Add the HCatalog Core JAR to the Hive Oozie
-sharelib, by logging in to the VM and running:
-
-```bash
-sudo -u oozie hadoop fs -put \
-  /usr/lib/hcatalog/share/hcatalog/hcatalog-core-0.5.0-cdh4.4.0.jar \
-  /user/oozie/share/lib/hive
-```
-
 Next: __Ensure Oozie is running__ From Cloudera Manager, start the Oozie service.
 
 ## Building
