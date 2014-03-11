@@ -15,7 +15,8 @@ for further information.)
     * In Cloudera Manager, for the [HDFS service](http://localhost:7180/cmf/services/status),
       click "View and Edit" under the Configuration tab then
       search for "Cluster-wide Configuration Safety Valve for core-site.xml"
-      and add the following XML snippet, then save changes. 
+      and add the following XML snippet, then save changes. This is already configured
+      for Cloudera Manager 5 onwards.
     * If not using Cloudera Manager, just add the following XML snippet to your `core-site.xml` file 
       and then restart the HDFS daemons.
 

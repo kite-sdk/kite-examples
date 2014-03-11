@@ -63,15 +63,15 @@ mvn exec:java -Dexec.mainClass="org.kitesdk.examples.staging.GenerateSimpleLogs"
 ```
 
 Using `tree` again, we can see that there are avro files for yesterday (the
-4th) and today (the 5th).
+5th) and today (the 6th).
 ```
-/tmp/data
+/tmp/data/
 ├── logs
 └── logs-staging
-    ├── day=04
-    │   └── 1378422612083-10.avro
-    └── day=05
-        └── 1378422612173-10.avro
+    ├── day=05
+    │   └── 754ed830-074d-4600-8e89-24f6eb5ffc9b.avro
+    └── day=06
+        └── c547e07a-e47b-4ba1-a588-15abbbdb9631.avro
 ```
 
 ### Moving data from staging to persistent
@@ -81,28 +81,27 @@ persistent dataset. The data in yesterday's partition is no longer being
 written and is safe to move because the partition scheme is now writing today's
 data to the next partition.
 
-The `StagingToPersistentSerial` program moves yesterday's partition by opening
+The `StagingToPersistent` program moves yesterday's partition by opening
 the staging dataset, selecting the partition for yesterday, and then writing
-each record. To avoid duplicating data, the persistent dataset's writer is
-closed last, after the partition is successfully deleted.
+each record in parallel using Crunch.
 
-To run `StagingToPersistentSerial`, run:
+To run `StagingToPersistent`, run:
 
 ```bash
-mvn exec:java -Dexec.mainClass="org.kitesdk.examples.staging.StagingToPersistentSerial"
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.staging.StagingToPersistent"
 ```
 
 After the move completes, the repository should look like this:
 ```
-/tmp/data
+/tmp/data/
 ├── logs
-│   └── year=2013
-│       └── month=09
-│           └── day=04
-│               └── 1378423563347-10.parquet
+│   └── year=2014
+│       └── month=03
+│           └── day=05
+│               └── bd0a2ae1-5e35-48cf-8419-cd8332c0441f.parquet
 └── logs-staging
-    └── day=05
-        └── 1378422612173-10.avro
+    └── day=06
+        └── c547e07a-e47b-4ba1-a588-15abbbdb9631.avro
 ```
 
 Keep in mind that this example uses a day-long partitions to keep the finished
@@ -114,8 +113,3 @@ Finish up by deleting the data with
 ```bash
 rm -rf /tmp/data/logs /tmp/data/logs-staging
 ```
-
-## To do
-
-* Staging to persistent in parallel - this requires a crunch parquet sink,
-see [CDK-247](https://issues.cloudera.org/browse/CDK-247).

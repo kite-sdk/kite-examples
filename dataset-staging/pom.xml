@@ -22,14 +22,14 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>dataset-staging</artifactId>
-  <version>0.11.0</version>
+  <version>0.11.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Kite Dataset Staging Example</name>
 
   <properties>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.11.0</kite-version>
+    <kite-version>0.11.1-SNAPSHOT</kite-version>
   </properties>
 
   <build>
@@ -55,6 +55,13 @@
       <artifactId>kite-data-core</artifactId>
       <version>${kite-version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-crunch</artifactId>
+      <version>${kite-version}</version>
+    </dependency>
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -65,6 +72,13 @@
       <artifactId>avro</artifactId>
       <version>1.7.5</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.crunch</groupId>
+      <artifactId>crunch-core</artifactId>
+      <version>0.9.0-hadoop2</version>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
@@ -74,6 +88,18 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <version>1.6.1</version>
+    </dependency>
+
+    <!-- missing from Hadoop, and needed for local job runner -->
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mapreduce-client-common</artifactId>
+      <version>2.0.0-cdh4.3.0</version>
     </dependency>
   </dependencies>
 

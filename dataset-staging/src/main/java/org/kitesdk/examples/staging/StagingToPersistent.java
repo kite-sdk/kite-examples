@@ -16,35 +16,38 @@
 package org.kitesdk.examples.staging;
 
 import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetReader;
 import org.kitesdk.data.DatasetRepositories;
 import org.kitesdk.data.DatasetRepository;
 import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.PartitionKey;
 import org.kitesdk.data.PartitionStrategy;
+import org.kitesdk.data.crunch.CrunchDatasets;
+import java.io.Serializable;
 import java.util.Calendar;
+import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
-import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.util.Tool;
+import org.apache.crunch.DoFn;
+import org.apache.crunch.Emitter;
+import org.apache.crunch.PCollection;
+import org.apache.crunch.PipelineResult;
+import org.apache.crunch.Target;
+import org.apache.crunch.io.ReadableSource;
+import org.apache.crunch.types.avro.Avros;
+import org.apache.crunch.util.CrunchTool;
 import org.apache.hadoop.util.ToolRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class StagingToPersistentSerial extends Configured implements Tool {
-
-  private static final Logger LOG = LoggerFactory.getLogger(StagingToPersistentSerial.class);
-
+@SuppressWarnings("deprecation")
+public class StagingToPersistent extends CrunchTool implements Serializable {
   public static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
-  @SuppressWarnings("deprecation")
   private static PartitionKey getPartitionKey(Dataset data, long timestamp) {
     // need to build a fake record to get a partition key
     final GenericRecordBuilder builder = new GenericRecordBuilder(
         data.getDescriptor().getSchema());
     builder.set("timestamp", timestamp);
     builder.set("level", "INFO");
-    builder.set("component", "StagingToPersistentSerial");
+    builder.set("component", "StagingToPersistent");
     builder.set("message", "Fake log message");
 
     // access the partition strategy, which produces keys from records
@@ -70,33 +73,36 @@ public class StagingToPersistentSerial extends Configured implements Tool {
     // the source dataset: yesterday's partition in the staging area
     final Dataset<GenericRecord> staging = repo.load("logs-staging");
     final PartitionKey yesterday = getPartitionKey(staging, yesterdayTimestamp);
-    final DatasetReader<GenericRecord> reader = staging
-        .getPartition(yesterday, false).newReader();
+    System.out.println(yesterday);
 
-    try {
-      reader.open();
+    ReadableSource<GenericRecord> source = CrunchDatasets.asSource
+        (staging.getPartition(yesterday, false), GenericRecord.class);
 
-      // yep, it's that easy.
-      for (GenericRecord record : reader) {
-        writer.write(record);
+    PCollection<GenericRecord> logsStaging = read(source);
+    PCollection<GenericData.Record> logs = logsStaging.parallelDo(
+        new DoFn<GenericRecord, GenericData.Record>() {
+      @Override
+      public void process(GenericRecord genericRecord, Emitter<GenericData.Record>
+          emitter) {
+        emitter.emit((GenericData.Record) genericRecord);
       }
+    }, Avros.generics(persistent.getDescriptor().getSchema()));
 
-    } finally {
-      reader.close();
-      writer.flush();
+    getPipeline().write(logs, CrunchDatasets.asTarget(persistent), Target.WriteMode.APPEND);
+
+    PipelineResult result = run();
+
+    if (result.succeeded()) {
+      // remove the source data partition from staging
+      staging.dropPartition(yesterday);
+      return 0;
+    } else {
+      return 1;
     }
-
-    // remove the source data partition from staging
-    staging.dropPartition(yesterday);
-
-    // if the above didn't throw an exception, commit the data
-    writer.close();
-
-    return 0;
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new StagingToPersistentSerial(), args);
+    int rc = ToolRunner.run(new StagingToPersistent(), args);
     System.exit(rc);
   }
 }

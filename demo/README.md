@@ -36,7 +36,8 @@ If you are using a prepared Kite VM, these configuration steps are already done 
 Flume needs to be able to impersonate the owner
  of the dataset it is writing to. (This is like Unix `sudo`, see
 [Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
-for further information.) In Cloudera Manager,
+for further information.) This is already configured for Cloudera Manager 5 onwards.
+For earlier versions, in the Cloudera Manager web interface,
 * __Update the configuration__
   * Click on the "hdfs1" service in [CM services](http://localhost:7180/cmf/services/status)
   * Under the "Configuration" drop-down, select "View and Edit"
@@ -73,17 +74,6 @@ for further information.) In Cloudera Manager,
 then make sure you change the value of the `proxyUser` setting in the agent
 configuration to the user that you are logged in as. Save changes,
 then start the Flume agent.
-
-### __Set up Hive Oozie sharelib__
-
-Add the HCatalog Core JAR to the Hive Oozie
-sharelib, by logging in to the VM and running:
-
-```bash
-sudo -u oozie hadoop fs -put \
-  /usr/lib/hcatalog/share/hcatalog/hcatalog-core-0.5.0-cdh4.4.0.jar \
-  /user/oozie/share/lib/hive
-```
 
 Next: __Ensure Oozie is running__ From Cloudera Manager, start the Oozie service.
 
