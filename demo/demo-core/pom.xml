@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.kitesdk.examples</groupId>
     <artifactId>demo</artifactId>
-    <version>0.12.0</version>
+    <version>0.12.1-SNAPSHOT</version>
   </parent>
 
   <packaging>jar</packaging>

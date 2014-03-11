@@ -22,14 +22,14 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>dataset-staging</artifactId>
-  <version>0.12.0</version>
+  <version>0.12.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Kite Dataset Staging Example</name>
 
   <properties>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.12.0</kite-version>
+    <kite-version>0.12.1-SNAPSHOT</kite-version>
   </properties>
 
   <build>
