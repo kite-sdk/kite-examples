@@ -149,7 +149,7 @@ container; for this example we'll start an embedded Tomcat instance using Maven:
 mvn tomcat7:run
 ```
 
-Navigate to [http://localhost:8080/demo-logging-webapp/](http://localhost:8080/demo-logging-webapp/),
+Navigate to [http://localhost:8034/demo-logging-webapp/](http://localhost:8034/demo-logging-webapp/),
 which presents you with a very simple web page for sending messages.
 
 The message events are sent to the Flume agent
@@ -191,7 +191,7 @@ impala-shell -q 'invalidate metadata'
 ```
 
 One way to explore the results is by using the `demo-reports-webapp` running at
-[http://localhost:8080/demo-reports-webapp/](http://localhost:8080/demo-reports-webapp/),
+[http://localhost:8034/demo-reports-webapp/](http://localhost:8034/demo-reports-webapp/),
 which uses JDBC to run Impala queries for a few pre-defined reports. (Note this only
 work with Impala 1.1 or later, see instructions above.)
 

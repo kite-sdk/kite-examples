@@ -26,6 +26,6 @@ do
       -o /dev/null \
       -b $COOKIE_FILE \
       -c $COOKIE_FILE \
-      "http://localhost:8080/demo-logging-webapp/send?user_id=$USER_ID&message=message$i"
+      "http://localhost:8034/demo-logging-webapp/send?user_id=$USER_ID&message=message$i"
   sleep $(printf ".%02ds" $(( $RANDOM % 1000 )))
 done

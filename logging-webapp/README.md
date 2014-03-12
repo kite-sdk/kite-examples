@@ -20,7 +20,7 @@ this example we'll start an embedded Tomcat instance using Maven:
 mvn tomcat7:run
 ```
 
-Navigate to [http://localhost:8080/logging-webapp/](http://localhost:8080/logging-webapp/),
+Navigate to [http://localhost:8034/logging-webapp/](http://localhost:8034/logging-webapp/),
 which presents you with a very simple web page for sending messages.
 
 The message events are sent to the Flume agent

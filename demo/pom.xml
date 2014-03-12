@@ -39,6 +39,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Keep this updated to the latest Kite release! -->
     <kite-version>0.12.1-SNAPSHOT</kite-version>
+    <maven.tomcat.port>8034</maven.tomcat.port>
   </properties>
 
   <repositories>
