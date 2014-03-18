@@ -71,7 +71,7 @@ public class StagingToPersistent extends CrunchTool implements Serializable {
     writer.open();
 
     // the source dataset: yesterday's partition in the staging area
-    final Dataset<GenericRecord> staging = repo.load("logs-staging");
+    final Dataset<GenericRecord> staging = repo.load("logs_staging");
     final PartitionKey yesterday = getPartitionKey(staging, yesterdayTimestamp);
     System.out.println(yesterday);
 

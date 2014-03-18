@@ -46,7 +46,7 @@ public class CreateStagedDataset extends Configured implements Tool {
         .build());
 
     // create an Avro dataset to temporarily hold data
-    repo.create("logs-staging", new DatasetDescriptor.Builder()
+    repo.create("logs_staging", new DatasetDescriptor.Builder()
         .format(Formats.AVRO)
         .schemaUri(schemaURI)
         .partitionStrategy(new PartitionStrategy.Builder()
