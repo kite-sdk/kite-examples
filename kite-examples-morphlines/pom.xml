@@ -17,14 +17,14 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>kite-examples-morphlines</artifactId>
-  <version>0.12.1-SNAPSHOT</version>
+  <version>0.12.1</version>
   <packaging>jar</packaging>
 
   <name>Kite Morphlines Examples</name>
 
   <properties>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.12.1-SNAPSHOT</kite-version>
+    <kite-version>0.12.1</kite-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
