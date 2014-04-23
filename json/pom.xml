@@ -22,7 +22,7 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo</artifactId>
-  <version>0.12.2-SNAPSHOT</version>
+  <version>0.13.0</version>
   <packaging>pom</packaging>
 
   <name>json</name>
@@ -30,7 +30,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.12.2-SNAPSHOT</kite-version>
+    <kite-version>0.13.0</kite-version>
   </properties>
 
   <repositories>

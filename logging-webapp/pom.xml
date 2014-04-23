@@ -4,7 +4,7 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>logging-webapp</artifactId>
-  <version>0.12.2-SNAPSHOT</version>
+  <version>0.13.0</version>
   <packaging>war</packaging>
 
   <name>logging-webapp</name>
@@ -12,7 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.12.2-SNAPSHOT</kite-version>
+    <kite-version>0.13.0</kite-version>
     <maven.tomcat.port>8034</maven.tomcat.port>
   </properties>
 
