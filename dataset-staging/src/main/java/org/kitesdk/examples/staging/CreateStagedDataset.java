@@ -15,16 +15,14 @@
  */
 package org.kitesdk.examples.staging;
 
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.Datasets;
-import org.kitesdk.data.Formats;
-import org.kitesdk.data.PartitionStrategy;
 import java.net.URI;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.Formats;
+import org.kitesdk.data.PartitionStrategy;
 
 public class CreateStagedDataset extends Configured implements Tool {
 

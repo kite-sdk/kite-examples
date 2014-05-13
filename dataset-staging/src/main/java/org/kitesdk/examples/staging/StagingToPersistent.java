@@ -17,8 +17,8 @@ package org.kitesdk.examples.staging;
 
 import java.io.Serializable;
 import java.lang.System;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.GenericRecord;
+import java.util.Calendar;
+import java.util.TimeZone;
 import org.apache.crunch.PCollection;
 import org.apache.crunch.PipelineResult;
 import org.apache.crunch.Target;
@@ -34,11 +34,9 @@ import static org.apache.avro.generic.GenericData.Record;
 
 @SuppressWarnings("deprecation")
 public class StagingToPersistent extends CrunchTool implements Serializable {
-  public static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
-
   @Override
   public int run(String[] args) throws Exception {
-    final long startOfToday = startOfDay(System.currentTimeMillis());
+    final long startOfToday = startOfDay();
 
     // the destination dataset
     Dataset<Record> persistent = Datasets.<Record, Dataset<Record>>
@@ -67,8 +65,13 @@ public class StagingToPersistent extends CrunchTool implements Serializable {
     }
   }
 
-  private long startOfDay(long timestamp) {
-    return (timestamp / DAY_IN_MILLIS) * DAY_IN_MILLIS;
+  private long startOfDay() {
+    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    return cal.getTimeInMillis();
   }
 
   public static void main(String... args) throws Exception {
