@@ -15,6 +15,7 @@
  */
 package org.kitesdk.examples.staging;
 
+import java.util.TimeZone;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetRepositories;
 import org.kitesdk.data.DatasetRepository;
@@ -35,7 +36,7 @@ public class GenerateSimpleLogs extends Configured implements Tool {
 
   private static final Logger LOG = LoggerFactory.getLogger(GenerateSimpleLogs.class);
 
-  public static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
+  private static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
   public static final String[] LOG_LEVELS = new String[]
       {"DEBUG", "INFO", "WARN", "ERROR"};
@@ -63,7 +64,7 @@ public class GenerateSimpleLogs extends Configured implements Tool {
         staging.getDescriptor().getSchema());
 
     // generate timestamps 1 second apart starting... now
-    final Calendar now = Calendar.getInstance();
+    final Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     final long yesterday = now.getTimeInMillis() - DAY_IN_MILLIS;
 
     try {
