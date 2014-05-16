@@ -19,12 +19,15 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo-logging-webapp</artifactId>
+  <version>0.14.1-SNAPSHOT</version>
 
   <parent>
-    <groupId>org.kitesdk.examples</groupId>
-    <artifactId>demo</artifactId>
+    <groupId>org.kitesdk</groupId>
+    <artifactId>kite-app-parent</artifactId>
     <version>0.14.1-SNAPSHOT</version>
+    <relativePath></relativePath>
   </parent>
 
   <packaging>war</packaging>
@@ -32,92 +35,32 @@
   <name>demo-logging-webapp</name>
 
   <dependencies>
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-core</artifactId>
-      <version>${kite-version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-json</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-client</artifactId>
-      <version>2.0.0-mr1-cdh4.4.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-hdfs</artifactId>
-      <version>2.0.0-cdh4.4.0</version>
-      <!-- exclude server-side parts of HDFS that conflict with running in a webapp -->
-      <exclusions>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jersey</groupId>
-          <artifactId>jersey-server</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.mortbay.jetty</groupId>
-          <artifactId>jetty</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.mortbay.jetty</groupId>
-          <artifactId>jetty-util</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.servlet.jsp</groupId>
-          <artifactId>jsp-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>tomcat</groupId>
-          <artifactId>jasper-runtime</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
+
     <dependency>
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-data-flume</artifactId>
-      <version>${kite-version}</version>
+      <version>${kite.version}</version>
     </dependency>
+
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>1.2.16</version>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <version>1.6.1</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
-      <version>1.7.5</version>
-    </dependency>
+
     <dependency>
       <groupId>javax</groupId>
       <artifactId>javaee-web-api</artifactId>
       <version>6.0</version>
       <scope>provided</scope>
     </dependency>
+
   </dependencies>
 
 </project>

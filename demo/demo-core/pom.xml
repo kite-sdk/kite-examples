@@ -20,12 +20,15 @@
 
   <modelVersion>4.0.0</modelVersion>
 
+  <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo-core</artifactId>
+  <version>0.14.1-SNAPSHOT</version>
 
   <parent>
-    <groupId>org.kitesdk.examples</groupId>
-    <artifactId>demo</artifactId>
+    <groupId>org.kitesdk</groupId>
+    <artifactId>kite-app-parent</artifactId>
     <version>0.14.1-SNAPSHOT</version>
+    <relativePath></relativePath>
   </parent>
 
   <packaging>jar</packaging>
@@ -37,30 +40,8 @@
       <plugin>
         <groupId>org.apache.avro</groupId>
         <artifactId>avro-maven-plugin</artifactId>
-        <version>1.7.5</version>
-        <configuration>
-          <stringType>String</stringType>
-          <createSetters>false</createSetters>
-          <fieldVisibility>private</fieldVisibility>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>schema</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-core</artifactId>
-      <version>${kite-version}</version>
-    </dependency>
-  </dependencies>
 
 </project>
