@@ -87,7 +87,8 @@ mvn install
 
 This creates the following artifacts:
 
-* a JAR file containing the compiled Avro specific schema `session.avsc` (in `demo-core`)
+* a JAR file containing the compiled Avro specific schemas `standard_event.avsc` and
+`session.avsc` (in `demo-core`)
 * a WAR file for the webapp that logs application events (in `demo-logging-webapp`)
 * a JAR file for running the Crunch job to transform events into sessions (in
 `demo-crunch`)
@@ -111,7 +112,7 @@ via Hive.
 mvn kite:create-dataset \
   -Dkite.rootDirectory=/tmp/data \
   -Dkite.datasetName=events \
-  -Dkite.avroSchemaFile=standard_event.avsc \
+  -Dkite.avroSchemaFile=demo-core/src/main/avro/standard_event.avsc \
   -Dkite.hcatalog=false \
   -Dkite.partitionExpression='[year("timestamp", "year"), month("timestamp", "month"), day("timestamp", "day"), hour("timestamp", "hour"), minute("timestamp", "minute")]'
 
@@ -121,9 +122,8 @@ mvn kite:create-dataset \
   -Dkite.avroSchemaFile=demo-core/src/main/avro/session.avsc
 ```
 
-A few comments about these commands. The schema for the `events` dataset,
-`standard_event.avsc`, is loaded from the classpath (it's in the Kite JAR),
-whereas the schema for `sessions` is a local file.
+A few comments about these commands. The schemas for the `events` and `sessions`
+datasets are loaded from local files.
 
 The `--partition-expression` argument is used to specify how the data is partitioned.
 Here we partition by time fields, using JEXL to specify the field partitioners.

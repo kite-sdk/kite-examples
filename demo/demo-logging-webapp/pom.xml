@@ -33,6 +33,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.kitesdk.examples</groupId>
+      <artifactId>demo-core</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-data-core</artifactId>
       <version>${kite-version}</version>
@@ -111,6 +116,12 @@
       <groupId>org.apache.avro</groupId>
       <artifactId>avro</artifactId>
       <version>1.7.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro-mapred</artifactId>
+      <version>1.7.5</version>
+      <classifier>hadoop2</classifier>
     </dependency>
     <dependency>
       <groupId>javax</groupId>
