@@ -27,7 +27,7 @@ written (probably by Flume), and eventually gets stored in Parquet.
 This example uses two datasets, one as a staging area where data is temporarily
 written and the other as a persistent store:
 
-* `logs-staging`: This dataset is in avro (record-based) format. It is
+* `logs_staging`: This dataset is in avro (record-based) format. It is
   partitioned by time, so that parts can be read, written to the persistent
   dataset, and then deleted.
 * `logs`: This is in Parquet format and is the persistent store.
@@ -43,7 +43,7 @@ Now `tree` shows that there are two empty datasets in `/tmp/data`:
 ```
 /tmp/data/
 ├── logs
-└── logs-staging
+└── logs_staging
 ```
 
 ### Adding log data to staging
@@ -67,7 +67,7 @@ Using `tree` again, we can see that there are avro files for yesterday (the
 ```
 /tmp/data/
 ├── logs
-└── logs-staging
+└── logs_staging
     ├── day=05
     │   └── 754ed830-074d-4600-8e89-24f6eb5ffc9b.avro
     └── day=06
@@ -99,7 +99,7 @@ After the move completes, the repository should look like this:
 │       └── month=03
 │           └── day=05
 │               └── bd0a2ae1-5e35-48cf-8419-cd8332c0441f.parquet
-└── logs-staging
+└── logs_staging
     └── day=06
         └── c547e07a-e47b-4ba1-a588-15abbbdb9631.avro
 ```
@@ -111,5 +111,5 @@ but a different partition scheme could be used instead.
 Finish up by deleting the data with
 
 ```bash
-rm -rf /tmp/data/logs /tmp/data/logs-staging
+rm -rf /tmp/data/logs /tmp/data/logs_staging
 ```
