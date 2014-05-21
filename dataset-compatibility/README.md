@@ -102,17 +102,22 @@ repo.create("movies", new DatasetDescriptor.Builder()
     .build());
 ```
 
-*This doesn't currently work because the files need to be in directories
-already under the repo root.* We need to fix this by allowing the user to pass
-a location to the FS repository. To get this working right now, just put the
-data files in directories named "movies" and "ratings" under the repository
-root.
+
 
 These steps are done in the `org.kitesdk.examples.data.DescribeDatasets`
-program. You can run this and then read the movies using these commands:
+program:
 ```bash
 mvn compile
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DescribeDatasets"
+```
+
+*The data files need to be in directories already under the repo root.* To get this
+working right now, just put the data files in directories named "movies" and "ratings"
+under the repository root, as follows, and then read the movies using these commands:
+
+```bash
+hadoop fs -mv u.item movies/u.item
+hadoop fs -mv u.data ratings/u.data
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadMovies"
 ```
 
