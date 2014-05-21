@@ -42,18 +42,15 @@ public class CreateSessions extends CrunchTool implements Serializable {
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a local filesystem dataset repository rooted at /tmp/data
-    DatasetRepository fsRepo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
-    // Construct an HCatalog dataset repository using external Hive tables
-    DatasetRepository hcatRepo = DatasetRepositories.open("repo:hive:/tmp/data");
+    // Construct an Hive dataset repository using external Hive tables
+    DatasetRepository repo = DatasetRepositories.open("repo:hive:/tmp/data");
 
     // Turn debug on while in development.
     getPipeline().enableDebug();
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
     // Load the events dataset and get the correct partition to sessionize
-    Dataset<StandardEvent> eventsDataset = fsRepo.load("events");
+    Dataset<StandardEvent> eventsDataset = repo.load("events");
     Dataset<StandardEvent> partition;
     if (args.length == 0 || (args.length == 1 && args[0].equals("LATEST"))) {
       partition = getLatestPartition(eventsDataset);
@@ -72,7 +69,7 @@ public class CreateSessions extends CrunchTool implements Serializable {
         .parallelDo(new MakeSession(), Avros.specifics(Session.class));
 
     // Write the sessions to the "sessions" Dataset
-    getPipeline().write(sessions, CrunchDatasets.asTarget(hcatRepo.load("sessions")),
+    getPipeline().write(sessions, CrunchDatasets.asTarget(repo.load("sessions")),
         Target.WriteMode.APPEND);
 
     return run().succeeded() ? 0 : 1;
