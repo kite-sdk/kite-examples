@@ -90,16 +90,9 @@ mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteProductDataset"
 
 __Note__: The above assumes that you are running against a single-node localhost HDFS
 installation, such as the one on the QuickStart VM.
-If this is not the case, then you can change `fs.default.name` in
-`src/main/resources/core-site.xml`, e.g. to `file:///` to use the local filesystem.
-Alternatively, you can pass in extra arguments to the command, as follows:
-
-```bash
-mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.CreateProductDatasetPojo" \
-  -Dexec.args="-fs file:///"
-```
-
-For the rest of the examples we will assume a single-node localhost HDFS installation.
+If this is not the case, then you can change the repository URI in the source files
+(e.g. `CreateProductDatasetPojo.java`) from `repo:hdfs:/tmp/data` to
+`repo:file:///tmp/data` to use the local filesystem.
 
 ### Generic records vs. POJOs
 
