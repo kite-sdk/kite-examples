@@ -55,17 +55,19 @@ mvn kite:delete-dataset
 Over time, the user model will likely change, as new properties are added,
 and old ones are no longer used. Schemas can be updated to a new version,
 as long as certain schema evolution rules are followed. We can see this by trying an
-update that is not allowed. Start by re-creating the dataset and writing some data:
+update that is not allowed. Start by re-creating the dataset and writing some data as
+before:
 
 ```bash
 mvn kite:create-dataset
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.WriteUserDataset"
 ```
 
-The copy the contents of _src/main/avro/user.avsc.invalid-migration_ to
+Then copy the contents of _src/main/avro/user.avsc.invalid-migration_ to
 _src/main/avro/user.avsc_, and try to update the dataset's schema:
 
 ```bash
+cp src/main/avro/user.avsc.invalid-migration src/main/avro/user.avsc
 mvn kite:update-dataset
 ```
 
@@ -77,6 +79,7 @@ default for the new field) to _src/main/avro/user.avsc_,
 and try to update the dataset's schema:
 
 ```bash
+cp src/main/avro/user.avsc.valid-migration src/main/avro/user.avsc
 mvn kite:update-dataset
 ```
 
