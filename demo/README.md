@@ -125,6 +125,13 @@ Next, we will create datasets using the `dataset` command, Kite's command-line
 interface. If you don't already have a copy, you can download it using the
 instructions in the [CLI tutorial](http://kitesdk.org/docs/current/usingkiteclicreatedataset.html#Preparation).
 
+If these datasets already exist, you can delete them with the following commands:
+
+```bash
+./dataset delete events --directory /tmp/data
+./dataset delete sessions --directory /tmp/data
+```
+
 To create the `sessions` dataset, run the `dataset create` command, passing in
 the session schema in HDFS.
 
@@ -161,18 +168,10 @@ partition strategy config file.
                         --directory /tmp/data
 ```
 
-Now the datasets are ready! But before we move on, there are a couple more things
-to know. The `dataset` command can also be used to show records in a dataset and
-can inspect or delete datasets. We can delete the datasets we just created using
-the following commands:
-
-```bash
-./dataset delete events
-./dataset delete sessions
-```
-
-The `dataset` command will also describe commands, options, and show examples
-by using `dataset help`.
+Now the datasets are ready! But before we move on, there are a couple more
+things to know. The `dataset` command can also be used to show records in a
+dataset and can inspect or delete datasets. The `dataset` command will also
+describe commands, options, and show examples by using `dataset help`.
 
 ### Create events
 
