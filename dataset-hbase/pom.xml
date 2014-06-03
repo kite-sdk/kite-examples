@@ -27,10 +27,11 @@
 
   <name>Kite Dataset HBase Examples</name>
 
-  <properties>
-    <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.14.2-SNAPSHOT</kite-version>
-  </properties>
+  <parent>
+    <groupId>org.kitesdk</groupId>
+    <artifactId>kite-app-parent-cdh4</artifactId>
+    <version>0.14.2-SNAPSHOT</version>
+  </parent>
 
   <build>
     <plugins>
@@ -38,20 +39,6 @@
       <plugin>
         <groupId>org.apache.avro</groupId>
         <artifactId>avro-maven-plugin</artifactId>
-        <version>1.7.5</version>
-        <configuration>
-          <stringType>String</stringType>
-          <createSetters>false</createSetters>
-          <fieldVisibility>private</fieldVisibility>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>schema</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
 
       <plugin>
@@ -70,7 +57,6 @@
       <plugin>
         <groupId>org.kitesdk</groupId>
         <artifactId>kite-maven-plugin</artifactId>
-        <version>${kite-version}</version>
         <configuration>
           <repositoryUri>repo:hbase:localhost.localdomain</repositoryUri>
           <datasetName>users.User</datasetName>
@@ -82,63 +68,29 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-core</artifactId>
-      <version>${kite-version}</version>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>${hadoop.log4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${hadoop.slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-hbase</artifactId>
-      <version>${kite-version}</version>
+      <artifactId>kite-hadoop-cdh4-dependencies</artifactId>
+      <version>${kite.version}</version>
+      <type>pom</type>
+      <scope>compile</scope> <!-- provide Hadoop dependencies -->
     </dependency>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>11.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
-      <version>1.7.5</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase</artifactId>
-      <version>0.94.6-cdh4.4.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-log4j12</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-client</artifactId>
-      <version>2.0.0-cdh4.4.0</version>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-hbase-cdh4-dependencies</artifactId>
+      <version>${kite.version}</version>
+      <type>pom</type>
+      <scope>compile</scope> <!-- provide HBase dependencies -->
     </dependency>
   </dependencies>
-
-  <repositories>
-    <repository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 
 </project>

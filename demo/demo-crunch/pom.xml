@@ -20,7 +20,9 @@
 
   <modelVersion>4.0.0</modelVersion>
 
+  <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo-crunch</artifactId>
+  <version>0.14.2-SNAPSHOT</version>
 
   <parent>
     <groupId>org.kitesdk.examples</groupId>
@@ -37,7 +39,6 @@
       <plugin>
         <groupId>org.kitesdk</groupId>
         <artifactId>kite-maven-plugin</artifactId>
-        <version>${kite-version}</version>
         <configuration>
           <toolClass>org.kitesdk.examples.demo.CreateSessions</toolClass>
         </configuration>
@@ -54,79 +55,28 @@
     </dependency>
 
     <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-core</artifactId>
-      <version>${kite-version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-crunch</artifactId>
-      <version>${kite-version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-hcatalog</artifactId>
-      <version>${kite-version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>11.0.2</version>
+      <version>${hadoop.guava.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
-      <version>1.7.5</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro-mapred</artifactId>
-      <version>1.7.5</version>
-      <classifier>hadoop2</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.crunch</groupId>
-      <artifactId>crunch-core</artifactId>
-      <version>0.9.0-hadoop2</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.avro</groupId>
-          <artifactId>avro-mapred</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.avro</groupId>
-          <artifactId>trevni-avro</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.avro</groupId>
-          <artifactId>trevni-core</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>${hadoop.log4j.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.6.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-client</artifactId>
-      <version>2.0.0-mr1-cdh4.4.0</version>
-      <scope>provided</scope> <!-- provided by mvn kite:run-tool and MR task classpath -->
+      <version>${hadoop.slf4j.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-exec</artifactId>
-      <version>0.10.0-cdh4.4.0</version>
+      <version>${kite.hive.version}</version>
+      <scope>compile</scope> <!-- provide Hive dependencies -->
     </dependency>
 
   </dependencies>

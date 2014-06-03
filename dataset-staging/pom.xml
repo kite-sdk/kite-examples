@@ -27,10 +27,11 @@
 
   <name>Kite Dataset Staging Example</name>
 
-  <properties>
-    <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.14.2-SNAPSHOT</kite-version>
-  </properties>
+  <parent>
+    <groupId>org.kitesdk</groupId>
+    <artifactId>kite-app-parent-cdh4</artifactId>
+    <version>0.14.2-SNAPSHOT</version>
+  </parent>
 
   <build>
     <plugins>
@@ -51,80 +52,28 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-core</artifactId>
-      <version>${kite-version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-crunch</artifactId>
-      <version>${kite-version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>11.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
-      <version>1.7.5</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro-mapred</artifactId>
-      <version>1.7.5</version>
-      <classifier>hadoop2</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.crunch</groupId>
-      <artifactId>crunch-core</artifactId>
-      <version>0.9.0-hadoop2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-client</artifactId>
-      <version>2.0.0-cdh4.4.0</version>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>${hadoop.log4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.6.1</version>
-    </dependency>
-
-    <!-- missing from Hadoop, and needed for local job runner -->
-    <dependency>
-      <groupId>commons-httpclient</groupId>
-      <artifactId>commons-httpclient</artifactId>
-      <version>3.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-codec</groupId>
-          <artifactId>commons-codec</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>${hadoop.slf4j.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-mapreduce-client-common</artifactId>
-      <version>2.0.0-cdh4.3.0</version>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-hadoop-cdh4-dependencies</artifactId>
+      <version>${kite.version}</version>
+      <type>pom</type>
+      <scope>compile</scope> <!-- provide Hadoop dependencies -->
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-exec</artifactId>
+      <version>${kite.hive.version}</version>
+      <scope>compile</scope> <!-- provide Hive dependencies -->
     </dependency>
   </dependencies>
-
-  <repositories>
-    <repository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
 </project>
