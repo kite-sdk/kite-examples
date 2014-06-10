@@ -26,7 +26,7 @@ required property is the schema (what the data looks like) and we can set that
 by using a Builder that automatically inspects the `Hello` class:
 
 ```java
-DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Hello.class).get();
+DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Hello.class).build();
 ```
 
 For step 2, we are going to use a repository in the local file system with data
