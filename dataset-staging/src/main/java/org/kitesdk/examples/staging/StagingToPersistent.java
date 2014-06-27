@@ -15,18 +15,16 @@
  */
 package org.kitesdk.examples.staging;
 
+import java.util.TimeZone;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetRepositories;
 import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.DatasetWriter;
-import org.kitesdk.data.PartitionKey;
-import org.kitesdk.data.PartitionStrategy;
+import org.kitesdk.data.View;
 import org.kitesdk.data.crunch.CrunchDatasets;
 import java.io.Serializable;
 import java.util.Calendar;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.generic.GenericRecordBuilder;
 import org.apache.crunch.DoFn;
 import org.apache.crunch.Emitter;
 import org.apache.crunch.PCollection;
@@ -37,46 +35,31 @@ import org.apache.crunch.types.avro.Avros;
 import org.apache.crunch.util.CrunchTool;
 import org.apache.hadoop.util.ToolRunner;
 
-@SuppressWarnings("deprecation")
 public class StagingToPersistent extends CrunchTool implements Serializable {
-  public static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
-
-  private static PartitionKey getPartitionKey(Dataset data, long timestamp) {
-    // need to build a fake record to get a partition key
-    final GenericRecordBuilder builder = new GenericRecordBuilder(
-        data.getDescriptor().getSchema());
-    builder.set("timestamp", timestamp);
-    builder.set("level", "INFO");
-    builder.set("component", "StagingToPersistent");
-    builder.set("message", "Fake log message");
-
-    // access the partition strategy, which produces keys from records
-    final PartitionStrategy partitioner = data.getDescriptor()
-        .getPartitionStrategy();
-
-    return partitioner.partitionKeyForEntity(builder.build());
-  }
 
   @Override
   public int run(String[] args) throws Exception {
     // open the repository
-    final DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
+    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
 
-    final Calendar now = Calendar.getInstance();
-    final long yesterdayTimestamp = now.getTimeInMillis() - DAY_IN_MILLIS;
+    final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    long midnight = cal.getTimeInMillis();
+    cal.add(Calendar.DATE, -1);
+    long yesterdayMidnight = cal.getTimeInMillis();
 
     // the destination dataset
-    final Dataset<GenericRecord> persistent = repo.load("logs");
-    final DatasetWriter<GenericRecord> writer = persistent.newWriter();
-    writer.open();
+    Dataset<GenericRecord> persistent = repo.load("logs");
 
     // the source dataset: yesterday's partition in the staging area
-    final Dataset<GenericRecord> staging = repo.load("logs_staging");
-    final PartitionKey yesterday = getPartitionKey(staging, yesterdayTimestamp);
-    System.out.println(yesterday);
+    Dataset<GenericRecord> staging = repo.load("logs_staging");
+    View<GenericRecord> yesterday = staging.from("timestamp", yesterdayMidnight)
+        .toBefore("timestamp", midnight);
 
-    ReadableSource<GenericRecord> source = CrunchDatasets.asSource
-        (staging.getPartition(yesterday, false), GenericRecord.class);
+    ReadableSource<GenericRecord> source = CrunchDatasets.asSource(yesterday, GenericRecord.class);
 
     PCollection<GenericRecord> logsStaging = read(source);
     PCollection<GenericData.Record> logs = logsStaging.parallelDo(
@@ -94,8 +77,7 @@ public class StagingToPersistent extends CrunchTool implements Serializable {
 
     if (result.succeeded()) {
       // remove the source data partition from staging
-      staging.dropPartition(yesterday);
-      return 0;
+      return yesterday.deleteAll() ? 0 : 1;
     } else {
       return 1;
     }
