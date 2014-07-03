@@ -15,90 +15,60 @@
  */
 package org.kitesdk.examples.staging;
 
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.DatasetWriter;
-import org.kitesdk.data.PartitionKey;
-import org.kitesdk.data.PartitionStrategy;
-import org.kitesdk.data.crunch.CrunchDatasets;
 import java.io.Serializable;
-import java.util.Calendar;
+import java.lang.System;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.generic.GenericRecordBuilder;
-import org.apache.crunch.DoFn;
-import org.apache.crunch.Emitter;
 import org.apache.crunch.PCollection;
 import org.apache.crunch.PipelineResult;
 import org.apache.crunch.Target;
 import org.apache.crunch.io.ReadableSource;
-import org.apache.crunch.types.avro.Avros;
 import org.apache.crunch.util.CrunchTool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Dataset;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.View;
+import org.kitesdk.data.crunch.CrunchDatasets;
+
+import static org.apache.avro.generic.GenericData.Record;
 
 @SuppressWarnings("deprecation")
 public class StagingToPersistent extends CrunchTool implements Serializable {
   public static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
-  private static PartitionKey getPartitionKey(Dataset data, long timestamp) {
-    // need to build a fake record to get a partition key
-    final GenericRecordBuilder builder = new GenericRecordBuilder(
-        data.getDescriptor().getSchema());
-    builder.set("timestamp", timestamp);
-    builder.set("level", "INFO");
-    builder.set("component", "StagingToPersistent");
-    builder.set("message", "Fake log message");
-
-    // access the partition strategy, which produces keys from records
-    final PartitionStrategy partitioner = data.getDescriptor()
-        .getPartitionStrategy();
-
-    return partitioner.partitionKeyForEntity(builder.build());
-  }
-
   @Override
   public int run(String[] args) throws Exception {
-    // open the repository
-    final DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
-
-    final Calendar now = Calendar.getInstance();
-    final long yesterdayTimestamp = now.getTimeInMillis() - DAY_IN_MILLIS;
+    final long startOfToday = startOfDay(System.currentTimeMillis());
 
     // the destination dataset
-    final Dataset<GenericRecord> persistent = repo.load("logs");
-    final DatasetWriter<GenericRecord> writer = persistent.newWriter();
-    writer.open();
+    Dataset<Record> persistent = Datasets.<Record, Dataset<Record>>
+        load("dataset:file:/tmp/data/logs");
 
-    // the source dataset: yesterday's partition in the staging area
-    final Dataset<GenericRecord> staging = repo.load("logs_staging");
-    final PartitionKey yesterday = getPartitionKey(staging, yesterdayTimestamp);
-    System.out.println(yesterday);
+    // the source: anything before today in the staging area
+    Dataset<Record> staging = Datasets.<Record, Dataset<Record>>
+        load("dataset:file:/tmp/data/logs_staging");
+    View<Record> ready = staging.toBefore("timestamp", startOfToday);
 
-    ReadableSource<GenericRecord> source = CrunchDatasets.asSource
-        (staging.getPartition(yesterday, false), GenericRecord.class);
+    ReadableSource<Record> source = CrunchDatasets.asSource(ready, Record.class);
 
-    PCollection<GenericRecord> logsStaging = read(source);
-    PCollection<GenericData.Record> logs = logsStaging.parallelDo(
-        new DoFn<GenericRecord, GenericData.Record>() {
-      @Override
-      public void process(GenericRecord genericRecord, Emitter<GenericData.Record>
-          emitter) {
-        emitter.emit((GenericData.Record) genericRecord);
-      }
-    }, Avros.generics(persistent.getDescriptor().getSchema()));
+    PCollection<Record> stagedLogs = read(source);
 
-    getPipeline().write(logs, CrunchDatasets.asTarget(persistent), Target.WriteMode.APPEND);
+    getPipeline().write(stagedLogs,
+        CrunchDatasets.asTarget(persistent), Target.WriteMode.APPEND);
 
     PipelineResult result = run();
 
     if (result.succeeded()) {
       // remove the source data partition from staging
-      staging.dropPartition(yesterday);
+      ready.deleteAll();
       return 0;
     } else {
       return 1;
     }
+  }
+
+  private long startOfDay(long timestamp) {
+    return (timestamp / DAY_IN_MILLIS) * DAY_IN_MILLIS;
   }
 
   public static void main(String... args) throws Exception {

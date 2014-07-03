@@ -18,6 +18,7 @@ package org.kitesdk.examples.staging;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetRepositories;
 import org.kitesdk.data.DatasetRepository;
+import org.kitesdk.data.Datasets;
 import org.kitesdk.data.Formats;
 import org.kitesdk.data.PartitionStrategy;
 import java.net.URI;
@@ -29,13 +30,11 @@ public class CreateStagedDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
-
     // where the schema is stored
     URI schemaURI = URI.create("resource:simple-log.avsc");
 
     // create a Parquet dataset for long-term storage
-    repo.create("logs", new DatasetDescriptor.Builder()
+    Datasets.create("dataset:file:/tmp/data/logs", new DatasetDescriptor.Builder()
         .format(Formats.PARQUET)
         .schemaUri(schemaURI)
         .partitionStrategy(new PartitionStrategy.Builder()
@@ -46,7 +45,7 @@ public class CreateStagedDataset extends Configured implements Tool {
         .build());
 
     // create an Avro dataset to temporarily hold data
-    repo.create("logs_staging", new DatasetDescriptor.Builder()
+    Datasets.create("dataset:file:/tmp/data/logs_staging", new DatasetDescriptor.Builder()
         .format(Formats.AVRO)
         .schemaUri(schemaURI)
         .partitionStrategy(new PartitionStrategy.Builder()
