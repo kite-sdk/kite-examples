@@ -15,54 +15,52 @@
  */
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.DatasetWriter;
-import org.kitesdk.data.Formats;
 import java.util.Random;
-import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecordBuilder;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Dataset;
+import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.DatasetWriter;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.Formats;
+
+import static org.apache.avro.generic.GenericData.Record;
 
 /**
  * Create a dataset on the local filesystem and write some user objects to it,
  * using Avro generic records, and stored in Parquet format.
  */
 public class CreateUserDatasetGenericParquet extends Configured implements Tool {
+  private static final String[] colors = { "green", "blue", "pink", "brown", "yellow" };
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct a filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
-    // Create a dataset of users with the Avro schema, and Parquet format in the
-    // repository
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
         .format(Formats.PARQUET)
         .build();
-    Dataset<GenericRecord> users = repo.create("users", descriptor);
+    Dataset<Record> users = Datasets.<Record, Dataset<Record>>
+        create("dataset:hdfs:/tmp/data/users", descriptor);
 
     // Get a writer for the dataset and write some users to it
-    DatasetWriter<GenericRecord> writer = users.newWriter();
+    DatasetWriter<Record> writer = null;
     try {
-      writer.open();
-      String[] colors = { "green", "blue", "pink", "brown", "yellow" };
+      writer = users.newWriter();
       Random rand = new Random();
       GenericRecordBuilder builder = new GenericRecordBuilder(descriptor.getSchema());
       for (int i = 0; i < 100; i++) {
-        GenericRecord record = builder.set("username", "user-" + i)
+        Record record = builder.set("username", "user-" + i)
             .set("creationDate", System.currentTimeMillis())
             .set("favoriteColor", colors[rand.nextInt(colors.length)]).build();
         writer.write(record);
       }
     } finally {
-      writer.close();
+      if (writer != null) {
+        writer.close();
+      }
     }
 
     return 0;

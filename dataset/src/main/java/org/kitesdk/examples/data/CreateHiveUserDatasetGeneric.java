@@ -15,58 +15,58 @@
  */
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.DatasetWriter;
 import java.util.Random;
-import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Dataset;
+import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.DatasetWriter;
+import org.kitesdk.data.Datasets;
+
+import static org.apache.avro.generic.GenericData.Record;
 
 /**
  * Create a dataset using HCatalog for metadata and write some user objects to it,
  * using Avro generic records.
  */
-public class CreateHCatalogUserDatasetGeneric extends Configured implements Tool {
+public class CreateHiveUserDatasetGeneric extends Configured implements Tool {
+  private static final String[] colors = { "green", "blue", "pink", "brown", "yellow" };
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct an HCatalog dataset repository using managed Hive tables
-    DatasetRepository repo = DatasetRepositories.open("repo:hive");
-
     // Create a dataset of users with the Avro schema in the repository
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
         .build();
-    Dataset<GenericRecord> users = repo.create("users", descriptor);
+    Dataset<Record> users = Datasets.<Record, Dataset<Record>>
+        create("dataset:hive?dataset=users", descriptor);
 
     // Get a writer for the dataset and write some users to it
-    DatasetWriter<GenericRecord> writer = users.newWriter();
+    DatasetWriter<Record> writer = null;
     try {
-      writer.open();
-      String[] colors = { "green", "blue", "pink", "brown", "yellow" };
+      writer = users.newWriter();
       Random rand = new Random();
       GenericRecordBuilder builder = new GenericRecordBuilder(descriptor.getSchema());
       for (int i = 0; i < 100; i++) {
-        GenericRecord record = builder.set("username", "user-" + i)
+        Record record = builder.set("username", "user-" + i)
             .set("creationDate", System.currentTimeMillis())
             .set("favoriteColor", colors[rand.nextInt(colors.length)]).build();
         writer.write(record);
       }
+
     } finally {
-      writer.close();
+      if (writer != null) {
+        writer.close();
+      }
     }
 
     return 0;
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new CreateHCatalogUserDatasetGeneric(), args);
+    int rc = ToolRunner.run(new CreateHiveUserDatasetGeneric(), args);
     System.exit(rc);
   }
 }

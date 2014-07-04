@@ -15,37 +15,34 @@
  */
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.DatasetWriter;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Dataset;
+import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.DatasetWriter;
+import org.kitesdk.data.Datasets;
 
 /**
  * Create a dataset on the local filesystem and write some {@link Product} objects to it.
  */
 public class CreateProductDatasetPojo extends Configured implements Tool {
+  private static final String[] names = { "toaster", "teapot", "butter dish" };
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct a filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
 
     // Create a dataset of products with the Avro schema in the repository
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schema(Product.class)
         .build();
-    Dataset<Product> products = repo.create("products", descriptor);
+    Dataset<Product> products = Datasets.<Product, Dataset<Product>>
+        create("dataset:hdfs:/tmp/data/products", descriptor);
 
     // Get a writer for the dataset and write some products to it
-    DatasetWriter<Product> writer = products.newWriter();
+    DatasetWriter<Product> writer = null;
     try {
-      writer.open();
-      String[] names = { "toaster", "teapot", "butter dish" };
+      writer = products.newWriter();
       int i = 0;
       for (String name : names) {
         Product product = new Product();
@@ -54,7 +51,9 @@ public class CreateProductDatasetPojo extends Configured implements Tool {
         writer.write(product);
       }
     } finally {
-      writer.close();
+      if (writer != null) {
+        writer.close();
+      }
     }
 
     return 0;

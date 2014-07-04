@@ -15,48 +15,38 @@
  */
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.PartitionKey;
-import org.kitesdk.data.PartitionStrategy;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Dataset;
+import org.kitesdk.data.DatasetReader;
+import org.kitesdk.data.Datasets;
+
+import static org.apache.avro.generic.GenericData.Record;
 
 /**
- * Read one partition of user objects from the users dataset using Avro generic records.
+ * Reads users by favorite color from the dataset using Avro generic records.
  */
 public class ReadUserDatasetGenericOnePartition extends Configured implements Tool {
-
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct a filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
     // Load the users dataset
-    Dataset<GenericRecord> users = repo.load("users");
+    Dataset<Record> users = Datasets.<Record, Dataset<Record>>
+        load("dataset:hdfs:/tmp/data/users");
 
-    // Get the partition strategy and use it to construct a partition key for
-    // hash(username)=0
-    PartitionStrategy partitionStrategy = users.getDescriptor().getPartitionStrategy();
-    PartitionKey partitionKey = partitionStrategy.partitionKey(0);
-
-    // Get the dataset partition for the partition key
-    Dataset<GenericRecord> partition = users.getPartition(partitionKey, false);
-
-    // Get a reader for the partition and read all the users
-    DatasetReader<GenericRecord> reader = partition.newReader();
+    // Get a reader for the dataset and read all the users
+    DatasetReader<Record> reader = null;
     try {
-      reader.open();
+      reader = users.with("favoriteColor", "green").newReader();
       for (GenericRecord user : reader) {
         System.out.println(user);
       }
+
     } finally {
-      reader.close();
+      if (reader != null) {
+        reader.close();
+      }
     }
 
     return 0;

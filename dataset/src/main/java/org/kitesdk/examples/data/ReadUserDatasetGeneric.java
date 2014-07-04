@@ -15,14 +15,15 @@
  */
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Dataset;
+import org.kitesdk.data.DatasetReader;
+import org.kitesdk.data.Datasets;
+
+import static org.apache.avro.generic.GenericData.Record;
 
 /**
  * Read all the user objects from the users dataset using Avro generic records.
@@ -31,22 +32,22 @@ public class ReadUserDatasetGeneric extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct a filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
     // Load the users dataset
-    Dataset<GenericRecord> users = repo.load("users");
+    Dataset<Record> users = Datasets.<Record, Dataset<Record>>
+        load("dataset:hdfs:/tmp/data/users");
 
     // Get a reader for the dataset and read all the users
-    DatasetReader<GenericRecord> reader = users.newReader();
+    DatasetReader<Record> reader = null;
     try {
-      reader.open();
+      reader = users.newReader();
       for (GenericRecord user : reader) {
         System.out.println(user);
       }
+
     } finally {
-      reader.close();
+      if (reader != null) {
+        reader.close();
+      }
     }
 
     return 0;
