@@ -7,22 +7,25 @@ import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetReader;
 import org.kitesdk.data.DatasetRepositories;
 import org.kitesdk.data.DatasetRepository;
+import org.kitesdk.data.Datasets;
 
 public class ReadMovies extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs://localhost:8020/user/cloudera");
+    Dataset movies = Datasets.load("dataset:hdfs:/tmp/data/movies");
 
-    Dataset movies = repo.load("movies");
-    DatasetReader reader = movies.newReader();
+    DatasetReader reader = null;
     try {
-      reader.open();
+      reader = movies.newReader();
       for (Object rec : reader) {
         System.err.println("Movie: " + rec);
       }
+
     } finally {
-      reader.close();
+      if (reader != null) {
+        reader.close();
+      }
     }
 
     return 0;
