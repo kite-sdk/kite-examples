@@ -19,10 +19,13 @@ import java.net.URI;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.Datasets;
 import org.kitesdk.data.Formats;
 import org.kitesdk.data.PartitionStrategy;
+
+import static org.apache.avro.generic.GenericData.Record;
 
 public class CreateStagedDataset extends Configured implements Tool {
 
@@ -32,7 +35,8 @@ public class CreateStagedDataset extends Configured implements Tool {
     URI schemaURI = URI.create("resource:simple-log.avsc");
 
     // create a Parquet dataset for long-term storage
-    Datasets.create("dataset:file:/tmp/data/logs", new DatasetDescriptor.Builder()
+    Datasets.<Record, Dataset<Record>>
+        create("dataset:file:/tmp/data/logs", new DatasetDescriptor.Builder()
         .format(Formats.PARQUET)
         .schemaUri(schemaURI)
         .partitionStrategy(new PartitionStrategy.Builder()
@@ -43,7 +47,8 @@ public class CreateStagedDataset extends Configured implements Tool {
         .build());
 
     // create an Avro dataset to temporarily hold data
-    Datasets.create("dataset:file:/tmp/data/logs_staging", new DatasetDescriptor.Builder()
+    Datasets.<Record, Dataset<Record>>
+        create("dataset:file:/tmp/data/logs_staging", new DatasetDescriptor.Builder()
         .format(Formats.AVRO)
         .schemaUri(schemaURI)
         .partitionStrategy(new PartitionStrategy.Builder()
