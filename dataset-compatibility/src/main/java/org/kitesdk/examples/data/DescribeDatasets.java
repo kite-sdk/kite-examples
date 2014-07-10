@@ -1,20 +1,20 @@
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.Datasets;
-import org.kitesdk.data.Formats;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.Formats;
 
 public class DescribeDatasets extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
+    String home = "hdfs:/user/" + System.getProperty("user.name");
+
     Schema ratingSchema = SchemaBuilder.record("Rating")
         .fields()
         .name("userId").type().intType().noDefault()
@@ -25,7 +25,7 @@ public class DescribeDatasets extends Configured implements Tool {
 
     Datasets.create("dataset:hdfs:/tmp/data/ratings",
         new DatasetDescriptor.Builder()
-            .location("hdfs:ratings.tsv") // originally u.data
+            .location(home + "/ratings.tsv") // originally u.data
             .format(Formats.CSV)
             .property("kite.csv.delimiter", "\t")
             .schema(ratingSchema)
@@ -48,7 +48,7 @@ public class DescribeDatasets extends Configured implements Tool {
 
     Datasets.create("dataset:hdfs:/tmp/data/movies",
         new DatasetDescriptor.Builder()
-            .location("hdfs:movies.psv") // originally u.item
+            .location(home + "/movies.psv") // originally u.item
             .format(Formats.CSV)
             .property("kite.csv.delimiter", "|")
             .schema(movieSchema)
