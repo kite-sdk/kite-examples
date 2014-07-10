@@ -5,20 +5,21 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.kitesdk.data.Datasets;
+
+import static org.apache.avro.generic.GenericData.Record;
 
 public class ReadMovies extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-    Dataset movies = Datasets.load("dataset:hdfs:/tmp/data/movies");
+    Dataset<Record> movies = Datasets.load(
+        "dataset:hdfs:/tmp/data/movies", Record.class);
 
-    DatasetReader reader = null;
+    DatasetReader<Record> reader = null;
     try {
       reader = movies.newReader();
-      for (Object rec : reader) {
+      for (Record rec : reader) {
         System.err.println("Movie: " + rec);
       }
 

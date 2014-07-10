@@ -36,8 +36,8 @@ public class CreateProductDatasetPojo extends Configured implements Tool {
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schema(Product.class)
         .build();
-    Dataset<Product> products = Datasets.<Product, Dataset<Product>>
-        create("dataset:hdfs:/tmp/data/products", descriptor);
+    Dataset<Product> products = Datasets.create(
+        "dataset:hdfs:/tmp/data/products", descriptor, Product.class);
 
     // Get a writer for the dataset and write some products to it
     DatasetWriter<Product> writer = null;

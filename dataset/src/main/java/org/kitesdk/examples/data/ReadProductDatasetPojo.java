@@ -32,8 +32,8 @@ public class ReadProductDatasetPojo extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
     // Load the products dataset
-    Dataset<Product> products = Datasets.<Product, Dataset<Product>>
-        load("dataset:hdfs:/tmp/data/products");
+    Dataset<Product> products = Datasets.load(
+        "dataset:hdfs:/tmp/data/products", Product.class);
 
     // Get a reader for the dataset and read all the users
     DatasetReader<Product> reader = null;

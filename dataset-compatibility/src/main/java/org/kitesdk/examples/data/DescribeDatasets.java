@@ -23,12 +23,13 @@ public class DescribeDatasets extends Configured implements Tool {
         .name("timeInSeconds").type().intType().noDefault()
         .endRecord();
 
-    Datasets.create("dataset:hdfs:/tmp/data/ratings", new DatasetDescriptor.Builder()
-        .location("hdfs:ratings.tsv") // originally u.data
-        .format(Formats.CSV)
-        .property("kite.csv.delimiter", "\t")
-        .schema(ratingSchema)
-        .build());
+    Datasets.create("dataset:hdfs:/tmp/data/ratings",
+        new DatasetDescriptor.Builder()
+            .location("hdfs:ratings.tsv") // originally u.data
+            .format(Formats.CSV)
+            .property("kite.csv.delimiter", "\t")
+            .schema(ratingSchema)
+            .build(), Object.class);
 
 //    movie id | movie title | release date | video release date |
 //    IMDb URL | unknown | Action | Adventure | Animation |
@@ -45,12 +46,13 @@ public class DescribeDatasets extends Configured implements Tool {
         // ignore genre fields for now
         .endRecord();
 
-    Datasets.create("dataset:hdfs:/tmp/data/movies", new DatasetDescriptor.Builder()
-        .location("hdfs:movies.psv") // originally u.item
-        .format(Formats.CSV)
-        .property("kite.csv.delimiter", "|")
-        .schema(movieSchema)
-        .build());
+    Datasets.create("dataset:hdfs:/tmp/data/movies",
+        new DatasetDescriptor.Builder()
+            .location("hdfs:movies.psv") // originally u.item
+            .format(Formats.CSV)
+            .property("kite.csv.delimiter", "|")
+            .schema(movieSchema)
+            .build(), Object.class);
 
     return 0;
   }

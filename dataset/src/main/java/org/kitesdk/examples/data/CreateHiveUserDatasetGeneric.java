@@ -40,8 +40,8 @@ public class CreateHiveUserDatasetGeneric extends Configured implements Tool {
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
         .build();
-    Dataset<Record> users = Datasets.<Record, Dataset<Record>>
-        create("dataset:hive?dataset=users", descriptor);
+    Dataset<Record> users = Datasets.create("dataset:hive?dataset=users",
+        descriptor, Record.class);
 
     // Get a writer for the dataset and write some users to it
     DatasetWriter<Record> writer = null;

@@ -25,8 +25,7 @@ public class HelloKite extends Configured implements Tool {
     // Create a dataset of Hellos
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schema(Hello.class).build();
-    Dataset<Hello> hellos = Datasets.<Hello, Dataset<Hello>>
-        create(datasetUri, descriptor);
+    Dataset<Hello> hellos = Datasets.create(datasetUri, descriptor, Hello.class);
 
     // Write some Hellos in to the dataset
     DatasetWriter<Hello> writer = null;

@@ -42,8 +42,8 @@ public class CreateUserDatasetGenericParquet extends Configured implements Tool 
         .schemaUri("resource:user.avsc")
         .format(Formats.PARQUET)
         .build();
-    Dataset<Record> users = Datasets.<Record, Dataset<Record>>
-        create("dataset:hdfs:/tmp/data/users", descriptor);
+    Dataset<Record> users = Datasets.create(
+        "dataset:hdfs:/tmp/data/users", descriptor, Record.class);
 
     // Get a writer for the dataset and write some users to it
     DatasetWriter<Record> writer = null;

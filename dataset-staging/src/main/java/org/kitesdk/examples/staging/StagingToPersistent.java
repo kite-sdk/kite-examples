@@ -39,12 +39,12 @@ public class StagingToPersistent extends CrunchTool implements Serializable {
     final long startOfToday = startOfDay();
 
     // the destination dataset
-    Dataset<Record> persistent = Datasets.<Record, Dataset<Record>>
-        load("dataset:file:/tmp/data/logs");
+    Dataset<Record> persistent = Datasets.load(
+        "dataset:file:/tmp/data/logs", Record.class);
 
     // the source: anything before today in the staging area
-    Dataset<Record> staging = Datasets.<Record, Dataset<Record>>
-        load("dataset:file:/tmp/data/logs_staging");
+    Dataset<Record> staging = Datasets.load(
+        "dataset:file:/tmp/data/logs_staging", Record.class);
     View<Record> ready = staging.toBefore("timestamp", startOfToday);
 
     ReadableSource<Record> source = CrunchDatasets.asSource(ready, Record.class);

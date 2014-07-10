@@ -30,8 +30,8 @@ public class WriteUserDataset extends Configured implements Tool {
   public int run(String[] args) throws Exception {
     // Load the users dataset
     // Dataset is named [table].[entity]
-    RandomAccessDataset<User> users = Datasets.<User, RandomAccessDataset<User>>
-        load("dataset:hbase:localhost.localdomain/users.User");
+    RandomAccessDataset<User> users = Datasets.load(
+        "dataset:hbase:localhost.localdomain/users.User", User.class);
 
     // Get an accessor for the dataset and write some users to it
     users.put(user("bill", "green"));

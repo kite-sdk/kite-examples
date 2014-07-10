@@ -33,8 +33,8 @@ public class ReadHiveUserDatasetGeneric extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
     // Load the users dataset
-    Dataset<Record> users = Datasets.<Record, Dataset<Record>>
-        load("dataset:hive?dataset=users");
+    Dataset<Record> users = Datasets.load(
+        "dataset:hive?dataset=users", Record.class);
 
     // Get a reader for the dataset and read all the users
     DatasetReader<Record> reader = null;

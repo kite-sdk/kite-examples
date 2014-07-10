@@ -53,8 +53,8 @@ public class GenerateSimpleLogs extends Configured implements Tool {
     final Random rand = new Random();
 
     // data is written to the staging dataset
-    Dataset<Record> staging = Datasets.<Record, Dataset<Record>>
-        load("dataset:file:/tmp/data/logs_staging");
+    Dataset<Record> staging = Datasets.load(
+        "dataset:file:/tmp/data/logs_staging", Record.class);
 
     // this is going to build our simple log records
     GenericRecordBuilder builder = new GenericRecordBuilder(

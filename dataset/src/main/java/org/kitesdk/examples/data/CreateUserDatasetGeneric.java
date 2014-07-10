@@ -40,8 +40,8 @@ public class CreateUserDatasetGeneric extends Configured implements Tool {
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
         .build();
-    Dataset<Record> users = Datasets.<Record, Dataset<Record>>
-        create("dataset::hdfs:/tmp/data/users", descriptor);
+    Dataset<Record> users = Datasets.create(
+        "dataset:hdfs:/tmp/data/users", descriptor, Record.class);
 
     // Get a writer for the dataset and write some users to it
     DatasetWriter<Record> writer = null;
