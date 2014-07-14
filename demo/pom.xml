@@ -80,7 +80,7 @@
           <source>1.6</source>
           <target>1.6</target>
           <compilerArgument>-Xlint:unchecked</compilerArgument>
-          <showDeprecation>true</showDeprecation>
+          <!-- <showDeprecation>true</showDeprecation> --> <!-- re-instate with CDK-539 -->
           <showWarnings>true</showWarnings>
         </configuration>
       </plugin>
