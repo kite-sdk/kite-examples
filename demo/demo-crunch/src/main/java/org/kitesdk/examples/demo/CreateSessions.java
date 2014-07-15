@@ -15,18 +15,21 @@
  */
 package org.kitesdk.examples.demo;
 
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.PartitionKey;
+import org.kitesdk.data.DatasetReader;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.RefinableView;
+import org.kitesdk.data.View;
 import org.kitesdk.data.crunch.CrunchDatasets;
 import org.kitesdk.data.event.StandardEvent;
-import org.kitesdk.data.filesystem.FileSystemDatasetRepository;
 import org.kitesdk.examples.demo.event.Session;
-import com.google.common.collect.Iterables;
+import com.google.common.base.Splitter;
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.regex.Pattern;
 import org.apache.crunch.DoFn;
 import org.apache.crunch.Emitter;
 import org.apache.crunch.MapFn;
@@ -36,34 +39,45 @@ import org.apache.crunch.Target;
 import org.apache.crunch.types.avro.Avros;
 import org.apache.crunch.util.CrunchTool;
 import org.apache.hadoop.util.ToolRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CreateSessions extends CrunchTool implements Serializable {
 
+  private static final Logger LOG = LoggerFactory.getLogger(CreateSessions.class);
+
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct a local filesystem dataset repository rooted at /tmp/data
-    DatasetRepository fsRepo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
-    // Construct an HCatalog dataset repository using external Hive tables
-    DatasetRepository hcatRepo = DatasetRepositories.open("repo:hive:/tmp/data");
-
     // Turn debug on while in development.
     getPipeline().enableDebug();
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
-    // Load the events dataset and get the correct partition to sessionize
-    Dataset<StandardEvent> eventsDataset = fsRepo.load("events");
-    Dataset<StandardEvent> partition;
+    RefinableView<StandardEvent> eventsDataset = Datasets.load(
+        "dataset:hdfs:/tmp/data/events", StandardEvent.class);
+
+    View<StandardEvent> eventsToProcess;
     if (args.length == 0 || (args.length == 1 && args[0].equals("LATEST"))) {
-      partition = getLatestPartition(eventsDataset);
+      // get the current minute
+      Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+      cal.set(Calendar.SECOND, 0);
+      cal.set(Calendar.MILLISECOND, 0);
+      long currentMinute = cal.getTimeInMillis();
+      // restrict events to before the current minute
+      // in the workflow, this also has a lower bound for the timestamp
+      eventsToProcess = eventsDataset.toBefore("timestamp", currentMinute);
+
     } else {
-      partition = getPartitionForURI(eventsDataset, args[0]);
+      eventsToProcess = viewFromUri(eventsDataset, args[0]);
+    }
+
+    if (isEmpty(eventsToProcess)) {
+      LOG.info("No records to process.");
+      return 0;
     }
 
     // Create a parallel collection from the working partition
     PCollection<StandardEvent> events = read(
-        CrunchDatasets.asSource(partition, StandardEvent.class));
+        CrunchDatasets.asSource(eventsToProcess));
 
     // Group events by user and cookie id, then create a session for each group
     PCollection<Session> sessions = events
@@ -72,7 +86,8 @@ public class CreateSessions extends CrunchTool implements Serializable {
         .parallelDo(new MakeSession(), Avros.specifics(Session.class));
 
     // Write the sessions to the "sessions" Dataset
-    getPipeline().write(sessions, CrunchDatasets.asTarget(hcatRepo.load("sessions")),
+    getPipeline().write(sessions,
+        CrunchDatasets.asTarget("dataset:hive:/tmp/data/sessions"),
         Target.WriteMode.APPEND);
 
     return run().succeeded() ? 0 : 1;
@@ -124,22 +139,44 @@ public class CreateSessions extends CrunchTool implements Serializable {
     }
   }
 
-  private <E> Dataset<E> getLatestPartition(Dataset<E> eventsDataset) {
-    Dataset<E> ds = eventsDataset;
-    while (ds.getDescriptor().isPartitioned()) {
-      ds = Iterables.getLast(ds.getPartitions());
+  public static <E> View<E> viewFromUri(RefinableView<E> view, String uri) {
+    // helpers to parse the URI values
+    Splitter.MapSplitter splitter = Splitter.on('/').withKeyValueSeparator("=");
+    Pattern number = Pattern.compile("\\d+");
+
+    // the argument is a URI, with key/value pairs to restrict the view
+    URI location = view.getDataset().getDescriptor().getLocation();
+    URI path = location.resolve(URI.create(uri).getPath()); // handle different authority
+    String relative = location.relativize(path).toString();
+
+    for (Map.Entry<String, String> entry : splitter.split(relative).entrySet()) {
+      System.out.println("Key: '" + entry.getKey() + "'");
+      // if it looks like a number, add it as a number
+      if (number.matcher(entry.getValue()).matches()) {
+        view = view.with(entry.getKey(), Integer.valueOf(entry.getValue()));
+      } else {
+        view = view.with(entry.getKey(), entry.getValue());
+      }
     }
-    return ds;
+
+    System.out.println("View: " + view);
+
+    return view;
   }
 
-  private <E> Dataset<E> getPartitionForURI(Dataset<E> eventsDataset, String uri) {
-    PartitionKey partitionKey = FileSystemDatasetRepository.partitionKeyForPath(
-        eventsDataset, URI.create(uri));
-    Dataset<E> partition = eventsDataset.getPartition(partitionKey, false);
-    if (partition == null) {
-      throw new IllegalArgumentException("Partition not found: " + uri);
+  public boolean isEmpty(View<?> view) {
+    DatasetReader<?> reader = null;
+    try {
+      reader = view.newReader();
+      for (Object _ : reader) {
+        return true;
+      }
+      return false;
+    } finally {
+      if (reader != null) {
+        reader.close();
+      }
     }
-    return partition;
   }
 
   public static void main(String... args) throws Exception {
