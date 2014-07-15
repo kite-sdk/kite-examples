@@ -1,20 +1,19 @@
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.Formats;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.Formats;
 
 public class DescribeDatasets extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs://localhost:8020/user/cloudera");
+    String home = "hdfs:/user/" + System.getProperty("user.name");
 
     Schema ratingSchema = SchemaBuilder.record("Rating")
         .fields()
@@ -24,13 +23,13 @@ public class DescribeDatasets extends Configured implements Tool {
         .name("timeInSeconds").type().intType().noDefault()
         .endRecord();
 
-    // create
-    repo.create("ratings", new DatasetDescriptor.Builder()
-//        .location("hdfs:u.data")
-        .format(Formats.CSV)
-        .property("kite.csv.delimiter", "\t")
-        .schema(ratingSchema)
-        .build());
+    Datasets.create("dataset:hdfs:/tmp/data/ratings",
+        new DatasetDescriptor.Builder()
+            .location(home + "/ratings.tsv") // originally u.data
+            .format(Formats.CSV)
+            .property("kite.csv.delimiter", "\t")
+            .schema(ratingSchema)
+            .build(), Object.class);
 
 //    movie id | movie title | release date | video release date |
 //    IMDb URL | unknown | Action | Adventure | Animation |
@@ -47,12 +46,13 @@ public class DescribeDatasets extends Configured implements Tool {
         // ignore genre fields for now
         .endRecord();
 
-    repo.create("movies", new DatasetDescriptor.Builder()
-//        .location("hdfs:u.item")
-        .format(Formats.CSV)
-        .property("kite.csv.delimiter", "|")
-        .schema(movieSchema)
-        .build());
+    Datasets.create("dataset:hdfs:/tmp/data/movies",
+        new DatasetDescriptor.Builder()
+            .location(home + "/movies.psv") // originally u.item
+            .format(Formats.CSV)
+            .property("kite.csv.delimiter", "|")
+            .schema(movieSchema)
+            .build(), Object.class);
 
     return 0;
   }

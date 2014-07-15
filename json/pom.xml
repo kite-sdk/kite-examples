@@ -21,51 +21,23 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.kitesdk.examples</groupId>
-  <artifactId>demo</artifactId>
-  <version>0.14.1</version>
+  <artifactId>json</artifactId>
+  <version>0.14.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>json</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.14.1</kite-version>
-  </properties>
-
-  <repositories>
-    <repository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>java.net2</id>
-      <name>Repository hosting the jee6 artifacts</name>
-      <url>http://download.java.net/maven/2</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
+  <parent>
+    <groupId>org.kitesdk</groupId>
+    <artifactId>kite-app-parent-cdh4</artifactId>
+    <version>0.14.2-SNAPSHOT</version>
+  </parent>
 
   <build>
     <plugins>
       <plugin>
         <groupId>org.kitesdk</groupId>
         <artifactId>kite-maven-plugin</artifactId>
-      	<version>${kite-version}</version>
         <configuration>
           <hadoopConfiguration>
             <property>

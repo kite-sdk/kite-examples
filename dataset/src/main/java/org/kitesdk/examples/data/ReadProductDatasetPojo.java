@@ -15,13 +15,14 @@
  */
 package org.kitesdk.examples.data;
 
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetReader;
 import org.kitesdk.data.DatasetRepositories;
 import org.kitesdk.data.DatasetRepository;
-import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Datasets;
 
 /**
  * Read all the {@link Product} objects from the products dataset.
@@ -30,22 +31,22 @@ public class ReadProductDatasetPojo extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct a filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
     // Load the products dataset
-    Dataset<Product> products = repo.load("products");
+    Dataset<Product> products = Datasets.load(
+        "dataset:hdfs:/tmp/data/products", Product.class);
 
-    // Get a reader for the dataset and read all the products
-    DatasetReader<Product> reader = products.newReader();
+    // Get a reader for the dataset and read all the users
+    DatasetReader<Product> reader = null;
     try {
-      reader.open();
+      reader = products.newReader();
       for (Product product : reader) {
         System.out.println(product);
       }
+
     } finally {
-      reader.close();
+      if (reader != null) {
+        reader.close();
+      }
     }
 
     return 0;

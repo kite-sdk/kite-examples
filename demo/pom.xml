@@ -22,10 +22,16 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo</artifactId>
-  <version>0.14.1</version>
+  <version>0.14.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>demo</name>
+
+  <parent>
+    <groupId>org.kitesdk</groupId>
+    <artifactId>kite-app-parent-cdh4</artifactId>
+    <version>0.14.2-SNAPSHOT</version>
+  </parent>
 
   <modules>
     <module>demo-core</module>
@@ -37,20 +43,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.14.1</kite-version>
     <maven.tomcat.port>8034</maven.tomcat.port>
   </properties>
 
   <repositories>
-    <repository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
     <repository>
       <id>java.net2</id>
       <name>Repository hosting the jee6 artifacts</name>
@@ -58,23 +54,11 @@
     </repository>
   </repositories>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
   <build>
     <plugins>
       <plugin>
         <groupId>org.kitesdk</groupId>
         <artifactId>kite-maven-plugin</artifactId>
-      	<version>${kite-version}</version>
         <configuration>
           <hadoopConfiguration>
             <property>
@@ -96,7 +80,7 @@
           <source>1.6</source>
           <target>1.6</target>
           <compilerArgument>-Xlint:unchecked</compilerArgument>
-          <showDeprecation>true</showDeprecation>
+          <!-- <showDeprecation>true</showDeprecation> --> <!-- re-instate with CDK-539 -->
           <showWarnings>true</showWarnings>
         </configuration>
       </plugin>

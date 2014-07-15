@@ -15,31 +15,26 @@
  */
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Datasets;
 
 /**
  * Delete the users dataset and HCatalog metadata.
  */
-public class DeleteHCatalogUserDataset extends Configured implements Tool {
+public class DeleteHiveUserDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct an HCatalog dataset repository using managed Hive tables
-    DatasetRepository repo = DatasetRepositories.open("repo:hive");
-
     // Delete the users dataset
-    boolean success = repo.delete("users");
+    boolean success = Datasets.delete("dataset:hive?dataset=users");
 
     return success ? 0 : 1;
   }
 
   public static void main(String... args) throws Exception {
-    int rc = ToolRunner.run(new DeleteHCatalogUserDataset(), args);
+    int rc = ToolRunner.run(new DeleteHiveUserDataset(), args);
     System.exit(rc);
   }
 }

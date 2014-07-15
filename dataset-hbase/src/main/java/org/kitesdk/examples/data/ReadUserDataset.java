@@ -15,14 +15,13 @@
  */
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.Key;
-import org.kitesdk.data.RandomAccessDataset;
-import org.kitesdk.data.RandomAccessDatasetRepository;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.DatasetReader;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.Key;
+import org.kitesdk.data.RandomAccessDataset;
 
 /**
  * Read the user objects from the users dataset by key lookup, and by scanning.
@@ -31,14 +30,10 @@ public class ReadUserDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct an HBase dataset repository using the local HBase database
-    RandomAccessDatasetRepository repo =
-        DatasetRepositories.openRandomAccess("repo:hbase:localhost.localdomain");
-
     // Load the users dataset
     // Dataset is named [table].[entity]
-    RandomAccessDataset<User> users = repo.load("users.User");
+    RandomAccessDataset<User> users = Datasets.load(
+        "dataset:hbase:localhost.localdomain/users.User", User.class);
 
     // Get an accessor for the dataset and look up a user by username
     Key key = new Key.Builder(users).add("username", "bill").build();
@@ -46,14 +41,16 @@ public class ReadUserDataset extends Configured implements Tool {
     System.out.println("----");
 
     // Get a reader for the dataset and read the users from "bill" onwards
-    DatasetReader<User> reader = users.from("username", "bill").newReader();
+    DatasetReader<User> reader = null;
     try {
-      reader.open();
+      reader = users.with("username", "bill").newReader();
       for (User user : reader) {
         System.out.println(user);
       }
     } finally {
-      reader.close();
+      if (reader != null) {
+        reader.close();
+      }
     }
 
     return 0;
