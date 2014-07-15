@@ -21,12 +21,12 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo-logging-webapp</artifactId>
-  <version>0.15.0</version>
+  <version>0.15.1-SNAPSHOT</version>
 
   <parent>
     <groupId>org.kitesdk.examples</groupId>
     <artifactId>demo</artifactId>
-    <version>0.15.0</version>
+    <version>0.15.1-SNAPSHOT</version>
   </parent>
 
   <packaging>war</packaging>
