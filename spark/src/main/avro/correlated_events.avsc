@@ -1,0 +1,18 @@
+{
+  "name": "CorrelatedEvents",
+  "namespace": "org.kitesdk.data.event",
+  "type": "record",
+  "doc": "An event along with a list of events correlated with the first event",
+  "fields": [
+    {
+      "name": "event",
+      "type": "org.kitesdk.data.event.StandardEvent",
+      "doc": "The events the other events are correlated with"
+    },
+    {
+      "name": "correlated",
+      "type": {"type": "array", "items": "org.kitesdk.data.event.StandardEvent"},
+      "doc": "The list of correlated events"
+    }
+  ]
+}
