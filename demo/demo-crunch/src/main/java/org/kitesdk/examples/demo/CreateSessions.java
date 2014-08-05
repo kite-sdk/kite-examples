@@ -15,21 +15,11 @@
  */
 package org.kitesdk.examples.demo;
 
-import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.Datasets;
-import org.kitesdk.data.RefinableView;
-import org.kitesdk.data.View;
-import org.kitesdk.data.crunch.CrunchDatasets;
-import org.kitesdk.data.event.StandardEvent;
-import org.kitesdk.examples.demo.event.Session;
-import com.google.common.base.Splitter;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.TimeZone;
-import java.util.regex.Pattern;
 import org.apache.crunch.DoFn;
 import org.apache.crunch.Emitter;
 import org.apache.crunch.MapFn;
@@ -38,7 +28,15 @@ import org.apache.crunch.Pair;
 import org.apache.crunch.Target;
 import org.apache.crunch.types.avro.Avros;
 import org.apache.crunch.util.CrunchTool;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Dataset;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.View;
+import org.kitesdk.data.crunch.CrunchDatasets;
+import org.kitesdk.data.event.StandardEvent;
+import org.kitesdk.data.spi.filesystem.FileSystemDatasets;
+import org.kitesdk.examples.demo.event.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +50,7 @@ public class CreateSessions extends CrunchTool implements Serializable {
     getPipeline().enableDebug();
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
-    RefinableView<StandardEvent> eventsDataset = Datasets.load(
+    Dataset<StandardEvent> eventsDataset = Datasets.load(
         "dataset:hdfs:/tmp/data/events", StandardEvent.class);
 
     View<StandardEvent> eventsToProcess;
@@ -66,11 +64,13 @@ public class CreateSessions extends CrunchTool implements Serializable {
       // in the workflow, this also has a lower bound for the timestamp
       eventsToProcess = eventsDataset.toBefore("timestamp", currentMinute);
 
+    } else if (isView(args[0])) {
+      eventsToProcess = Datasets.load(args[0], StandardEvent.class);
     } else {
-      eventsToProcess = viewFromUri(eventsDataset, args[0]);
+      eventsToProcess = FileSystemDatasets.viewForPath(eventsDataset, new Path(args[0]));
     }
 
-    if (isEmpty(eventsToProcess)) {
+    if (eventsToProcess.isEmpty()) {
       LOG.info("No records to process.");
       return 0;
     }
@@ -91,6 +91,11 @@ public class CreateSessions extends CrunchTool implements Serializable {
         Target.WriteMode.APPEND);
 
     return run().succeeded() ? 0 : 1;
+  }
+
+  private static boolean isView(String uri) {
+    String scheme = URI.create(uri).getScheme();
+    return "view".equals(scheme) || "dataset".equals(scheme);
   }
 
   private static class GetSessionKey extends MapFn<StandardEvent, String> {
@@ -136,46 +141,6 @@ public class CreateSessions extends CrunchTool implements Serializable {
           .setDuration(endTime - startTime)
           .setSessionEventCount(numEvents)
           .build());
-    }
-  }
-
-  public static <E> View<E> viewFromUri(RefinableView<E> view, String uri) {
-    // helpers to parse the URI values
-    Splitter.MapSplitter splitter = Splitter.on('/').withKeyValueSeparator("=");
-    Pattern number = Pattern.compile("\\d+");
-
-    // the argument is a URI, with key/value pairs to restrict the view
-    URI location = view.getDataset().getDescriptor().getLocation();
-    URI path = location.resolve(URI.create(uri).getPath()); // handle different authority
-    String relative = location.relativize(path).toString();
-
-    for (Map.Entry<String, String> entry : splitter.split(relative).entrySet()) {
-      System.out.println("Key: '" + entry.getKey() + "'");
-      // if it looks like a number, add it as a number
-      if (number.matcher(entry.getValue()).matches()) {
-        view = view.with(entry.getKey(), Integer.valueOf(entry.getValue()));
-      } else {
-        view = view.with(entry.getKey(), entry.getValue());
-      }
-    }
-
-    System.out.println("View: " + view);
-
-    return view;
-  }
-
-  public boolean isEmpty(View<?> view) {
-    DatasetReader<?> reader = null;
-    try {
-      reader = view.newReader();
-      for (Object _ : reader) {
-        return true;
-      }
-      return false;
-    } finally {
-      if (reader != null) {
-        reader.close();
-      }
     }
   }
 
