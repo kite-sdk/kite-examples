@@ -170,7 +170,8 @@ Wait about 30 seconds for Flume to flush the events to the
 then run the Crunch job to generate derived session data from the events:
 
 ```bash
-(cd demo-crunch; mvn kite:run-tool)
+cd demo-crunch
+mvn kite:run-tool
 ```
 
 The `kite:run-tool` Maven goal executes the `run` method of the `Tool`,
@@ -181,6 +182,12 @@ of the `kite-maven-plugin`.
 
 When it's complete you should see a file in [`/tmp/data/sessions`]
 (http://localhost:8888/filebrowser/#/tmp/data/sessions).
+
+You can also supply a view URI to process the events for a particular minute bucket:
+
+```bash
+mvn kite:run-tool -Dkite.args='view:hdfs:/tmp/data/events?year=2014&month=8&date=5&hour=17&minute=10'
+```
 
 ### Run session analysis
 
