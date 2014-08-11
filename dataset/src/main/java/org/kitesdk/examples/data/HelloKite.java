@@ -8,8 +8,6 @@ import org.apache.hadoop.util.ToolRunner;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.Datasets;
 

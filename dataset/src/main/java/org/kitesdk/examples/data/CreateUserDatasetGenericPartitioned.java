@@ -42,7 +42,7 @@ public class CreateUserDatasetGenericPartitioned extends Configured implements T
         .identity("favoriteColor", "favorite_color")
         .build();
 
-    // Create a dataset of users with the Avro schema in the repository
+    // Create a dataset of users with the Avro schema
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:user.avsc")
         .partitionStrategy(partitionStrategy)

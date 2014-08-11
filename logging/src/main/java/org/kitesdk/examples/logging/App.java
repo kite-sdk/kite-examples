@@ -15,8 +15,6 @@
  */
 package org.kitesdk.examples.logging;
 
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.generic.GenericRecordBuilder;
@@ -24,6 +22,7 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
+import org.kitesdk.data.Datasets;
 
 /**
  * A simple application to log events to a dataset.
@@ -36,9 +35,9 @@ public class App extends Configured implements Tool {
     // Get a log4j logger
     Logger logger = Logger.getLogger(App.class);
 
-    // Find the schema from the repository
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-    Schema schema = repo.load("events").getDescriptor().getSchema();
+    // Find the schema from the dataset
+    Schema schema = Datasets.load("dataset:hdfs:/tmp/data/events").getDataset()
+        .getDescriptor().getSchema();
 
     // Build some events using the generic Avro API and log them using log4j
     GenericRecordBuilder builder = new GenericRecordBuilder(schema);

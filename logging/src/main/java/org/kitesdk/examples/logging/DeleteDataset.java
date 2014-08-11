@@ -15,11 +15,10 @@
  */
 package org.kitesdk.examples.logging;
 
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Datasets;
 
 /**
  * Drop the events dataset.
@@ -29,11 +28,8 @@ public class DeleteDataset extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a local filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
     // Drop the events dataset
-    boolean success = repo.delete("events");
+    boolean success = Datasets.delete("dataset:hdfs:/tmp/data/events");
 
     return success ? 0 : 1;
   }

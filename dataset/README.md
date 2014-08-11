@@ -34,12 +34,6 @@ that points to the local filesystem to store the data (and metadata). The URI
 here, "dataset:file:/tmp/hellos", tells Kite to store data in `/tmp/hellos`.
 
 ```java
-DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-kite");
-```
-
-With the repository and descriptor, we can now create a dataset.
-
-```java
 Dataset hellos = Datasets.create("dataset:file:/tmp/hellos", descriptor);
 ```
 
@@ -96,9 +90,9 @@ mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteProductDataset"
 
 __Note__: The above assumes that you are running against a single-node localhost HDFS
 installation, such as the one on the QuickStart VM.
-If this is not the case, then you can change the repository URI in the source files
-(e.g. `CreateProductDatasetPojo.java`) from `repo:hdfs:/tmp/data` to
-`repo:file:///tmp/data` to use the local filesystem.
+If this is not the case, then you can change the dataset URI in the source files
+(e.g. `CreateProductDatasetPojo.java`) from `dataset:hdfs:/tmp/data/products` to
+`dataset:file:///tmp/data/products` to use the local filesystem.
 
 ### Generic records vs. POJOs
 
