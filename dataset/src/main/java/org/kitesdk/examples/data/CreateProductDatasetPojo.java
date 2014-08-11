@@ -32,7 +32,7 @@ public class CreateProductDatasetPojo extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    // Create a dataset of products with the Avro schema in the repository
+    // Create a dataset of products with the Avro schema
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schema(Product.class)
         .build();

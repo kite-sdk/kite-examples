@@ -15,12 +15,11 @@
  */
 package org.kitesdk.examples.logging;
 
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.Datasets;
 
 /**
  * Create a dataset on the local filesystem.
@@ -30,14 +29,11 @@ public class CreateDataset extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a local filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
-    // Create a dataset of events with the Avro schema in the repository
+    // Create a dataset of events with the Avro schema
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:event.avsc")
         .build();
-    repo.create("events", descriptor);
+    Datasets.create("dataset:hdfs:/tmp/data/events", descriptor);
 
     return 0;
   }

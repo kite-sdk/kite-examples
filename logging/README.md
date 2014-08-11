@@ -96,3 +96,9 @@ Run the following program to dump the contents of the dataset to the console:
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.ReadDataset"
 ```
 
+If you want to move on to the Kite webapp logging example, then keep the dataset you just created
+otherwise, you can delete the dataset:
+
+```bash
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.DeleteDataset"
+```

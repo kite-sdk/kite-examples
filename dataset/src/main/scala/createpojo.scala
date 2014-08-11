@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.kitesdk.data.{DatasetDescriptor, DatasetWriter}
-import org.kitesdk.data.filesystem.FileSystemDatasetRepository
+import org.kitesdk.data.{DatasetDescriptor, DatasetWriter, Datasets, View}
 import com.google.common.collect.Lists
 import org.apache.avro.Schema
 import org.apache.avro.Schema.{Field, Type}
@@ -27,12 +26,6 @@ import scala.util.Random
 // Create a class to represent a User entity
 case class User(username: String, creationDate: Int, favoriteColor: String)
 
-// Construct a local filesystem dataset repository rooted at /tmp/data
-val repo = new FileSystemDatasetRepository(
-  FileSystem.get(new Configuration()),
-  new Path("/tmp/data")
-)
-
 // Create an Avro schema that corresponds with the User entity
 val schema = Schema.createRecord("user", null, null, false)
 schema.setFields(
@@ -43,13 +36,12 @@ schema.setFields(
   )
 )
 
-// Create a dataset of users with the Avro schema in the repository
-val descriptor = new DatasetDescriptor.Builder().schema(schema).get()
-val users = repo.create("users", descriptor)
+// Create a dataset of users with the Avro schema
+val descriptor = new DatasetDescriptor.Builder().schema(schema).build()
+val users = Datasets.create("dataset:hdfs:/tmp/data/users", descriptor).asInstanceOf[View[GenericRecord]]
 
 // Get a writer for the dataset and write some users to it
 val writer = users.newWriter().asInstanceOf[DatasetWriter[GenericRecord]]
-writer.open()
 val colors = Array("green", "blue", "pink", "brown", "yellow")
 val rand = new Random()
 for (i <- 0 to 100) {

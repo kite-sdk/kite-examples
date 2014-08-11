@@ -4,7 +4,7 @@ This module is a set of examples that demonstrate the `kite-data` module, which
 makes manging data sets in Hadoop easy with a declarative API and good defaults
 based on Hadoop best practices.
 * Data sets you create with the Kite data API are ready to use with Hive,
-  Impala, and Crunch.
+  Impala, Crunch, MapReduce, and Spark.
 * Records are automatically compressed and stored in splittable files for
   Map/Reduce performance.
 * Data schema, storage format, and partition strategy are declared when
@@ -32,12 +32,6 @@ DatasetDescriptor descriptor = new DatasetDescriptor.Builder().schema(Hello.clas
 For step 2, we use the `create` factory method in `Datasets` with a dataset URI
 that points to the local filesystem to store the data (and metadata). The URI
 here, "dataset:file:/tmp/hellos", tells Kite to store data in `/tmp/hellos`.
-
-```java
-DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-kite");
-```
-
-With the repository and descriptor, we can now create a dataset.
 
 ```java
 Dataset hellos = Datasets.create("dataset:file:/tmp/hellos", descriptor);
@@ -96,9 +90,9 @@ mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteProductDataset"
 
 __Note__: The above assumes that you are running against a single-node localhost HDFS
 installation, such as the one on the QuickStart VM.
-If this is not the case, then you can change the repository URI in the source files
-(e.g. `CreateProductDatasetPojo.java`) from `repo:hdfs:/tmp/data` to
-`repo:file:///tmp/data` to use the local filesystem.
+If this is not the case, then you can change the dataset URI in the source files
+(e.g. `CreateProductDatasetPojo.java`) from `dataset:hdfs:/tmp/data/products` to
+`dataset:file:///tmp/data/products` to use the local filesystem.
 
 ### Generic records vs. POJOs
 
@@ -107,7 +101,7 @@ objects for most Java programmers. Avro supports generic records too,
 which are more efficient, since they don't require reflection,
 and also don't require either the reader or writer to have the POJO class available.
 
-__Note__: It's currently not possible to write POJOs and then read them back as generic
+__Note__: Prior to Kite 0.15.0, it was not possible to write POJOs and then read them back as generic
 objects since the return type will be the POJO class. So for the generic examples below
 we model a dataset of users rather than products.
 
@@ -249,13 +243,13 @@ mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteHiveUserDataset"
 Run the equivalent example with:
 
 ```bash
-scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')" src/main/scala/createpojo.scala
+scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')":src/main/resources src/main/scala/createpojo.scala
 ```
 
 Or for the generic example:
 
 ```bash
-scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')" src/main/scala/creategeneric.scala
+scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')":src/main/resources src/main/scala/creategeneric.scala
 ```
 
 The Java examples can be used to read (and delete) the dataset written from Scala:

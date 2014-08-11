@@ -1,7 +1,5 @@
 package org.kitesdk.examples.logging.webapp;
 
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicLong;
@@ -13,6 +11,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecordBuilder;
 import org.apache.log4j.Logger;
+import org.kitesdk.data.Datasets;
 
 public class LoggingServlet extends HttpServlet {
 
@@ -23,9 +22,9 @@ public class LoggingServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    // Find the schema from the repository
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-    this.schema = repo.load("events").getDescriptor().getSchema();
+    // Find the schema from the dataset
+    this.schema = Datasets.load("dataset:hdfs:/tmp/data/events").getDataset()
+        .getDescriptor().getSchema();
   }
 
   @Override
