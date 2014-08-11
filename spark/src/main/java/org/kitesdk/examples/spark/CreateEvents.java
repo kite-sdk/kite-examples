@@ -14,41 +14,39 @@
  * limitations under the License.
  */
 
-package org.kitesdk.examples.spark.commands;
+package org.kitesdk.examples.spark;
 
 import com.beust.jcommander.Parameters;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import org.apache.avro.util.Utf8;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.Datasets;
 import org.kitesdk.data.View;
 import org.kitesdk.data.event.StandardEvent;
-import org.slf4j.Logger;
 
 @Parameters(commandDescription = "Create the events dataset")
-public class CreateEventsCommand extends BaseEventsCommand {
+public class CreateEvents extends BaseEventsTool {
 
   protected Random random;
   protected long baseTimestamp;
   protected long counter;
 
-  public CreateEventsCommand(Logger console) {
-    super(console);
+  public CreateEvents() {
     random = new Random();
     baseTimestamp = System.currentTimeMillis();
     counter = 0l;
   }
 
   @Override
-  public int run() throws IOException {
-    Preconditions.checkState(!Datasets.exists(createUri()),
+  public int run(List<String> args) throws Exception {
+
+    Preconditions.checkState(!Datasets.exists(uri),
         "events dataset already exists");
 
     DatasetDescriptor.Builder descriptorBuilder = new DatasetDescriptor.Builder();
@@ -56,7 +54,7 @@ public class CreateEventsCommand extends BaseEventsCommand {
     descriptorBuilder.format("avro");
     descriptorBuilder.schema(StandardEvent.class);
 
-    View<StandardEvent> events = Datasets.create(createUri(), descriptorBuilder.build(), StandardEvent.class);
+    View<StandardEvent> events = Datasets.create(uri, descriptorBuilder.build(), StandardEvent.class);
     DatasetWriter<StandardEvent> writer = events.newWriter();
     try {
       while (System.currentTimeMillis() - baseTimestamp < 36000) {
@@ -66,14 +64,14 @@ public class CreateEventsCommand extends BaseEventsCommand {
       writer.close();
     }
 
-    console.info("Generated " + counter + " events");
+    System.out.println("Generated " + counter + " events");
 
     return 0;
   }
 
   public StandardEvent generateRandomEvent() {
     return StandardEvent.newBuilder()
-        .setEventInitiator("client_user")
+        .setEventInitiator(new Utf8("client_user"))
         .setEventName(randomEventName())
         .setUserId(randomUserId())
         .setSessionId(randomSessionId())
@@ -83,21 +81,21 @@ public class CreateEventsCommand extends BaseEventsCommand {
         .build();
   }
 
-  public String randomEventName() {
-    return "event"+counter++;
+  public Utf8 randomEventName() {
+    return new Utf8("event"+counter++);
   }
 
   public long randomUserId() {
     return random.nextInt(10);
   }
 
-  public String randomSessionId() {
-    return UUID.randomUUID().toString();
+  public Utf8 randomSessionId() {
+    return new Utf8(UUID.randomUUID().toString());
   }
 
-  public String randomIp() {
-    return "192.168." + (random.nextInt(254) + 1) + "."
-        + (random.nextInt(254) + 1);
+  public Utf8 randomIp() {
+    return new Utf8("192.168." + (random.nextInt(254) + 1) + "."
+        + (random.nextInt(254) + 1));
   }
 
   public long randomTimestamp() {
@@ -108,22 +106,12 @@ public class CreateEventsCommand extends BaseEventsCommand {
     return baseTimestamp+delta;
   }
 
-  public Map<String, Object> randomEventDetails() {
-    Map<String, Object> details = new HashMap<String, Object>();
+  public Map<Utf8, Object> randomEventDetails() {
+    Map<Utf8, Object> details = new HashMap<Utf8, Object>();
     String type = random.nextInt(1500) < 1 ? "alert" : "click";
-    details.put("type", type);
+    details.put(new Utf8("type"), type);
 
     return details;
-  }
-
-  @Override
-  public List<String> getExamples() {
-    return Lists.newArrayList(
-        "# Create the events dataset in HDFS:",
-        "--use-hdfs",
-        "# Create the events dataset in Hive:",
-        "--use-hive"
-    );
   }
 
 }

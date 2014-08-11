@@ -14,36 +14,42 @@
  * limitations under the License.
  */
 
-package org.kitesdk.examples.spark.commands;
+package org.kitesdk.examples.spark;
 
-import com.beust.jcommander.Parameter;
 import com.google.common.base.Preconditions;
-import java.io.IOException;
 import java.util.List;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.Datasets;
 import org.kitesdk.data.event.CorrelatedEvents;
 import org.kitesdk.examples.spark.CorrelateEventsTask;
-import org.slf4j.Logger;
 
 
-public class CorrelateEventsCommand extends BaseEventsCommand {
+public class CorrelateEvents extends BaseEventsTool {
 
-  @Parameter(names = {"--master"},
-      description = "Spark master (defaults to local)")
-  String master = "local";
-
-  public CorrelateEventsCommand(Logger console) {
-    super(console);
-  }
+  String master = "localhost.localdomain";
 
   @Override
-  public int run() throws IOException {
-    String inputUri = createUri();
-    String outputUri = createUri("correlated_events");
+  public int run(List<String> args) throws Exception {
+
+    String inputUri = uri;
+    String outputUri = "dataset:hive?dataset=correlated_events";
+
+    if (args.size() > 0) {
+      if ("--master".equals(args.get(0))) {
+        if (args.size() >= 2) {
+          master = args.get(1);
+        } else {
+          System.err.println("Error: --master requires an argument");
+          System.err.println("Usage: correlate [--master <spark master>] [output-dataset-uri]");
+          return -1;
+        }
+      } else {
+        outputUri = args.get(0);
+      }
+    }
 
     Preconditions.checkState(Datasets.exists(inputUri),
-        "events dataset doesn't exists");
+        "input dataset doesn't exists");
 
     if (!Datasets.exists(outputUri)) {
       Datasets.create(outputUri, new DatasetDescriptor.Builder()
@@ -52,15 +58,9 @@ public class CorrelateEventsCommand extends BaseEventsCommand {
           .build());
     }
     CorrelateEventsTask task = new CorrelateEventsTask(inputUri, master,
-        outputUri, console);
+        outputUri);
     task.run();
 
     return 0;
   }
-
-  @Override
-  public List<String> getExamples() {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
 }

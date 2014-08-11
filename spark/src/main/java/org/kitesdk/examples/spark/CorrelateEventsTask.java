@@ -16,7 +16,6 @@
 
 package org.kitesdk.examples.spark;
 
-import com.facebook.fb303.FacebookService;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import java.io.File;
@@ -26,38 +25,31 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import javax.jdo.JDOException;
+import org.apache.avro.util.Utf8;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hive.conf.HiveConf;
-import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
-import org.apache.hadoop.hive.thrift.client.TUGIAssumingTransport;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.PairFlatMapFunction;
 import org.apache.spark.api.java.function.PairFunction;
-import org.apache.thrift.TBase;
 import org.kitesdk.data.event.CorrelatedEvents;
 import org.kitesdk.data.event.StandardEvent;
 import org.kitesdk.data.mapreduce.DatasetKeyInputFormat;
 import org.kitesdk.data.mapreduce.DatasetKeyOutputFormat;
-import org.slf4j.Logger;
 import scala.Tuple2;
 
 public class CorrelateEventsTask implements Serializable {
 
-  private static long FIVE_MIN_MILLIS = TimeUnit.MINUTES.toMillis(5);
+  private static final long FIVE_MIN_MILLIS = TimeUnit.MINUTES.toMillis(5);
   String eventsUri;
   String master;
   String correlatedEventsUri;
-  Logger console;
 
   public CorrelateEventsTask(String eventsUri, String master,
-      String correlatedEventsUri, Logger console) {
+      String correlatedEventsUri) {
     this.eventsUri = eventsUri;
     this.master = master;
     this.correlatedEventsUri = correlatedEventsUri;
-    this.console = console;
   }
 
   public void run() throws IOException {
@@ -89,7 +81,7 @@ public class CorrelateEventsTask implements Serializable {
             StandardEvent event = t._1();
             long loTimestamp = createLoTimestamp(event.getTimestamp());
             long hiTimestamp = createHiTimestamp(event.getTimestamp());
-            String ip = event.getIp();
+            String ip = event.getIp().toString();
 
             result.add(new Tuple2<CorrelationKey, StandardEvent>(
                 new CorrelationKey(loTimestamp, ip), event));
@@ -113,12 +105,12 @@ public class CorrelateEventsTask implements Serializable {
 
             for (StandardEvent event : allEvents) {
               if (event.getEventDetails() != null &&
-                  event.getEventDetails().containsKey("type") &&
-                  "alert".equals(event.getEventDetails().get("type").toString())) {
+                  event.getEventDetails().containsKey(new Utf8("type")) &&
+                  "alert".equals(event.getEventDetails().get(new Utf8("type")).toString())) {
                 alerts.add(event);
               } else if (event.getEventDetails() != null &&
-                  event.getEventDetails().containsKey("type") &&
-                  "click".equals(event.getEventDetails().get("type").toString())) {
+                  event.getEventDetails().containsKey(new Utf8("type")) &&
+                  "click".equals(event.getEventDetails().get(new Utf8("type")).toString())) {
                 clicks.add(event);
               }
             }
@@ -200,7 +192,7 @@ public class CorrelateEventsTask implements Serializable {
   private void addJar(JavaSparkContext context, String... path) {
     String jarPath = Joiner.on('/').join(path);
     context.addJar(jarPath);
-    console.info("Adding jar " + jarPath + " to the SparkContext");
+    System.out.println("Adding jar " + jarPath + " to the SparkContext");
   }
 
   private static class CorrelationKey implements Serializable {
