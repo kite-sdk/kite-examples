@@ -4,7 +4,7 @@ This module is a set of examples that demonstrate the `kite-data` module, which
 makes manging data sets in Hadoop easy with a declarative API and good defaults
 based on Hadoop best practices.
 * Data sets you create with the Kite data API are ready to use with Hive,
-  Impala, and Crunch.
+  Impala, Crunch, MapReduce, and Spark.
 * Records are automatically compressed and stored in splittable files for
   Map/Reduce performance.
 * Data schema, storage format, and partition strategy are declared when
@@ -101,7 +101,7 @@ objects for most Java programmers. Avro supports generic records too,
 which are more efficient, since they don't require reflection,
 and also don't require either the reader or writer to have the POJO class available.
 
-__Note__: It's currently not possible to write POJOs and then read them back as generic
+__Note__: Prior to Kite 0.15.0, it was not possible to write POJOs and then read them back as generic
 objects since the return type will be the POJO class. So for the generic examples below
 we model a dataset of users rather than products.
 

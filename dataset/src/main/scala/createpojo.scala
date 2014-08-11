@@ -37,7 +37,7 @@ schema.setFields(
 )
 
 // Create a dataset of users with the Avro schema
-val descriptor = new DatasetDescriptor.Builder().schema(schema).get()
+val descriptor = new DatasetDescriptor.Builder().schema(schema).build()
 val users = Datasets.create("dataset:hdfs:/tmp/data/users", descriptor)
 
 // Get a writer for the dataset and write some users to it
