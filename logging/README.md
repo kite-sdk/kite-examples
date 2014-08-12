@@ -96,3 +96,8 @@ Run the following program to dump the contents of the dataset to the console:
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.ReadDataset"
 ```
 
+When you're done, you can delete the dataset:
+
+```bash
+mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.DeleteDataset"
+```
