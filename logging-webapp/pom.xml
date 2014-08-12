@@ -18,6 +18,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.tomcat.port>8034</maven.tomcat.port>
+    <hadoop.conf.dir>/etc/hadoop/conf</hadoop.conf.dir>
   </properties>
 
   <dependencies>
@@ -79,5 +80,19 @@
         <version>2.1</version>
       </plugin>
     </plugins>
+    <resources>
+      <resource>
+        <directory>${hadoop.conf.dir}</directory>
+        <includes>
+          <include>core-site.xml</include>
+          <include>hdfs-site.xml</include>
+          <include>yarn-site.xml</include>
+          <include>mapred-site.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
   </build>
 </project>
