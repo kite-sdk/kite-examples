@@ -243,13 +243,13 @@ mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DeleteHiveUserDataset"
 Run the equivalent example with:
 
 ```bash
-scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')" src/main/scala/createpojo.scala
+scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')":src/main/resources src/main/scala/createpojo.scala
 ```
 
 Or for the generic example:
 
 ```bash
-scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')" src/main/scala/creategeneric.scala
+scala -cp "$(mvn dependency:build-classpath | grep -v '^\[')":src/main/resources src/main/scala/creategeneric.scala
 ```
 
 The Java examples can be used to read (and delete) the dataset written from Scala:
