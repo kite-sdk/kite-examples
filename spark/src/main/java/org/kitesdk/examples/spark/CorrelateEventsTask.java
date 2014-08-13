@@ -57,12 +57,16 @@ public class CorrelateEventsTask implements Serializable {
     DatasetKeyInputFormat.configure(conf).readFrom(eventsUri).withType(StandardEvent.class);
     DatasetKeyOutputFormat.configure(conf).writeTo(correlatedEventsUri).withType(CorrelatedEvents.class);
 
+    // Create our Spark configuration and get a Java context
     SparkConf sparkConf = new SparkConf()
         .setAppName("Correlate Events")
         .setMaster(master)
+        // Configure the use of Kryo serialization including our Avro registrator
         .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
         .set("spark.kryo.registrator", "org.kitesdk.examples.spark.AvroKyroRegistrator");
     JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
+
+    // Register some classes that will be needed in remote Spark tasks
     addJarFromClass(sparkContext, getClass());
     addJars(sparkContext, System.getenv("HIVE_HOME"), "lib");
     sparkContext.addFile(System.getenv("HIVE_HOME")+"/conf/hive-site.xml");

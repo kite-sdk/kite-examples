@@ -16,6 +16,7 @@
 package org.kitesdk.examples.spark;
 
 import java.util.Arrays;
+import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -23,9 +24,19 @@ public class Main {
 
 
   public static void main(String[] args) throws Exception {
-    String command = args[0];
-    args = Arrays.copyOfRange(args, 1, args.length);
-    int rc = 0;
+    String command = "";
+    List<String> argsList = Arrays.asList(args);
+    for (int i = 0; i < argsList.size(); i++) {
+      if ("create".equals(argsList.get(i)) ||
+          "correlate".equals(argsList.get(i))) {
+        command = argsList.get(i);
+        argsList.remove(i);
+        break;
+      }
+    }
+    args = argsList.toArray(new String[argsList.size()]);
+
+    int rc;
 
     if ("create".equals(command)) {
       rc = ToolRunner.run(new Configuration(), new CreateEvents(), args);
