@@ -27,7 +27,7 @@ import org.kitesdk.data.event.CorrelatedEvents;
 
 public class CorrelateEvents extends BaseEventsTool {
 
-  String master = "localhost.localdomain";
+  String master = "spark://localhost.localdomain:7077";
 
   @Override
   public int run(List<String> args) throws Exception {
