@@ -190,6 +190,13 @@
       <scope>compile</scope> <!-- provide Hive dependencies -->
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_2.10</artifactId>
+      <version>${kite.spark.version}</version>
+      <scope>compile</scope> <!-- provide Spark dependencies -->
+    </dependency>
+
   </dependencies>
 
 </project>
