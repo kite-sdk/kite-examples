@@ -143,6 +143,9 @@
        <resource>
          <directory>${hadoop.conf.dir}</directory>
        </resource>
+       <resouce>
+         <directory>src/main/resources</directory>
+       </resource>
      </resources>
   </build>
 
