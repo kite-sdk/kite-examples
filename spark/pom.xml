@@ -183,6 +183,13 @@
       <version>0.3.6</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-exec</artifactId>
+      <version>${kite.hive.version}</version>
+      <scope>compile</scope> <!-- provide Hive dependencies -->
+    </dependency>
+
   </dependencies>
 
 </project>
