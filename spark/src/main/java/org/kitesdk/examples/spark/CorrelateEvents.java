@@ -18,10 +18,11 @@ package org.kitesdk.examples.spark;
 
 import com.google.common.base.Preconditions;
 import java.util.List;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.util.ToolRunner;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.Datasets;
 import org.kitesdk.data.event.CorrelatedEvents;
-import org.kitesdk.examples.spark.CorrelateEventsTask;
 
 
 public class CorrelateEvents extends BaseEventsTool {
@@ -62,5 +63,11 @@ public class CorrelateEvents extends BaseEventsTool {
     task.run();
 
     return 0;
+  }
+
+  public static void main(String[] args) throws Exception {
+    int rc = ToolRunner.run(new Configuration(), new CorrelateEvents(), args);
+
+    System.exit(rc);
   }
 }

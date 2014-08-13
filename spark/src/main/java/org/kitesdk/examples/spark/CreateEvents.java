@@ -16,7 +16,6 @@
 
 package org.kitesdk.examples.spark;
 
-import com.beust.jcommander.Parameters;
 import com.google.common.base.Preconditions;
 import java.util.HashMap;
 import java.util.List;
@@ -24,13 +23,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import org.apache.avro.util.Utf8;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.util.ToolRunner;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.Datasets;
 import org.kitesdk.data.View;
 import org.kitesdk.data.event.StandardEvent;
 
-@Parameters(commandDescription = "Create the events dataset")
 public class CreateEvents extends BaseEventsTool {
 
   protected Random random;
@@ -112,6 +112,12 @@ public class CreateEvents extends BaseEventsTool {
     details.put(new Utf8("type"), type);
 
     return details;
+  }
+
+  public static void main(String[] args) throws Exception {
+    int rc = ToolRunner.run(new Configuration(), new CreateEvents(), args);
+
+    System.exit(rc);
   }
 
 }

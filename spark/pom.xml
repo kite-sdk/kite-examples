@@ -29,13 +29,18 @@
 
   <parent>
     <groupId>org.kitesdk</groupId>
-    <artifactId>kite-app-parent-cdh4</artifactId>
+    <artifactId>kite-app-parent-cdh5</artifactId>
     <version>0.15.1-SNAPSHOT</version>
   </parent>
 
   <packaging>jar</packaging>
 
   <name>Kite Spark Demo</name>
+
+  <properties>
+    <hive.conf.dir>/etc/hive/conf</hive.conf.dir>
+    <hadoop.conf.dir>/etc/hadoop/conf</hadoop.conf.dir>
+  </properties>
 
   <build>
     <plugins>
@@ -131,6 +136,14 @@
         </configuration>
       </plugin>
     </plugins>
+    <resources>
+       <resource>
+         <directory>${hive.conf.dir}</directory>
+       </resource>
+       <resource>
+         <directory>${hadoop.conf.dir}</directory>
+       </resource>
+     </resources>
   </build>
 
   <dependencies>
@@ -154,31 +167,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.hive</groupId>
-      <artifactId>hive-exec</artifactId>
-      <version>${kite.hive.version}</version>
-      <scope>compile</scope> <!-- provide Hive dependencies -->
-      <exclusions>
-        <exclusion>
-          <artifactId>asm</artifactId>
-          <groupId>asm</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-mapreduce</artifactId>
-      <version>${kite.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-tools</artifactId>
-      <version>${kite.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.avro</groupId>
       <artifactId>avro-mapred</artifactId>
       <classifier>hadoop2</classifier>
@@ -190,26 +178,6 @@
       <groupId>com.twitter</groupId>
       <artifactId>chill-avro</artifactId>
       <version>0.3.6</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.10</artifactId>
-      <version>1.0.0-cdh5.1.0</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>hadoop-annotations</artifactId>
-          <groupId>org.apache.hadoop</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>hadoop-auth</artifactId>
-          <groupId>org.apache.hadoop</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>hadoop-client</artifactId>
-          <groupId>org.apache.hadoop</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
   </dependencies>
