@@ -16,6 +16,7 @@
 package org.kitesdk.examples.spark;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
@@ -25,7 +26,7 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     String command = "";
-    List<String> argsList = Arrays.asList(args);
+    List<String> argsList = new LinkedList(Arrays.asList(args));
     for (int i = 0; i < argsList.size(); i++) {
       if ("create".equals(argsList.get(i)) ||
           "correlate".equals(argsList.get(i))) {
