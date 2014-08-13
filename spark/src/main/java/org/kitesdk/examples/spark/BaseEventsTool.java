@@ -28,7 +28,7 @@ public abstract class BaseEventsTool extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
     int start = 0;
-    if (args.length >= 1) {
+    if (args.length >= 1 && !args[0].startsWith("--")) {
       uri = args[0];
       start = 1;
     }
