@@ -113,3 +113,13 @@ spark-submit --class org.kitesdk.examples.spark.CorrelateEvents --jars $(mvn dep
 
 You can browse the correlated events using [Hue on the QuickstartVM](http://localhost:8888/metastore/table/default/correlated_events/read).
 
+### Delete the datasets
+
+When you're done or if you want to run the example again, you can delete the datasets we created:
+
+```bash
+curl http://central.maven.org/maven2/org/kitesdk/kite-tools/0.15.0/kite-tools-0.15.0-binary.jar -o dataset
+chmod +x dataset
+./dataset delete events
+./dataset delete correlated_events
+```

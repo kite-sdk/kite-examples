@@ -49,12 +49,10 @@ public class CreateEvents extends BaseEventsTool {
     Preconditions.checkState(!Datasets.exists(uri),
         "events dataset already exists");
 
-    DatasetDescriptor.Builder descriptorBuilder = new DatasetDescriptor.Builder();
+    DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
+        .schema(StandardEvent.class).build();
 
-    descriptorBuilder.format("avro");
-    descriptorBuilder.schema(StandardEvent.class);
-
-    View<StandardEvent> events = Datasets.create(uri, descriptorBuilder.build(), StandardEvent.class);
+    View<StandardEvent> events = Datasets.create(uri, descriptor, StandardEvent.class);
     DatasetWriter<StandardEvent> writer = events.newWriter();
     try {
       while (System.currentTimeMillis() - baseTimestamp < 36000) {
@@ -101,7 +99,7 @@ public class CreateEvents extends BaseEventsTool {
   public long randomTimestamp() {
     long delta = System.currentTimeMillis() - baseTimestamp;
     // Each millisecond elapsed will elapse 100 milliseconds
-    // this is the euivalent of each second being 1.67 minutes
+    // this is the equivalent of each second being 1.67 minutes
     delta = delta*100l;
     return baseTimestamp+delta;
   }

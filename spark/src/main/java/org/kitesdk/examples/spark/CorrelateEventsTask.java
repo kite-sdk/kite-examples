@@ -16,10 +16,7 @@
 
 package org.kitesdk.examples.spark;
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,6 +46,23 @@ public class CorrelateEventsTask implements Serializable {
     this.correlatedEventsUri = correlatedEventsUri;
   }
 
+  /*
+   * This task correlates events based on IP address and timestamp. The goal is
+   * to find any "click" events that come from the same IP address and occur
+   * within 5 minutes of an "alert" event. The process works by first converting
+   * timestamps into 5 minute increments. This means each event will be mapped
+   * to the nearest 5 minute mark before the event happened and the nearest
+   * 5 minute mark after the event happened. These rounded timestamps are
+   * combined with the IP address of the event to do an approximate self join of
+   * the data. The events are then iterated over to check for two conditions:
+   *
+   *   1) There is an alert event in the same bucket
+   *   2) That alert is actually less than 5 minutes apart from the given click
+   *
+   * The task will write out all of the "alert" events that have at least one
+   * "click" event from the same IP address and within 5 minutes along with the
+   * list of "click" events that were correlated.
+   */
   public void run() throws IOException {
     Configuration conf = new Configuration();
     DatasetKeyInputFormat.configure(conf).readFrom(eventsUri).withType(StandardEvent.class);
@@ -65,6 +79,9 @@ public class CorrelateEventsTask implements Serializable {
     JavaPairRDD<StandardEvent, Void> events = sparkContext.newAPIHadoopRDD(conf,
         DatasetKeyInputFormat.class, StandardEvent.class, Void.class);
 
+    // Map each event to two correlation keys. One with the IP address and the
+    // nearest 5 minute interval that happened before the event and one with the
+    // IP address and the nearest 5 minute interval that happened after the event
     JavaPairRDD<CorrelationKey, StandardEvent> mappedEvents = events.flatMapToPair(
         new PairFlatMapFunction<Tuple2<StandardEvent, Void>, CorrelationKey, StandardEvent>() {
           @Override
@@ -87,8 +104,12 @@ public class CorrelateEventsTask implements Serializable {
           }
         });
 
+    // Group the events by they correlation key
     JavaPairRDD<CorrelationKey, Iterable<StandardEvent>> groupedEvents = mappedEvents.groupByKey();
-    
+
+    // Generate potential matches by creating a list of alerts along with the
+    // matched list of clicks. If no alerts were found with this correlation
+    // key, then output an empty pair
     JavaPairRDD<List<StandardEvent>, List<StandardEvent>> potentialMatches = groupedEvents.mapToPair(
         new PairFunction<Tuple2<CorrelationKey, Iterable<StandardEvent>>, List<StandardEvent>, List<StandardEvent>>(){
 
@@ -118,6 +139,8 @@ public class CorrelateEventsTask implements Serializable {
           }
         });
 
+    // Verify that the matched events are true matches (i.e. the timestamps
+    // are really less than or equal to 5 minutes apart
     JavaPairRDD<CorrelatedEvents, Void> matches = potentialMatches.flatMapToPair(
         new PairFlatMapFunction<Tuple2<List<StandardEvent>, List<StandardEvent>>, CorrelatedEvents, Void>() {
 
@@ -149,6 +172,7 @@ public class CorrelateEventsTask implements Serializable {
         }
       });
 
+    // Write the data to a Kite dataset
     matches.saveAsNewAPIHadoopFile("dummy", CorrelatedEvents.class, Void.class,
         DatasetKeyOutputFormat.class, conf);
   }
