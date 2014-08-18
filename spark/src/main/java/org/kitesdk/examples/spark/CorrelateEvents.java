@@ -27,26 +27,14 @@ import org.kitesdk.data.event.CorrelatedEvents;
 
 public class CorrelateEvents extends BaseEventsTool {
 
-  String master = "spark://localhost.localdomain:7077";
-
   @Override
   public int run(List<String> args) throws Exception {
 
     String inputUri = uri;
     String outputUri = "dataset:hive?dataset=correlated_events";
 
-    if (args.size() > 0) {
-      if ("--master".equals(args.get(0))) {
-        if (args.size() >= 2) {
-          master = args.get(1);
-        } else {
-          System.err.println("Error: --master requires an argument");
-          System.err.println("Usage: correlate [--master <spark master>] [output-dataset-uri]");
-          return -1;
-        }
-      } else {
-        outputUri = args.get(0);
-      }
+    if (args.size() == 1) {
+      outputUri = args.get(0);
     }
 
     Preconditions.checkState(Datasets.exists(inputUri),
@@ -58,8 +46,7 @@ public class CorrelateEvents extends BaseEventsTool {
           .schema(CorrelatedEvents.class)
           .build());
     }
-    CorrelateEventsTask task = new CorrelateEventsTask(inputUri, master,
-        outputUri);
+    CorrelateEventsTask task = new CorrelateEventsTask(inputUri, outputUri);
     task.run();
 
     return 0;

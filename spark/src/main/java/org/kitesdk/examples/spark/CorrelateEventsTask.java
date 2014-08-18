@@ -42,13 +42,10 @@ public class CorrelateEventsTask implements Serializable {
 
   private static final long FIVE_MIN_MILLIS = TimeUnit.MINUTES.toMillis(5);
   String eventsUri;
-  String master;
   String correlatedEventsUri;
 
-  public CorrelateEventsTask(String eventsUri, String master,
-      String correlatedEventsUri) {
+  public CorrelateEventsTask(String eventsUri, String correlatedEventsUri) {
     this.eventsUri = eventsUri;
-    this.master = master;
     this.correlatedEventsUri = correlatedEventsUri;
   }
 
@@ -60,16 +57,10 @@ public class CorrelateEventsTask implements Serializable {
     // Create our Spark configuration and get a Java context
     SparkConf sparkConf = new SparkConf()
         .setAppName("Correlate Events")
-        .setMaster(master)
         // Configure the use of Kryo serialization including our Avro registrator
         .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
         .set("spark.kryo.registrator", "org.kitesdk.examples.spark.AvroKyroRegistrator");
     JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
-
-    // Register some classes that will be needed in remote Spark tasks
-    addJarFromClass(sparkContext, getClass());
-    addJars(sparkContext, System.getenv("HIVE_HOME"), "lib");
-    sparkContext.addFile(System.getenv("HIVE_HOME")+"/conf/hive-site.xml");
 
     JavaPairRDD<StandardEvent, Void> events = sparkContext.newAPIHadoopRDD(conf,
         DatasetKeyInputFormat.class, StandardEvent.class, Void.class);
@@ -168,35 +159,6 @@ public class CorrelateEventsTask implements Serializable {
 
   private static long createHiTimestamp(long timestamp) {
     return timestamp - (timestamp % FIVE_MIN_MILLIS) + FIVE_MIN_MILLIS;
-  }
-
-  private void addJarFromClass(JavaSparkContext context, Class<?> klass) {
-    String jarPath = klass.getResource("/" +
-        klass.getName().replace(".", "/") + ".class").toString()
-        .replace("jar:", "")
-        .split("!")[0];
-    addJar(context, jarPath);
-  }
-
-  private void addJars(JavaSparkContext context, String... path) throws IOException {
-    String root = Joiner.on('/').join(path);
-    String[] jars = new File(root).getCanonicalFile().list(new FilenameFilter() {
-
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.endsWith(".jar");
-      }
-    });
-
-    for (String jar : jars) {
-      addJar(context, root, jar);
-    }
-  }
-
-  private void addJar(JavaSparkContext context, String... path) {
-    String jarPath = Joiner.on('/').join(path);
-    context.addJar(jarPath);
-    System.out.println("Adding jar " + jarPath + " to the SparkContext");
   }
 
   private static class CorrelationKey implements Serializable {
