@@ -19,6 +19,11 @@ This example works with [simple log data][schema], which is generated in the
 second step. This simulates an environment where log data is constantly being
 written (probably by Flume), and eventually gets stored in Parquet.
 
+Before diving into the example, build the code with:
+```bash
+mvn compile
+```
+
 [par]: http://parquet.io/
 [schema]: https://github.com/kite-sdk/kite-examples/blob/staging-example/dataset-staging/src/main/resources/simple-log.avsc
 

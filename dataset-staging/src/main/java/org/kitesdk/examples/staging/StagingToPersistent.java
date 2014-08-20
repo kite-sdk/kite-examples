@@ -16,7 +16,6 @@
 package org.kitesdk.examples.staging;
 
 import java.io.Serializable;
-import java.lang.System;
 import java.util.Calendar;
 import java.util.TimeZone;
 import org.apache.crunch.PCollection;
@@ -47,7 +46,7 @@ public class StagingToPersistent extends CrunchTool implements Serializable {
         "dataset:file:/tmp/data/logs_staging", Record.class);
     View<Record> ready = staging.toBefore("timestamp", startOfToday);
 
-    ReadableSource<Record> source = CrunchDatasets.asSource(ready, Record.class);
+    ReadableSource<Record> source = CrunchDatasets.asSource(ready);
 
     PCollection<Record> stagedLogs = read(source);
 
