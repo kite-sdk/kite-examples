@@ -15,8 +15,12 @@ While this guide is focused on converting JSON records inside flume, Morphlines
 can be configured to handle a variety of tasks and transforms, documented in
 its [Morphlines Reference Guide][refguide].
 
+__Note__: Unlike the other examples, this example requires a CDH5.0 or later
+cluster (such as the [Cloudera Quickstart VM][getvm]).
+
 [morphlines]: http://kitesdk.org/docs/current/kite-morphlines/index.html
 [refguide]: http://kitesdk.org/docs/current/kite-morphlines/morphlinesReferenceGuide.html
+[getvm]: http://www.cloudera.com/content/support/en/downloads/quickstart_vms.html
 
 ## Configuration
 
