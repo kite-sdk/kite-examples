@@ -51,7 +51,7 @@ public class CreateSessions extends CrunchTool implements Serializable {
     getPipeline().getConfiguration().set("crunch.log.job.progress", "true");
 
     Dataset<StandardEvent> eventsDataset = Datasets.load(
-        "dataset:hdfs:/tmp/data/events", StandardEvent.class);
+        "dataset:hdfs:/tmp/data/default/events", StandardEvent.class);
 
     View<StandardEvent> eventsToProcess;
     if (args.length == 0 || (args.length == 1 && args[0].equals("LATEST"))) {
@@ -89,7 +89,7 @@ public class CreateSessions extends CrunchTool implements Serializable {
 
     // Write the sessions to the "sessions" Dataset
     getPipeline().write(sessions,
-        CrunchDatasets.asTarget("dataset:hive:/tmp/data/sessions"),
+        CrunchDatasets.asTarget("dataset:hive:/tmp/data/default/sessions"),
         Target.WriteMode.APPEND);
 
     return run().succeeded() ? 0 : 1;

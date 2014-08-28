@@ -23,7 +23,7 @@ public class LoggingServlet extends HttpServlet {
   @Override
   public void init() throws ServletException {
     // Find the schema from the dataset
-    this.schema = Datasets.load("dataset:hdfs:/tmp/data/events").getDataset()
+    this.schema = Datasets.load("dataset:hdfs:/tmp/data/default/events").getDataset()
         .getDescriptor().getSchema();
   }
 

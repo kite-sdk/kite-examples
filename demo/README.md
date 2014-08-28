@@ -137,8 +137,8 @@ mvn kite:delete-dataset -Dkite.rootDirectory=/tmp/data -Dkite.datasetName=sessio
 
 You can check that the data directories were created, using Hue (login as `cloudera` if
  you are logged in to the VM, or as your host login if you are running from your
- machine): [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events),
- [`/tmp/data/sessions`](http://localhost:8888/filebrowser/#/tmp/data/sessions).
+ machine): [`/tmp/data/default/events`](http://localhost:8888/filebrowser/#/tmp/data/default/events),
+ [`/tmp/data/default/sessions`](http://localhost:8888/filebrowser/#/tmp/data/default/sessions).
 
 ### Create events
 
@@ -166,7 +166,7 @@ a script as follows:
 ### Generate the derived sessions
 
 Wait about 30 seconds for Flume to flush the events to the
-[filesystem](http://localhost:8888/filebrowser/#/tmp/data/events),
+[filesystem](http://localhost:8888/filebrowser/#/tmp/data/default/events),
 then run the Crunch job to generate derived session data from the events:
 
 ```bash
@@ -180,13 +180,13 @@ in this case `CreateSessions`, which launches a Crunch job on the cluster.
 The `Tool` class to run, as well as the cluster settings, are found from the configuration
 of the `kite-maven-plugin`.
 
-When it's complete you should see a file in [`/tmp/data/sessions`]
-(http://localhost:8888/filebrowser/#/tmp/data/sessions).
+When it's complete you should see a file in [`/tmp/data/default/sessions`]
+(http://localhost:8888/filebrowser/#/tmp/data/default/sessions).
 
 You can also supply a view URI to process the events for a particular minute bucket:
 
 ```bash
-mvn kite:run-tool -Dkite.args='view:hdfs:/tmp/data/events?year=2014&month=8&date=5&hour=17&minute=10'
+mvn kite:run-tool -Dkite.args='view:hdfs:/tmp/data/default/events?year=2014&month=8&date=5&hour=17&minute=10'
 ```
 
 ### Run session analysis
@@ -284,7 +284,7 @@ Monitor the coordinator and resulting workflow jobs using the [Oozie application
 
 After a minute or two when a workflow job has completed, you should see new files appear
 in the `sessions` dataset, in
-[`/tmp/data/sessions`](http://localhost:8888/filebrowser#/tmp/data/sessions).
+[`/tmp/data/default/sessions`](http://localhost:8888/filebrowser#/tmp/data/default/sessions).
 When you see new files appear, then try running the session analysis from above.
 
 When you have finished, stop the user simulation script by killing the process

@@ -11,13 +11,12 @@
 
   <parent>
     <groupId>org.kitesdk</groupId>
-    <artifactId>kite-app-parent-cdh4</artifactId>
+    <artifactId>kite-app-parent-cdh5</artifactId>
     <version>0.16.1-SNAPSHOT</version>
   </parent>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <hadoop.conf.dir>/etc/hadoop/conf</hadoop.conf.dir>
   </properties>
 
   <dependencies>
@@ -38,7 +37,7 @@
     </dependency>
     <dependency>
       <groupId>org.kitesdk</groupId>
-      <artifactId>kite-hadoop-cdh4-dependencies</artifactId>
+      <artifactId>kite-hadoop-cdh5-dependencies</artifactId>
       <version>${kite.version}</version>
       <type>pom</type>
       <scope>compile</scope> <!-- provide Hadoop dependencies -->
@@ -80,19 +79,5 @@
         </executions>
       </plugin>
     </plugins>
-    <resources>
-      <resource>
-        <directory>${hadoop.conf.dir}</directory>
-        <includes>
-          <include>core-site.xml</include>
-          <include>hdfs-site.xml</include>
-          <include>yarn-site.xml</include>
-          <include>mapred-site.xml</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-    </resources>
   </build>
 </project>
