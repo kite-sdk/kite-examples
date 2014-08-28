@@ -68,9 +68,9 @@ to create the dataset on the filesystem with the following command:
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.CreateDataset"
 ```
 
-You can see the dataset directory hierarchy in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events),
+You can see the dataset directory hierarchy in [`/tmp/data/default/events`](http://localhost:8888/filebrowser/#/tmp/data/default/events),
 In particular, the schema for the events is stored in
-[`/tmp/data/events/.metadata/schema.avsc`](http://localhost:8888/filebrowser/#/tmp/data/events/.metadata/schema.avsc).
+[`/tmp/data/default/events/.metadata/schema.avsc`](http://localhost:8888/filebrowser/#/tmp/data/default/events/.metadata/schema.avsc).
 
 Now we can run the application to do the logging.
 
@@ -85,7 +85,7 @@ including the local filesystem.) Log4j is using Kite's Flume
 [`Log4jAppender`](https://github.com/kite-sdk/kite/blob/master/kite-data/kite-data-flume/src/main/java/org/kitesdk/data/flume/Log4jAppender.java)
 in the project's [`log4j.properties`](https://github.com/kite-sdk/kite-examples/blob/master/logging/src/main/resources/log4j.properties)
 
-The Flume sink will write a temporary file in [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events).
+The Flume sink will write a temporary file in [`/tmp/data/default/events`](http://localhost:8888/filebrowser/#/tmp/data/default/events).
 After a few seconds the file will be renamed so it no longer has the _.tmp_
 extension. If you don't see new files, make sure you have followed the [Setting up the QuickStart VM](https://github.com/kite-sdk/kite-examples#setting-up-the-quickstart-vm)
 directions.

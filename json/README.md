@@ -167,8 +167,7 @@ __HDFS sink config__:
 # store the users in the users Dataset
 tier1.sinks.user-dataset.type = hdfs
 tier1.sinks.user-dataset.channel = mem-channel
-# the partitioned directories must match the dataset's partition strategy
-tier1.sinks.user-dataset.hdfs.path = /tmp/data/users
+tier1.sinks.user-dataset.hdfs.path = /tmp/data/default/users
 tier1.sinks.user-dataset.hdfs.batchSize = 10
 tier1.sinks.user-dataset.hdfs.fileType = DataStream
 tier1.sinks.user-dataset.hdfs.proxyUser = cloudera
@@ -208,7 +207,7 @@ OK
 ```
 
 After sending a couple of records and waiting for flume to complete writing the
-files, you should see them under `/tmp/data/users/`. We can also take a look at
+files, you should see them under `/tmp/data/default/users/`. We can also take a look at
 the records using impala:
 
 ```
@@ -265,4 +264,13 @@ Query finished, fetching results ...
 | red           | 1                    |
 +---------------+----------------------+
 Returned 2 row(s) in 0.31s
+```
+
+## Delete the dataset
+
+We can now delete the dataset using the maven plugin:
+```bash
+mvn kite:delete-dataset \
+  -Dkite.rootDirectory=/tmp/data \
+  -Dkite.datasetName=users
 ```

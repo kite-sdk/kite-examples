@@ -29,7 +29,7 @@
 
   <parent>
     <groupId>org.kitesdk</groupId>
-    <artifactId>kite-app-parent-cdh4</artifactId>
+    <artifactId>kite-app-parent-cdh5</artifactId>
     <version>0.16.1-SNAPSHOT</version>
   </parent>
 
@@ -63,7 +63,7 @@
     </dependency>
     <dependency>
       <groupId>org.kitesdk</groupId>
-      <artifactId>kite-hadoop-cdh4-dependencies</artifactId>
+      <artifactId>kite-hadoop-cdh5-dependencies</artifactId>
       <version>${kite.version}</version>
       <type>pom</type>
       <scope>compile</scope> <!-- provide Hadoop dependencies -->

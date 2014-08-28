@@ -32,7 +32,7 @@ public class ReadDataset extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Load the events dataset
-    Dataset<GenericRecord> events = Datasets.load("dataset:hdfs:/tmp/data/events");
+    Dataset<GenericRecord> events = Datasets.load("dataset:hdfs:/tmp/data/default/events");
 
     // Get a reader for the dataset and read all the events
     DatasetReader<GenericRecord> reader = events.newReader();

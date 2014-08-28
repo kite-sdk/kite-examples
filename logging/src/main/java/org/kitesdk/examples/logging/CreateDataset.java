@@ -33,7 +33,7 @@ public class CreateDataset extends Configured implements Tool {
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schemaUri("resource:event.avsc")
         .build();
-    Datasets.create("dataset:hdfs:/tmp/data/events", descriptor);
+    Datasets.create("dataset:hdfs:/tmp/data/default/events", descriptor);
 
     return 0;
   }
