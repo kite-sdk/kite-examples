@@ -37,7 +37,7 @@ for further information.)
     * Install that JAR file by copying it to the `/usr/lib/flume-ng/lib/` directory
     * Change the value of the `tier1.sinks.sink-1.serializer` property from `org.apache.flume.sink.hdfs.AvroEventSerializer$Builder` to `org.apache.flume.serialization.AvroEventSerializer$Builder` since this version of Flume has a built-in HDFS sink for writing Avro data files.
 
-*   __Start a Flume agent__ 
+*   __Configure the Flume agent__
     * First, check the value of the `tier1.sinks.sink-1.hdfs.proxyUser` in the `flume.properties` 
       file to ensure it matches your login username. The default value is `cloudera`, which is correct
       for the QuickStart VM, but you'll likely need to change this when running the example from another system.
@@ -46,12 +46,13 @@ for further information.)
         * Click on the "Agent (Default)" category
         * Paste the contents of the `flume.properties` file into the text area for the "Configuration File" property. 
         * Save your change
-        * Start (or restart) the Flume agent
     * If not using Cloudera Manager, configure the Flume agent by following these steps:
         * Edit the `/etc/default/flume-ng-agent` file and add a line containing `FLUME_AGENT_NAME=tier1` 
           (this sets the default Flume agent name to match the one defined in the `flume.properties` file).
         * Run `sudo cp flume.properties /etc/flume-ng/conf/flume.conf` so the Flume agent uses our configuration file.
-        * Run `sudo /etc/init.d/flume-ng-agent restart` to restart the Flume agent with this new configuration
+
+__NOTE:__ Don't start Flume immediately after updating the configuration. Flume requires that the
+dataset alerady be created before it will start correctly.
 
 ## Running
 
@@ -72,6 +73,13 @@ You can see the dataset directory hierarchy in [`/tmp/data/default/events`](http
 In particular, the schema for the events is stored in
 [`/tmp/data/default/events/.metadata/schema.avsc`](http://localhost:8888/filebrowser/#/tmp/data/default/events/.metadata/schema.avsc).
 
+Before we start our application, start the Flume agent:
+
+* If using Cloudera Manager:
+    * Start (or restart) the Flume agent
+* If not using Cloudera Manager:
+    * Run `sudo /etc/init.d/flume-ng-agent restart` to restart the Flume agent with this new configuration
+
 Now we can run the application to do the logging.
 
 ```bash
@@ -81,8 +89,8 @@ mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.App"
 The program writes 10 log events to the logger. The events are sent to the Flume agent
 over IPC, and the agent writes the events to the HDFS file sink. (Even though it is
 called the HDFS sink, it can actually write to any Hadoop filesystem,
-including the local filesystem.) Log4j is using Kite's Flume
-[`Log4jAppender`](https://github.com/kite-sdk/kite/blob/master/kite-data/kite-data-flume/src/main/java/org/kitesdk/data/flume/Log4jAppender.java)
+including the local filesystem.) Log4j is using Flume's
+[`Log4jAppender`](https://github.com/apache/flume/blob/trunk/flume-ng-clients/flume-ng-log4jappender/src/main/java/org/apache/flume/clients/log4jappender/Log4jAppender.java)
 in the project's [`log4j.properties`](https://github.com/kite-sdk/kite-examples/blob/master/logging/src/main/resources/log4j.properties)
 
 The Flume sink will write a temporary file in [`/tmp/data/default/events`](http://localhost:8888/filebrowser/#/tmp/data/default/events).

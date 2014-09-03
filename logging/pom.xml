@@ -21,11 +21,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-flume</artifactId>
-      <version>${kite.version}</version>
-    </dependency>
-    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>${hadoop.log4j.version}</version>
@@ -42,6 +37,11 @@
       <type>pom</type>
       <scope>compile</scope> <!-- provide Hadoop dependencies -->
     </dependency>
+    <dependency>
+      <groupId>org.apache.flume.flume-ng-clients</groupId>
+      <artifactId>flume-ng-log4jappender</artifactId>
+      <version>1.5.0.1</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -57,26 +57,6 @@
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/jars</outputDirectory>
-              <overWriteReleases>false</overWriteReleases>
-              <overWriteSnapshots>false</overWriteSnapshots>
-              <overWriteIfNewer>true</overWriteIfNewer>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

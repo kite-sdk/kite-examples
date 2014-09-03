@@ -45,8 +45,8 @@
         <groupId>org.kitesdk</groupId>
         <artifactId>kite-maven-plugin</artifactId>
         <configuration>
-          <deployFileSystem>hdfs://localhost:8020/</deployFileSystem><!-- the Hadoop filesystem to deploy Oozie apps on -->
-          <oozieUrl>http://localhost:11000/oozie</oozieUrl> <!-- where to send Oozie commands to -->
+          <deployFileSystem>hdfs://quickstart.cloudera:8020/</deployFileSystem><!-- the Hadoop filesystem to deploy Oozie apps on -->
+          <oozieUrl>http://quickstart.cloudera:11000/oozie</oozieUrl> <!-- where to send Oozie commands to -->
           <updateApplication>true</updateApplication> <!-- update already-deployed apps -->
           <toolClass>org.kitesdk.examples.demo.CreateSessions</toolClass>
           <args>
@@ -55,11 +55,11 @@
           <hadoopConfiguration>
             <property>
               <name>fs.default.name</name>
-              <value>hdfs://localhost.localdomain:8020</value>
+              <value>hdfs://quickstart.cloudera:8020</value>
             </property>
             <property>
               <name>mapred.job.tracker</name>
-              <value>localhost.localdomain:8021</value>
+              <value>quickstart.cloudera:8021</value>
             </property>
           </hadoopConfiguration>
           <jobProperties> <!-- job properties for parameters in workflow.xml -->
