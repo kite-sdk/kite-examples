@@ -18,6 +18,6 @@
             maxActive="1" maxIdle="1" maxWait="10000"
             username="cloudera" password="cloudera"
             driverClassName="org.apache.hive.jdbc.HiveDriver"
-            url="jdbc:hive2://localhost:21050/;auth=noSasl"/>
+            url="jdbc:hive2://quickstart.cloudera:21050/;auth=noSasl"/>
 
 </Context>

@@ -22,7 +22,6 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
-import org.kitesdk.data.Datasets;
 
 /**
  * A simple application to log events to a dataset.
@@ -35,9 +34,9 @@ public class App extends Configured implements Tool {
     // Get a log4j logger
     Logger logger = Logger.getLogger(App.class);
 
-    // Find the schema from the dataset
-    Schema schema = Datasets.load("dataset:hdfs:/tmp/data/default/events").getDataset()
-        .getDescriptor().getSchema();
+    // Load the schema from our classpath
+    Schema schema = new Schema.Parser().parse(
+        getClass().getResourceAsStream("/event.avsc"));
 
     // Build some events using the generic Avro API and log them using log4j
     GenericRecordBuilder builder = new GenericRecordBuilder(schema);

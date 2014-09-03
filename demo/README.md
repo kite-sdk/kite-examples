@@ -10,7 +10,7 @@ If you run into trouble, check out the [Troubleshooting section](../README.md#tr
 ## Getting started
 
 1. This example assumes that you have VirtualBox or VMWare installed and have a
-   running [Cloudera QuickStart VM][getvm]. See the
+   running [Cloudera QuickStart VM][getvm] version 5.1 or later. See the
    [Getting Started](../README.md#getting-started) and
    [Troubleshooting](../README.md#troubleshooting) sections for help.
 2. In that VM, check out a copy of this demo so you can build the code and
@@ -24,25 +24,19 @@ cd kite-examples
 cd demo
 ```
 
-If you are using a prepared Kite VM, the `git clone` command is already done for you.
-
-[getvm]: https://ccp.cloudera.com/display/SUPPORT/Cloudera+QuickStart+VM
+[getvm]: http://www.cloudera.com/content/support/en/downloads/quickstart_vms.html
 
 ## Configuring the VM
 
-If you are using a prepared Kite VM, these configuration steps are already done for you.
-
-### __Enable Flume user impersonation__
-Flume needs to be able to impersonate the owner
+*   __Enable Flume user impersonation__ Flume needs to be able to impersonate the owner
  of the dataset it is writing to. (This is like Unix `sudo`, see
-[Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
-for further information.) This is already configured for Cloudera Manager 5 onwards.
-For earlier versions, in the Cloudera Manager web interface,
-* __Update the configuration__
-  * Click on the "hdfs1" service in [CM services](http://localhost:7180/cmf/services/status)
-  * Under the "Configuration" drop-down, select "View and Edit"
-  * Search for "valve"
-  * Add the following XML snippet as the "Cluster-wide Configuration Safety Valve for core-site.xml" and click "Save Changes"
+[Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH5/latest/CDH5-Security-Guide/cdh5sg_flume_security_props.html#topic_4_2_1_unique_1)
+for further information.)
+    * If you're using Cloudera Manager (the QuickStart VM ships with Cloudera Manager,
+      but by default it is not enabled) then this is already configured for you.
+    * If you're not using Cloudera Manager, just add the following XML snippet to your
+      `/etc/hadoop/conf/core-site.xml` file and then restart the NameNode with
+      `sudo service hadoop-hdfs-namenode restart`.
 
 ```
 <property>
@@ -57,25 +51,31 @@ For earlier versions, in the Cloudera Manager web interface,
 
 ### __Configure the flume agent__
 
-* __Update the Flume agent configuration__
-  * Click on the "Cloudera Manager" logo in the upper-left corner of CM, which
-    takes you to [CM services](http://localhost:7180/cmf/services/status)
-  * Click on the "flume1" service
-  * Under the "Configuration" drop-down, select "View and Edit"
-  * Search for "Configuration file"
-  * Replace the contents of of the "Configuration file" with the
-    `flume.properties` file from this repository
-  * Click "Save Changes"
-* __(Re)Start the Flume agent__
-  * Go back to the "flume1" service
-  * Under the "Actions" drop-down on the right side, select "Restart"
+* First, check the value of the `tier1.sinks.sink-1.hdfs.proxyUser` in the `flume.properties`
+  file to ensure it matches your login username. The default value is `cloudera`, which is correct
+  for the QuickStart VM, but you'll likely need to change this when running the example from another system.
+* If you're using Cloudera Manager, configure the Flume agent by following these steps:
+    * Select "View and Edit" under the Flume service Configuration tab
+    * Click on the "Agent (Default)" category
+    * Paste the contents of the `flume.properties` file into the text area for the "Configuration File" property.
+    * Save your change
+* If you're not using Cloudera Manager, configure the Flume agent by following these steps:
+    * Edit the `/etc/default/flume-ng-agent` file and add a line containing `FLUME_AGENT_NAME=tier1`
+      (this sets the default Flume agent name to match the one defined in the `flume.properties` file).
+    * Run `sudo cp flume.properties /etc/flume-ng/conf/flume.conf` so the Flume agent uses our configuration file.
 
-    If you are running this example from you machine and not from a QuickStart VM login,
-then make sure you change the value of the `proxyUser` setting in the agent
-configuration to the user that you are logged in as. Save changes,
-then start the Flume agent.
+__NOTE:__ Don't start Flume immediately after updating the configuration. Flume requires that the
+dataset alerady be created before it will start correctly.
 
-Next: __Ensure Oozie is running__ From Cloudera Manager, start the Oozie service.
+
+### __Ensure Oozie is running__
+
+* If you're using Cloudera Manager and Oozie isn't running follow these steps:
+    * Click on the "Cloudera Manager" logo in the upper-left corner of CM, which takes you
+      to [CM services](http://quickstart.cloudera:7180/cmf/services/status)
+    * Click on the "oozie1" service
+    * Under the "Actions" drop-down on the right side, select "Start"
+* If you're not using Cloudera Manager you can start Oozie by running `sudo service oozie start`
 
 ## Building
 
@@ -137,8 +137,15 @@ mvn kite:delete-dataset -Dkite.rootDirectory=/tmp/data -Dkite.datasetName=sessio
 
 You can check that the data directories were created, using Hue (login as `cloudera` if
  you are logged in to the VM, or as your host login if you are running from your
- machine): [`/tmp/data/default/events`](http://localhost:8888/filebrowser/#/tmp/data/default/events),
- [`/tmp/data/default/sessions`](http://localhost:8888/filebrowser/#/tmp/data/default/sessions).
+ machine): [`/tmp/data/default/events`](http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/events),
+ [`/tmp/data/default/sessions`](http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/sessions).
+
+### Start Flume
+
+* If using Cloudera Manager:
+    * Start (or restart) the Flume agent
+* If not using Cloudera Manager:
+    * Run `sudo /etc/init.d/flume-ng-agent restart` to restart the Flume agent with this new configuration
 
 ### Create events
 
@@ -149,7 +156,7 @@ container; for this example we'll start an embedded Tomcat instance using Maven:
 mvn tomcat7:run
 ```
 
-Navigate to [http://localhost:8034/demo-logging-webapp/](http://localhost:8034/demo-logging-webapp/),
+Navigate to [http://quickstart.cloudera:8034/demo-logging-webapp/](http://quickstart.cloudera:8034/demo-logging-webapp/),
 which presents you with a very simple web page for sending messages.
 
 The message events are sent to the Flume agent
@@ -166,7 +173,7 @@ a script as follows:
 ### Generate the derived sessions
 
 Wait about 30 seconds for Flume to flush the events to the
-[filesystem](http://localhost:8888/filebrowser/#/tmp/data/default/events),
+[filesystem](http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/events),
 then run the Crunch job to generate derived session data from the events:
 
 ```bash
@@ -181,7 +188,7 @@ The `Tool` class to run, as well as the cluster settings, are found from the con
 of the `kite-maven-plugin`.
 
 When it's complete you should see a file in [`/tmp/data/default/sessions`]
-(http://localhost:8888/filebrowser/#/tmp/data/default/sessions).
+(http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/sessions).
 
 You can also supply a view URI to process the events for a particular minute bucket:
 
@@ -198,12 +205,12 @@ impala-shell -q 'invalidate metadata'
 ```
 
 One way to explore the results is by using the `demo-reports-webapp` running at
-[http://localhost:8034/demo-reports-webapp/](http://localhost:8034/demo-reports-webapp/),
+[http://quickstart.cloudera:8034/demo-reports-webapp/](http://quickstart.cloudera:8034/demo-reports-webapp/),
 which uses JDBC to run Impala queries for a few pre-defined reports. (Note this only
 work with Impala 1.1 or later, see instructions above.)
 
 Another way is to run ad hoc SQL queries using the Hue interfaces to
-[Impala](http://localhost:8888/impala/) or [Hive](http://localhost:8888/beeswax/).
+[Impala](http://quickstart.cloudera:8888/impala/) or [Hive](http://quickstart.cloudera:8888/beeswax/).
 Here are some queries to try out:
 
 ```
@@ -245,7 +252,7 @@ The filesystem to deploy to is specified by the `deployFileSystem` setting for t
 `kite-maven-plugin`. By default, Oozie applications are stored in the
 `/user/<user>/apps` directory on
 HDFS. You can navigate to this location using the
-[web interface](http://localhost:8888/filebrowser/#/user) to see if the
+[web interface](http://quickstart.cloudera:8888/filebrowser/#/user) to see if the
 application has been successfully deployed.
 
 Before running an Oozie coordinator application, let's run a one-off workflow. The
@@ -255,7 +262,7 @@ Oozie server to use is specified by `oozieUrl` in the plugin configuration.
 mvn kite:run-app -Dkite.applicationType=workflow
 ```
 
-Monitor the workflow job using the [Oozie application in Hue](http://localhost:8888/oozie/list_oozie_workflows/).
+Monitor the workflow job using the [Oozie application in Hue](http://quickstart.cloudera:8888/oozie/list_oozie_workflows/).
 You can click through to see the underlying MapReduce jobs (just one in this case)
 that are run by Crunch.
 
@@ -280,11 +287,11 @@ Now we can run the Oozie coordinator application.
 mvn kite:run-app -Dkite.applicationType=coordinator -Dstart="$(date -u +"%Y-%m-%dT%H:%MZ")"
 ```
 
-Monitor the coordinator and resulting workflow jobs using the [Oozie application in Hue](http://localhost:8888/oozie/list_oozie_coordinators).
+Monitor the coordinator and resulting workflow jobs using the [Oozie application in Hue](http://quickstart.cloudera:8888/oozie/list_oozie_coordinators).
 
 After a minute or two when a workflow job has completed, you should see new files appear
 in the `sessions` dataset, in
-[`/tmp/data/default/sessions`](http://localhost:8888/filebrowser#/tmp/data/default/sessions).
+[`/tmp/data/default/sessions`](http://quickstart.cloudera:8888/filebrowser#/tmp/data/default/sessions).
 When you see new files appear, then try running the session analysis from above.
 
 When you have finished, stop the user simulation script by killing the process
