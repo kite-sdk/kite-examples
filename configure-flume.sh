@@ -31,8 +31,8 @@ rm -f /var/lib/flume-ng/plugins.d/dataset-sink/lib/*
 rm -f /var/lib/flume-ng/plugins.d/dataset-sink/libext/*
 
 # Create links to the kite-data-hcatalog and kite-data-hbase jars
-ln -s /usr/lib/kite/kite-data-hcatalog.jar /var/lib/flume-ng/plugins.d/dataset-site/lib/kite-data-hcatalog.jar
-ln -s /usr/lib/kite/kite-data-hbase.jar /var/lib/flume-ng/plugins.d/dataset-site/lib/kite-data-hbase.jar
+ln -s /usr/lib/kite/kite-data-hcatalog.jar /var/lib/flume-ng/plugins.d/dataset-sink/lib/kite-data-hcatalog.jar
+ln -s /usr/lib/kite/kite-data-hbase.jar /var/lib/flume-ng/plugins.d/dataset-sink/lib/kite-data-hbase.jar
 
 # Create links to the Kite dependencies
 ln -s /usr/lib/hive/lib/antlr-2.7.7.jar /var/lib/flume-ng/plugins.d/dataset-sink/libext/antlr-2.7.7.jar 
