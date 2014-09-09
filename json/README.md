@@ -43,7 +43,7 @@ for further information.)
 
 ### __Configure the flume agent__
 
-* First, check the value of the `tier1.sinks.sink-1.hdfs.proxyUser` in the
+* First, check the value of the `tier1.sinks.user-dataset.auth.proxyUser` in the
   [flume.properties](flume.properties), file to ensure it matches your login
   username. The default value is `cloudera`, which is correct for the
   QuickStart VM, but you'll likely need to change this when running the example
@@ -222,12 +222,12 @@ __HDFS sink config__:
 
 ```
 # store the users in the users Dataset
-tier1.sinks.sink-1.type = org.apache.flume.sink.kite.DatasetSink
-tier1.sinks.sink-1.channel = ch-1
-tier1.sinks.sink-1.kite.repo.uri = repo:hive:/tmp/data/default
-tier1.sinks.sink-1.kite.dataset.name = users
-tier1.sinks.sink-1.kite.batchSize = 10
-tier1.sinks.sink-1.auth.proxyUser = cloudera
+tier1.sinks.user-dataset.type = org.apache.flume.sink.kite.DatasetSink
+tier1.sinks.user-dataset.channel = mem-channel
+tier1.sinks.user-dataset.kite.repo.uri = repo:hive:/tmp/data/default
+tier1.sinks.user-dataset.kite.dataset.name = users
+tier1.sinks.user-dataset.kite.batchSize = 10
+tier1.sinks.user-dataset.auth.proxyUser = cloudera
 ```
 
 To configure flume, copy the `flume.properties` file as the flume agent's
