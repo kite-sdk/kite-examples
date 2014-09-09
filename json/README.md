@@ -68,15 +68,13 @@ sudo ../configure-flume.sh
       the one defined in the `flume.properties` file).
     * Edit the `/etc/default/flume-ng-agent` file and add a line containing
       `export FLUME_JAVA_OPTS=-Xmx100m` (this sets the heap size to 100MB).
+    * Run `sudo cp flume.properties /etc/flume-ng/conf/flume.conf` so the Flume
+      agent uses our configuration file.
     * Create a `/etc/flume-ng/conf/flume-env.sh` file with the following contents:
-
 ```
 # Note that the Flume conf directory is always included in the classpath.
 FLUME_CLASSPATH="/etc/hive/conf"
 ```
-
-    * Run `sudo cp flume.properties /etc/flume-ng/conf/flume.conf` so the Flume
-      agent uses our configuration file.
 
 __NOTE:__ Don't start Flume immediately after updating the configuration. Flume
 requires that the dataset alerady be created before it will start correctly.
