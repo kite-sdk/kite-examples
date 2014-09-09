@@ -45,3 +45,4 @@ ln -s /usr/lib/hive/lib/hive-exec.jar /var/lib/flume-ng/plugins.d/dataset-sink/l
 ln -s /usr/lib/hive/lib/hive-metastore.jar /var/lib/flume-ng/plugins.d/dataset-sink/libext/hive-metastore.jar 
 ln -s /usr/lib/hive/lib/jdo-api-3.0.1.jar /var/lib/flume-ng/plugins.d/dataset-sink/libext/jdo-api-3.0.1.jar 
 ln -s /usr/lib/hive/lib/libfb303-0.9.0.jar /var/lib/flume-ng/plugins.d/dataset-sink/libext/libfb303-0.9.0.jar 
+ln -s /usr/lib/hive-hcatalog/share/hcatalog/hive-hcatalog-core.jar /var/lib/flume-ng/plugins.d/dataset-sink/libext/hive-hcatalog-core.jar
