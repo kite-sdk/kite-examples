@@ -15,12 +15,62 @@ While this guide is focused on converting JSON records inside flume, Morphlines
 can be configured to handle a variety of tasks and transforms, documented in
 its [Morphlines Reference Guide][refguide].
 
-__Note__: Unlike the other examples, this example requires a CDH5.0 or later
-cluster (such as the [Cloudera Quickstart VM][getvm]).
-
 [morphlines]: http://kitesdk.org/docs/current/kite-morphlines/index.html
 [refguide]: http://kitesdk.org/docs/current/kite-morphlines/morphlinesReferenceGuide.html
-[getvm]: http://www.cloudera.com/content/support/en/downloads/quickstart_vms.html
+
+## Configuring the VM
+
+*   __Enable Flume user impersonation__ Flume needs to be able to impersonate the owner
+ of the dataset it is writing to. (This is like Unix `sudo`, see
+[Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH5/latest/CDH5-Security-Guide/cdh5sg_flume_security_props.html#topic_4_2_1_unique_1)
+for further information.)
+    * If you're using Cloudera Manager (the QuickStart VM ships with Cloudera Manager,
+      but by default it is not enabled) then this is already configured for you.
+    * If you're not using Cloudera Manager, just add the following XML snippet to your
+      `/etc/hadoop/conf/core-site.xml` file and then restart the NameNode with
+      `sudo service hadoop-hdfs-namenode restart`.
+
+```
+<property>
+  <name>hadoop.proxyuser.flume.groups</name>
+  <value>*</value>
+</property>
+<property>
+  <name>hadoop.proxyuser.flume.hosts</name>
+  <value>*</value>
+</property>
+```
+
+### __Configure the flume agent__
+
+* First, check the value of the `tier1.sinks.sink-1.hdfs.proxyUser` in the
+  [flume.properties](flume.properties), file to ensure it matches your login
+  username. The default value is `cloudera`, which is correct for the
+  QuickStart VM, but you'll likely need to change this when running the example
+  from another system.
+* Next, run the [configure-flume.sh script](../configure-flume.sh) from the
+  [root of the kite-examples repository](http://github.com/kite-sdk/kite-examples)
+  using sudo:
+  ```bash
+  sudo ../configure-flume.sh
+  ```
+* If you're using Cloudera Manager, configure the Flume agent by following these
+  steps:
+    * Select "View and Edit" under the Flume service Configuration tab
+    * Click on the "Agent (Default)" category
+    * Paste the contents of the [flume.properties](flume.properties) file into
+      the text area for the "Configuration File" property.
+    * Save your change
+* If you're not using Cloudera Manager, configure the Flume agent by following
+  these steps:
+    * Edit the `/etc/default/flume-ng-agent` file and add a line containing
+      `FLUME_AGENT_NAME=tier1` (this sets the default Flume agent name to match
+      the one defined in the `flume.properties` file).
+    * Run `sudo cp flume.properties /etc/flume-ng/conf/flume.conf` so the Flume
+      agent uses our configuration file.
+
+__NOTE:__ Don't start Flume immediately after updating the configuration. Flume
+requires that the dataset alerady be created before it will start correctly.
 
 ## Configuration
 
@@ -159,19 +209,18 @@ morphlines, and tell it where the morphlines configuration lives. The
 `morphlineId` identifies which morphline in the configuration file to use and
 is optional if there is only one.
 
-Lastly, configure the HDFS sink to write to the Dataset.
+Lastly, configure the Dataset sink to write to the Dataset.
 
 __HDFS sink config__:
 
 ```
 # store the users in the users Dataset
-tier1.sinks.user-dataset.type = hdfs
-tier1.sinks.user-dataset.channel = mem-channel
-tier1.sinks.user-dataset.hdfs.path = /tmp/data/default/users
-tier1.sinks.user-dataset.hdfs.batchSize = 10
-tier1.sinks.user-dataset.hdfs.fileType = DataStream
-tier1.sinks.user-dataset.hdfs.proxyUser = cloudera
-tier1.sinks.user-dataset.serializer = org.apache.flume.sink.hdfs.AvroEventSerializer$Builder
+tier1.sinks.sink-1.type = org.apache.flume.sink.kite.DatasetSink
+tier1.sinks.sink-1.channel = ch-1
+tier1.sinks.sink-1.kite.repo.uri = repo:hive:/tmp/data/default
+tier1.sinks.sink-1.kite.dataset.name = users
+tier1.sinks.sink-1.kite.batchSize = 10
+tier1.sinks.sink-1.auth.proxyUser = cloudera
 ```
 
 To configure flume, copy the `flume.properties` file as the flume agent's
@@ -197,8 +246,8 @@ Once the flume agent is running, you can send events by connecting with netcat,
 `nc`, and typing in JSON records. `CTRL+D` will close the connection.
 
 ```
-blue@work:~$ nc -v localhost 41415
-Connection to localhost 41415 port [tcp/*] succeeded!
+blue@work:~$ nc -v quickstart.cloudera 41415
+Connection to quickstart.cloudera 41415 port [tcp/*] succeeded!
 {"username": "blue", "color": "green"}
 OK
 {"username": "tom", "color": "red"}
@@ -213,19 +262,19 @@ the records using impala:
 ```
 blue@work:~$ impala-shell
 Starting Impala Shell in unsecure mode
-Connected to localhost.localdomain:21000
+Connected to quickstart.cloudera:21000
 Server version: impalad version 1.1.1 RELEASE (build 83d5868f005966883a918a819a449f636a5b3d5f)
 Welcome to the Impala shell. Press TAB twice to see a list of available commands.
 
 Copyright (c) 2012 Cloudera, Inc. All rights reserved.
 
 (Shell build version: Impala Shell v1.1.1 (83d5868) built on Fri Aug 23 17:28:05 PDT 2013)
-[localhost.localdomain:21000] > invalidate metadata;
+[quickstart.cloudera:21000] > invalidate metadata;
 Query: invalidate metadata
 Query finished, fetching results ...
 
 Returned 0 row(s) in 5.25s
-[localhost.localdomain:21000] > show tables;
+[quickstart.cloudera:21000] > show tables;
 Query: show tables
 Query finished, fetching results ...
 +-------+
@@ -234,7 +283,7 @@ Query finished, fetching results ...
 | users |
 +-------+
 Returned 1 row(s) in 0.11s
-[localhost.localdomain:21000] > select * from users;
+[quickstart.cloudera:21000] > select * from users;
 Query: select * from users
 Query finished, fetching results ...
 +----------+---------------+---------------+
@@ -244,7 +293,7 @@ Query finished, fetching results ...
 | tom      | 1389403395128 | red           |
 +----------+---------------+---------------+
 Returned 2 row(s) in 0.50s
-[localhost.localdomain:21000] > select count(favoriteColor) from users group by favoriteColor;
+[quickstart.cloudera:21000] > select count(favoriteColor) from users group by favoriteColor;
 Query: select count(favoriteColor) from users group by favoriteColor
 Query finished, fetching results ...
 +----------------------+
@@ -254,7 +303,7 @@ Query finished, fetching results ...
 | 1                    |
 +----------------------+
 Returned 2 row(s) in 0.31s
-[localhost.localdomain:21000] > select favoriteColor, count(favoriteColor) from users group by favoriteColor;
+[quickstart.cloudera:21000] > select favoriteColor, count(favoriteColor) from users group by favoriteColor;
 Query: select favoriteColor, count(favoriteColor) from users group by favoriteColor
 Query finished, fetching results ...
 +---------------+----------------------+
