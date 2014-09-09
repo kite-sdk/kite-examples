@@ -6,7 +6,7 @@ if [[ "$EUID" -ne 0 ]]; then
 fi
 
 # Make sure there isn't a plugins.d in /usr/lib/flume-ng already
-if [[ -d /usr/lib/flume-ng/plugins.d ]]; then
+if [[ -d /usr/lib/flume-ng/plugins.d && ! -L /usr/lib/flume-ng/plugins.d ]]; then
   echo "Error: /usr/lib/flume-ng/plugins.d already exists and is a directory"
   exit
 fi
