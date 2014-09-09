@@ -51,9 +51,9 @@ for further information.)
 * Next, run the [configure-flume.sh script](../configure-flume.sh) from the
   [root of the kite-examples repository](http://github.com/kite-sdk/kite-examples)
   using sudo:
-  ```bash
-  sudo ../configure-flume.sh
-  ```
+```bash
+sudo ../configure-flume.sh
+```
 * If you're using Cloudera Manager, configure the Flume agent by following these
   steps:
     * Select "View and Edit" under the Flume service Configuration tab
@@ -66,6 +66,8 @@ for further information.)
     * Edit the `/etc/default/flume-ng-agent` file and add a line containing
       `FLUME_AGENT_NAME=tier1` (this sets the default Flume agent name to match
       the one defined in the `flume.properties` file).
+    * Edit the `/etc/default/flume-ng-agent` file and add a line containing
+      `export FLUME_JAVA_OPTS=-Xmx100m` (this sets the heap size to 100MB).
     * Run `sudo cp flume.properties /etc/flume-ng/conf/flume.conf` so the Flume
       agent uses our configuration file.
 
