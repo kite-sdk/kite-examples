@@ -29,7 +29,7 @@ public class DeleteDataset extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     // Drop the events dataset
-    boolean success = Datasets.delete("dataset:hdfs:/tmp/data/default/events");
+    boolean success = Datasets.delete("dataset:hive:/tmp/data/default/events");
 
     return success ? 0 : 1;
   }

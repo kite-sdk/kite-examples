@@ -36,7 +36,7 @@ public class App extends Configured implements Tool {
     Logger logger = Logger.getLogger(App.class);
 
     // Find the schema from the dataset
-    Schema schema = Datasets.load("dataset:hdfs:/tmp/data/default/events").getDataset()
+    Schema schema = Datasets.load("dataset:hive:/tmp/data/default/events").getDataset()
         .getDescriptor().getSchema();
 
     // Build some events using the generic Avro API and log them using log4j

@@ -17,6 +17,6 @@
 <configuration>
   <property>
     <name>fs.default.name</name>
-    <value>hdfs://localhost/</value>
+    <value>hdfs://quickstart.cloudera/</value>
   </property>
 </configuration>

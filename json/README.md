@@ -20,8 +20,10 @@ its [Morphlines Reference Guide][refguide].
 
 ## Configuring the VM
 
-*   __Enable Flume user impersonation__ Flume needs to be able to impersonate the owner
- of the dataset it is writing to. (This is like Unix `sudo`, see
+### __Enable Flume user impersonation__
+
+Flume needs to be able to impersonate the owner of the dataset it is writing to.
+(This is like Unix `sudo`, see
 [Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH5/latest/CDH5-Security-Guide/cdh5sg_flume_security_props.html#topic_4_2_1_unique_1)
 for further information.)
     * If you're using Cloudera Manager (the QuickStart VM ships with Cloudera Manager,
@@ -48,8 +50,9 @@ for further information.)
   username. The default value is `cloudera`, which is correct for the
   QuickStart VM, but you'll likely need to change this when running the example
   from another system.
-* Next, run the [configure-flume.sh script](../configure-flume.sh) from the
-  [root of the kite-examples repository](http://github.com/kite-sdk/kite-examples)
+* Next we need to add a `plugins.d` directory to configure Flume with some additional
+  dependencies. To do this, run the [configure-flume.sh script](../configure-flume.sh)
+  from the [root of the kite-examples repository](http://github.com/kite-sdk/kite-examples)
   using sudo:
 ```bash
 sudo ../configure-flume.sh
@@ -181,17 +184,16 @@ sudo cp morphline.conf /etc/flume-ng/conf/morphline.conf
 ### Flume
 
 The last step is to create a flume configuration that uses our morphline. The
-full configuration is in [flume.properties](flume.properties), which can be
-copied as the full flume agent config.
+full configuration is in [flume.properties](flume.properties), which we
+copied as the full flume agent config above.
 
-Flume
-has two ways of calling a morphline, either in a sink or in an interceptor. We
+Flume has two ways of calling a morphline, either in a sink or in an interceptor. We
 will use the interceptor, which can transform an event before putting it in a
 source's outgoing channel. The source has been configured as
 `tier1.sources.listener`, so interceptors are added underneath its configuration.
 
 In addition to the morphline interceptor, we need to add an interceptor that
-puts the avro record's schema in the flume event's headers for the HDFS sink.
+puts the avro record's schema in the flume event's headers for the Dataset sink.
 This is done with a static interceptor because the schema doesn't change.
 
 __Interceptor config__:
@@ -230,8 +232,12 @@ tier1.sinks.user-dataset.kite.batchSize = 10
 tier1.sinks.user-dataset.auth.proxyUser = cloudera
 ```
 
-To configure flume, copy the `flume.properties` file as the flume agent's
-configuration and restart the flume Agent.
+Now start the Flume agent:
+
+* If using Cloudera Manager:
+    * Start (or restart) the Flume agent
+* If not using Cloudera Manager:
+    * Run `sudo /etc/init.d/flume-ng-agent restart` to restart the Flume agent.
 
 ## Testing
 
