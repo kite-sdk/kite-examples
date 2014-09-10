@@ -20,6 +20,12 @@
 <configuration>
 
   <property>
+    <name>yarn.resourcemanager.address</name>
+    <value>quickstart.cloudera:8032</value>
+  </property>
+
+  <!-- This shouldn't be required, but is needed due to a bug in CDH -->
+  <property>
     <description>Classpath for typical applications.</description>
      <name>yarn.application.classpath</name>
      <value>

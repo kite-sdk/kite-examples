@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 
 public class LoggingServlet extends HttpServlet {
 
-  private Logger logger = Logger.getLogger(LoggingServlet.class);
+  private final Logger logger = Logger.getLogger(LoggingServlet.class);
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse
