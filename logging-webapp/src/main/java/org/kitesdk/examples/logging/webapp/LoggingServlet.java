@@ -24,7 +24,7 @@ public class LoggingServlet extends HttpServlet {
     try {
       // Load the schema from our classpath
       this.schema = new Schema.Parser().parse(
-          getClass().getResourceAsStream("events.avsc"));
+          getClass().getResourceAsStream("event.avsc"));
     } catch (IOException ex) {
       throw new ServletException("Can't load events.avsc schema", ex);
     }

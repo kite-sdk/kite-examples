@@ -36,7 +36,7 @@ public class App extends Configured implements Tool {
 
     // Load the schema from our classpath
     Schema schema = new Schema.Parser().parse(
-        getClass().getResourceAsStream("events.avsc"));
+        getClass().getResourceAsStream("event.avsc"));
 
     // Build some events using the generic Avro API and log them using log4j
     GenericRecordBuilder builder = new GenericRecordBuilder(schema);
