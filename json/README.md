@@ -80,7 +80,7 @@ FLUME_CLASSPATH="/etc/hive/conf"
 ```
 
 __NOTE:__ Don't start Flume immediately after updating the configuration. Flume
-requires that the dataset alerady be created before it will start correctly.
+requires that the dataset already exist before it will start correctly.
 
 ## Configuration
 

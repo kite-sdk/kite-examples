@@ -65,7 +65,7 @@ FLUME_CLASSPATH="/etc/hive/conf"
 ```
 
 __NOTE:__ Don't start Flume immediately after updating the configuration. Flume
-requires that the dataset alerady be created before it will start correctly.
+requires that the dataset already exist before it will start correctly.
 
 ## Running
 
@@ -83,8 +83,6 @@ mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.CreateDataset"
 ```
 
 You can see the dataset directory hierarchy in [`/tmp/data/default/events`](http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/events),
-In particular, the schema for the events is stored in
-[`/tmp/data/default/events/.metadata/schema.avsc`](http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/events/.metadata/schema.avsc).
 
 Before we start our application, start the Flume agent:
 
