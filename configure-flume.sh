@@ -31,8 +31,8 @@ rm -f /var/lib/flume-ng/plugins.d/dataset-sink/lib/*
 rm -f /var/lib/flume-ng/plugins.d/dataset-sink/libext/*
 
 BASE_DIR=/usr/lib
-if [[ ! -d /usr/lib/kite && -d /opt/cloudera/parcels/CDH ]]; then
-  BASE_DIR=/opt/cloudera/parcels/CDH;
+if [[ ! -d /usr/lib/kite && -d /opt/cloudera/parcels/CDH/lib ]]; then
+  BASE_DIR=/opt/cloudera/parcels/CDH/lib;
 fi
 
 # Create links to the kite-data-hcatalog and kite-data-hbase jars
