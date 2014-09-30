@@ -118,8 +118,8 @@ You can browse the correlated events using [Hue on the QuickstartVM](http://loca
 When you're done or if you want to run the example again, you can delete the datasets we created:
 
 ```bash
-curl http://central.maven.org/maven2/org/kitesdk/kite-tools/0.15.0/kite-tools-0.15.0-binary.jar -o dataset
-chmod +x dataset
-./dataset delete events
-./dataset delete correlated_events
+curl http://central.maven.org/maven2/org/kitesdk/kite-tools/0.16.0/kite-tools-0.16.0-binary.jar -o kite-dataset
+chmod +x kite-dataset
+./kite-dataset delete events
+./kite-dataset delete correlated_events
 ```
