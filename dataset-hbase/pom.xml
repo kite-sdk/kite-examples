@@ -58,7 +58,7 @@
         <groupId>org.kitesdk</groupId>
         <artifactId>kite-maven-plugin</artifactId>
         <configuration>
-          <repositoryUri>repo:hbase:localhost.localdomain</repositoryUri>
+          <repositoryUri>repo:hbase:quickstart.cloudera</repositoryUri>
           <datasetName>users.User</datasetName>
           <avroSchemaFile>src/main/avro/user.avsc</avroSchemaFile>
         </configuration>

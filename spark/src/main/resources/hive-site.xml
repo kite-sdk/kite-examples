@@ -16,7 +16,12 @@
 -->
 <configuration>
   <property>
-    <name>fs.default.name</name>
-    <value>hdfs://quickstart.cloudera/</value>
+    <name>hive.metastore.uris</name>
+    <value>thrift://quickstart.cloudera:9083</value>
   </property>
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>/user/hive/warehouse</value>
+  </property>
+
 </configuration>

@@ -156,7 +156,6 @@ public class CorrelateEventsTask implements Serializable {
             for (StandardEvent click : clicks) {
               if (Math.abs(alert.getTimestamp() - click.getTimestamp())
                   <= FIVE_MIN_MILLIS) {
-                System.out.println(TimeUnit.MILLISECONDS.toSeconds(Math.abs(alert.getTimestamp() - click.getTimestamp())));
                 correlated.add(click);
               }
             }

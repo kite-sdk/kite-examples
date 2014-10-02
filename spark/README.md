@@ -5,7 +5,10 @@ This module provides an example of processing event data using Apache Spark.
 ## Getting started
 
 This example assumes that you're running a CDH5.1 or later cluster (such as the
-[Cloudera Quickstart VM][getvm]) that has Spark configured.
+[Cloudera Quickstart VM][getvm]) that has Spark configured. This example requires
+the `spark-submit` command to execute the Spark job on the cluster. If you're using
+the Quickstart VM, be sure to run this example from the VM rather than the host
+computer.
 
 [getvm]: http://www.cloudera.com/content/support/en/downloads/quickstart_vms.html
 

@@ -96,10 +96,11 @@ mvn compile
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadUserDataset"
 ```
 
-You can also try changing `WriteUserDataset` to set the new field and check that it runs,
+You can also try changing [`WriteUserDataset`][write-user-java] to set the new field and check that it runs,
 and that the new entities can be read back.
 
 ```bash
+mvn compile
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.WriteUserDataset"
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadUserDataset"
 ```
@@ -109,3 +110,5 @@ Finally, delete the dataset:
 ```bash
 mvn kite:delete-dataset
 ```
+
+[write-user-java]: src/main/java/org/kitesdk/examples/data/WriteUserDataset.java

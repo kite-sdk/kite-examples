@@ -125,7 +125,7 @@ mvn kite:create-dataset \
 A few comments about these commands. The schemas for the `events` and `sessions`
 datasets are loaded from local files.
 
-The `--partition-expression` argument is used to specify how the data is partitioned.
+The `-Dkite.partitionExpression` argument is used to specify how the data is partitioned.
 Here we partition by time fields, using JEXL to specify the field partitioners.
 
 Note that you can delete the datasets if you created them on a previous attempt with:
