@@ -17,8 +17,8 @@ all of the rating data and a `u.item` file with information about each movie.
 To add these file to HDFS:
 
 1. Unzip the file: `unzip ml-100k.zip`
-2. Copy the `u.data` file into HDFS: `hadoop fs -copyFromLocal ml-100k/u.data ratings.tsv`
-3. Copy the `u.item` file into HDFS: `hadoop fs -copyFromLocal ml-100k/u.item movies.psv`
+2. Copy the `u.data` file into HDFS: `hdfs dfs -copyFromLocal ml-100k/u.data ratings.tsv`
+3. Copy the `u.item` file into HDFS: `hdfs dfs -copyFromLocal ml-100k/u.item movies.psv`
 
 This also renames the files to be a little more friendly.
 
