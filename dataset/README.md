@@ -45,7 +45,13 @@ time.
 After creating the data set, the example creates a `Hello` object and writes it
 out. Then, it reads it back in, calls `sayHello`, and finally, deletes the data
 set. After you read through the rest of [`HelloKite code`][hello-java], you can
-run the example from the `dataset/` folder with this command:
+build the code from the `dataset/` folder with this command:
+
+```bash
+mvn compile
+```
+and then run the example with:
+
 ```bash
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.HelloKite"
 ```
@@ -58,13 +64,7 @@ This example shows basic usage of the Kite Data API for performing streaming wri
 to (and reads from) a dataset. Like the "Hello Kite" example above, the
 products are plain (old) java object, POJOs.
 
-Build the code with:
-
-```bash
-mvn compile
-```
-
-Then create the dataset with:
+Create the dataset with:
 
 ```bash
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.CreateProductDatasetPojo"

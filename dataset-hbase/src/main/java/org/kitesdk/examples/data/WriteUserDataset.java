@@ -31,7 +31,7 @@ public class WriteUserDataset extends Configured implements Tool {
     // Load the users dataset
     // Dataset is named [table].[entity]
     RandomAccessDataset<User> users = Datasets.load(
-        "dataset:hbase:localhost.localdomain/users.User", User.class);
+        "dataset:hbase:quickstart.cloudera/users.User", User.class);
 
     // Get an accessor for the dataset and write some users to it
     users.put(user("bill", "green"));
