@@ -82,7 +82,7 @@ to create the dataset on the filesystem with the following command:
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.CreateDataset"
 ```
 
-You can see the dataset directory hierarchy in [`/tmp/data/default/events`](http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/events),
+Since this is a Hive dataset, you can see the table definition in [Hue's metastore browser](http://quickstart.cloudera:8888/metastore/table/default/events).
 
 Before we start our application, start the Flume agent:
 
@@ -112,6 +112,9 @@ Run the following program to dump the contents of the dataset to the console:
 ```bash
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.logging.ReadDataset"
 ```
+
+You can also browse the data using
+[Hue's metastore browser](http://quickstart.cloudera:8888/metastore/table/default/events/read).
 
 If you want to move on to the Kite [logging-webapp](../logging-webapp) example,
 then keep the dataset you just created otherwise, you can delete the dataset:

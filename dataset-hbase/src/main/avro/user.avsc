@@ -18,6 +18,12 @@
       "name": "favoriteColor",
       "type": "string",
       "mapping": { "type": "column", "value": "meta:favoriteColor" }
+    },
+    {
+      "name": "age",
+      "type": "int",
+      "default": 0,
+      "mapping": { "type": "column", "value": "meta:age" }
     }
   ]
 }
