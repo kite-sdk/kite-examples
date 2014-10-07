@@ -102,24 +102,6 @@ properties in `/etc/hbase/conf/hbase-site.xml`:
 ```
 * __Restart the vm__ Restart the VM with `sudo shutdown -r now`
 
-### Running the examples on a cluster
-
-You can also run the examples on a cluster. In order to run the examples, you need to make
-sure the examples are able to find your configuration files. Do this by setting the
-`HADOOP_CONF_DIR` and `HIVE_CONF_DIR` envrionment variables:
-
-```bash
-export HADOOP_CONF_DIR=/etc/hadoop/conf
-export HIVE_CONF_DIR=/etc/hive/conf
-```
-
-If you want, you can also have these set in your bash profile:
-
-```bash
-echo 'export HADOOP_CONF_DIR=/etc/hadoop/conf' >> ~/.bash_profile
-echo 'export HIVE_CONF_DIR=/etc/hive/conf' >> ~/.bash_profile
-```
-
 # Troubleshooting
 
 ## Working with the VM
