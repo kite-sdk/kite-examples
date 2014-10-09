@@ -85,6 +85,16 @@ is done by setting the `dfs.namenode.rpc-bind-host` property in `/etc/hadoop/con
     <value>0.0.0.0</value>
   </property>
 ```
+* __Configure the History Server to listen on all interfaces__ In order to access the 
+cluster from the host computer, the History Server must be configured to listen on all 
+network interfaces. This is done by setting the `mapreduce.jobhistory.address` property 
+in `/etc/hadoop/conf/mapred-site.xml`:
+```xml
+  <property>
+    <name>mapreduce.jobhistory.address</name>
+    <value>0.0.0.0:10020</value>
+  </property>
+```
 * __Configure HBase to listen on all interfaces__ In order to access the cluster from
 the host computer, HBase must be configured to listen on all network interfaces. This
 is done by setting the `hbase.master.ipc.address` and `hbase.regionserver.ipc.address`
