@@ -13,11 +13,11 @@ Flume needs to be able to impersonate the owner of the dataset it is writing to.
 (This is like Unix `sudo`, see
 [Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
 for further information.) 
-    * If you're using Cloudera Manager (the QuickStart VM ships with Cloudera Manager,
-      but by default it is not enabled) then this is already configured for you.
-    * If you're not using Cloudera Manager, just add the following XML snippet to your
-      `/etc/hadop/conf/core-site.xml` file and then restart the NameNode with
-      `sudo service hadoop-hdfs-namenode restart`.
+* If you're using Cloudera Manager (the QuickStart VM ships with Cloudera Manager,
+  but by default it is not enabled) then this is already configured for you.
+* If you're not using Cloudera Manager, just add the following XML snippet to your
+  `/etc/hadop/conf/core-site.xml` file and then restart the NameNode with
+  `sudo service hadoop-hdfs-namenode restart`.
 
 ```
 <property>
