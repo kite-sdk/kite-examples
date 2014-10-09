@@ -42,40 +42,13 @@ There are two ways to run the examples with the QuickStart VM:
 2. From your host computer.
 
 The advantage of the first approach is that you don't need to install anything extra on
-your host computer, such as Java or Maven, so there are no extra set up steps.
+your host computer, such as Java or Maven, so there are no fewer set up steps.
 
-The second approach is preferable when you want to use tools from your own development
-environment (browser, IDE, command line). However, there are a few extra steps you
-need to take to configure the QuickStart VM, listed below.
+For either approach, you need to make the following changes while logged into the VM:
 
-
-* __Add a host entry for quickstart.cloudera__ Add or edit a line like the following 
-in `/etc/hosts`
-```
-127.0.0.1       localhost.localdomain   localhost       quickstart.cloudera
-```
 * __Sync the system clock__ For some of the examples it's important that the host and
 guest times are in sync. To synchronize the guest, login and type
 `sudo ntpdate pool.ntp.org`.
-* __Enable port forwarding__ Most of the ports that need to be forward are pre-configured
-on the QuickStart VM, but there are few that we need to add. For VirtualBox, open
-the Settings dialog for the VM, select the Network tab, and click the Port Forwarding
-button. Map the following ports - in each case the host port and the guest port
-should be the same. Also, your VM should not be running when you are making these changes.
-** 8032 (YARN ResourceManager)
-** 10020 (MapReduce JobHistoryServer)
-
-If you have VBoxManage installed on your host machine, you can do this via
-command line as well. In bash, this would look something like:
-
-```bash
-# Set VM_NAME to the name of your VM as it appears in VirtualBox
-VM_NAME="QuickStart VM"
-PORTS="8032 10020"
-for port in $PORTS; do
-  VBoxManage modifyvm "$VM_NAME" --natpf1 "Rule $port,tcp,,$port,,$port"
-done
-```
 * __Configure the NameNode to listen on all interfaces__ In order to access the cluster from
 the host computer, the NameNode must be configured to listen on all network interfaces. This
 is done by setting the `dfs.namenode.rpc-bind-host` property in `/etc/hadoop/conf/hdfs-site.xml`:
@@ -85,9 +58,9 @@ is done by setting the `dfs.namenode.rpc-bind-host` property in `/etc/hadoop/con
     <value>0.0.0.0</value>
   </property>
 ```
-* __Configure the History Server to listen on all interfaces__ In order to access the 
-cluster from the host computer, the History Server must be configured to listen on all 
-network interfaces. This is done by setting the `mapreduce.jobhistory.address` property 
+* __Configure the History Server to listen on all interfaces__ In order to access the
+cluster from the host computer, the History Server must be configured to listen on all
+network interfaces. This is done by setting the `mapreduce.jobhistory.address` property
 in `/etc/hadoop/conf/mapred-site.xml`:
 ```xml
   <property>
@@ -111,6 +84,35 @@ properties in `/etc/hbase/conf/hbase-site.xml`:
   </property>
 ```
 * __Restart the vm__ Restart the VM with `sudo shutdown -r now`
+
+The second approach is preferable when you want to use tools from your own development
+environment (browser, IDE, command line). However, there are a few extra steps you
+need to take to configure the QuickStart VM, listed below:
+
+* __Add a host entry for quickstart.cloudera__ Add or edit a line like the following
+in `/etc/hosts` on the host machine
+```
+127.0.0.1       localhost.localdomain   localhost       quickstart.cloudera
+```
+* __Enable port forwarding__ Most of the ports that need to be forward are pre-configured
+on the QuickStart VM, but there are few that we need to add. For VirtualBox, open
+the Settings dialog for the VM, select the Network tab, and click the Port Forwarding
+button. Map the following ports - in each case the host port and the guest port
+should be the same. Also, your VM should not be running when you are making these changes.
+  * 8032 (YARN ResourceManager)
+  * 10020 (MapReduce JobHistoryServer)
+
+If you have VBoxManage installed on your host machine, you can do this via
+command line as well. In bash, this would look something like:
+
+```bash
+# Set VM_NAME to the name of your VM as it appears in VirtualBox
+VM_NAME="QuickStart VM"
+PORTS="8032 10020"
+for port in $PORTS; do
+  VBoxManage modifyvm "$VM_NAME" --natpf1 "Rule $port,tcp,,$port,,$port"
+done
+```
 
 # Troubleshooting
 
