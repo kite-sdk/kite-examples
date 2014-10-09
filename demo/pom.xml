@@ -36,7 +36,6 @@
   <modules>
     <module>demo-core</module>
     <module>demo-crunch</module>
-    <module>demo-oozie</module>
     <module>demo-logging-webapp</module>
     <module>demo-reports-webapp</module>
   </modules>
