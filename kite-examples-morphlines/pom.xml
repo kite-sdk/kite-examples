@@ -24,7 +24,7 @@
 
   <properties>
     <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.16.1-SNAPSHOT</kite-version>
+    <kite-version>0.17.0</kite-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
