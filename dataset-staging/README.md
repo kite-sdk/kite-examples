@@ -25,7 +25,7 @@ mvn compile
 ```
 
 [par]: http://parquet.io/
-[schema]: https://github.com/kite-sdk/kite-examples/blob/staging-example/dataset-staging/src/main/resources/simple-log.avsc
+[schema]: https://github.com/kite-sdk/kite-examples/blob/master/dataset-staging/src/main/resources/simple-log.avsc
 
 ### Creating the datasets
 
