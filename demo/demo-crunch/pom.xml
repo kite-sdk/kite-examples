@@ -22,12 +22,12 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo-crunch</artifactId>
-  <version>0.17.1</version>
+  <version>0.17.2-SNAPSHOT</version>
 
   <parent>
     <groupId>org.kitesdk.examples</groupId>
     <artifactId>demo</artifactId>
-    <version>0.17.1</version>
+    <version>0.17.2-SNAPSHOT</version>
   </parent>
 
   <packaging>jar</packaging>
