@@ -114,6 +114,17 @@ for port in $PORTS; do
 done
 ```
 
+## Running integration tests
+
+Some of the examples include integration tests. You can run them all with the following
+command:
+ 
+```bash
+for module in $(ls -d -- */); do
+  (cd $module; mvn clean verify; if [ $? -ne 0 ]; then break; fi)
+done
+```
+
 # Troubleshooting
 
 ## Working with the VM
