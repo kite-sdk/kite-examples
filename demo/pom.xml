@@ -22,7 +22,7 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo</artifactId>
-  <version>0.17.1-SNAPSHOT</version>
+  <version>0.17.1</version>
   <packaging>pom</packaging>
 
   <name>demo</name>
@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.kitesdk</groupId>
     <artifactId>kite-app-parent-cdh5</artifactId>
-    <version>0.17.1-SNAPSHOT</version>
+    <version>0.17.1</version>
   </parent>
 
   <modules>
