@@ -1,5 +1,5 @@
 <%--
-  Copyright 2013 Cloudera Inc.
+  Copyright 2015 Cloudera Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,15 +14,35 @@
   limitations under the License.
 --%>
 <html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <head>
 <title>Kite Example</title>
-<head>
+<script>
+function one() {
+	document.input.submit();
+}
+</script>
+</head>
 <body>
 <h2>Kite Example</h2>
 <form name="input" action="send" method="get">
 User ID: <input type="text" name="user_id" value="1">
 Message: <input type="text" name="message" value="Hello!">
-<input type="submit" value="Send">
+<table border="2" cellpadding="5" width="800">
+<tr><td>
+<select name="movie" onchange="one()">
+<%
+for (int i=1; i<1683; i++) {
+%>
+<%="<option>" + i + "</option>" %>
+<%
+}
+%>
+</select>
+</td></tr>
+<tr><td>
+<iframe src="http://www.rottentomatoes.com/m/toy_story/" width="1200" height="800" />
+</td></tr></table>
 </form>
 </body>
 </html>
