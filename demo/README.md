@@ -64,7 +64,7 @@ for further information.)
     * Run `sudo cp flume.properties /etc/flume-ng/conf/flume.conf` so the Flume agent uses our configuration file.
 
 __NOTE:__ Don't start Flume immediately after updating the configuration. Flume requires that the
-dataset alerady be created before it will start correctly.
+dataset already be created before it will start correctly.
 
 ## Building
 
