@@ -27,6 +27,7 @@ import org.apache.hadoop.util.ToolRunner;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.Datasets;
+import org.kitesdk.data.Flushable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +84,9 @@ public class GenerateSimpleLogs extends Configured implements Tool {
         writer.write(builder.build());
       }
 
-      writer.flush();
+      if (writer instanceof Flushable) {
+        ((Flushable) writer).flush();
+      }
     } finally {
       if (writer != null) {
         writer.close();
