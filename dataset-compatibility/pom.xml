@@ -22,7 +22,7 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>dataset-compatibility</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Kite Dataset Compatibility Example</name>
@@ -30,7 +30,7 @@
   <parent>
     <groupId>org.kitesdk</groupId>
     <artifactId>kite-app-parent-cdh5</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
 
   <build>
