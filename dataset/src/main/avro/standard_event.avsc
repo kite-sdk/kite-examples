@@ -33,12 +33,6 @@
       "name": "timestamp",
       "type": "long",
       "doc": "The point in time when the event occurred, represented as the number of milliseconds since January 1, 1970, 00:00:00 GMT. Required."
-    },
-    {
-      "name": "event_details",
-      "type": ["null", {"type": "map", "values": ["string", "bytes"]}],
-      "default": null,
-      "doc": "The event-specific details as key-value pairs. Optional."
     }
       
   ]

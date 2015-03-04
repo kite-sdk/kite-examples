@@ -23,7 +23,7 @@ import org.apache.hadoop.util.Tool;
 
 public abstract class BaseEventsTool extends Configured implements Tool {
 
-  protected String uri = "dataset:hive?dataset=events";
+  protected String uri = "dataset:hive:events";
 
   @Override
   public int run(String[] args) throws Exception {

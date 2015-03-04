@@ -11,7 +11,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License. 
  */
 
 package org.kitesdk.examples.data;
@@ -31,7 +31,6 @@ import org.kitesdk.data.View;
 import org.kitesdk.data.event.StandardEvent;
 
 public class GenerateEvents extends BaseEventsTool {
-
   protected Random random;
   protected long baseTimestamp;
   protected long counter;
@@ -44,13 +43,28 @@ public class GenerateEvents extends BaseEventsTool {
 
   @Override
   public int run(List<String> args) throws Exception {
+	  return 0;
+  }
+  
+  public int run(String[] args) throws Exception {
 
     View<StandardEvent> events = Datasets.load(
         "dataset:hive:events", StandardEvent.class);
+
     DatasetWriter<StandardEvent> writer = events.newWriter();
     try {
+      Utf8 sessionId = new Utf8("sessionId");
+      long userId = 0;
+      Utf8 ip = new Utf8("ip");
+      int randomEventCount = 0;
       while (System.currentTimeMillis() - baseTimestamp < 36000) {
-        writer.write(generateRandomEvent());
+        sessionId = randomSessionId();
+        userId = randomUserId();
+        ip = randomIp();
+        randomEventCount = random.nextInt(25);
+        for (int i=0; i < randomEventCount; i++) {
+            writer.write(generateRandomEvent(sessionId, userId, ip));
+        }
       }
     } finally {
       writer.close();
@@ -61,15 +75,14 @@ public class GenerateEvents extends BaseEventsTool {
     return 0;
   }
 
-  public StandardEvent generateRandomEvent() {
+  public StandardEvent generateRandomEvent(Utf8 sessionId, long userId, Utf8 ip) {
     return StandardEvent.newBuilder()
         .setEventInitiator(new Utf8("client_user"))
         .setEventName(randomEventName())
-        .setUserId(randomUserId())
-        .setSessionId(randomSessionId())
-        .setIp(randomIp())
+        .setUserId(userId)
+        .setSessionId(sessionId)
+        .setIp(ip)
         .setTimestamp(randomTimestamp())
-        .setEventDetails(randomEventDetails())
         .build();
   }
 
@@ -92,21 +105,11 @@ public class GenerateEvents extends BaseEventsTool {
 
   public long randomTimestamp() {
     long delta = System.currentTimeMillis() - baseTimestamp;
-    // Each millisecond elapsed will elapse 100 milliseconds
-    // this is the equivalent of each second being 1.67 minutes
-    delta = delta*100l;
+    delta = delta*1000l+random.nextInt(5000);
     return baseTimestamp+delta;
   }
 
-  public Map<Utf8, Object> randomEventDetails() {
-    Map<Utf8, Object> details = new HashMap<Utf8, Object>();
-    String type = random.nextInt(1500) < 1 ? "alert" : "click";
-    details.put(new Utf8("type"), type);
-
-    return details;
-  }
-
-  public static void main(String[] args) throws Exception {
+  public static void main(String... args) throws Exception {
     int rc = ToolRunner.run(new Configuration(), new GenerateEvents(), args);
 
     System.exit(rc);
