@@ -11,7 +11,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
  */
 
 package org.kitesdk.examples.data;
@@ -24,32 +24,30 @@ import java.util.UUID;
 import org.apache.avro.util.Utf8;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
+import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.util.Tool;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.Datasets;
 import org.kitesdk.data.View;
 import org.kitesdk.data.event.StandardEvent;
 
-public class GenerateEvents extends BaseEventsTool {
+public class GenerateEvents extends Configured implements Tool {
   protected Random random;
   protected long baseTimestamp;
   protected long counter;
 
   public GenerateEvents() {
     random = new Random();
-    baseTimestamp = System.currentTimeMillis();
     counter = 0l;
   }
-
   @Override
-  public int run(List<String> args) throws Exception {
-	  return 0;
-  }
-  
   public int run(String[] args) throws Exception {
 
+    baseTimestamp = System.currentTimeMillis();  
+
     View<StandardEvent> events = Datasets.load(
-        "dataset:hive:events", StandardEvent.class);
+        (args[0].isEmpty() ? "dataset:hive:events" : args[0]), StandardEvent.class);
 
     DatasetWriter<StandardEvent> writer = events.newWriter();
     try {
