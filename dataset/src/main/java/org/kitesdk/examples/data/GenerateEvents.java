@@ -39,15 +39,14 @@ public class GenerateEvents extends Configured implements Tool {
 
   public GenerateEvents() {
     random = new Random();
-    counter = 0l;
   }
   @Override
   public int run(String[] args) throws Exception {
-
+    long counter = 0l;
     baseTimestamp = System.currentTimeMillis();  
 
     View<StandardEvent> events = Datasets.load(
-        (args[0].isEmpty() ? "dataset:hive:events" : args[0]), StandardEvent.class);
+        (args.length==1 ? args[0] : "dataset:hive:events"), StandardEvent.class);
 
     DatasetWriter<StandardEvent> writer = events.newWriter();
     try {
@@ -55,14 +54,15 @@ public class GenerateEvents extends Configured implements Tool {
       long userId = 0;
       Utf8 ip = new Utf8("ip");
       int randomEventCount = 0;
+
       while (System.currentTimeMillis() - baseTimestamp < 36000) {
-        sessionId = randomSessionId();
-        userId = randomUserId();
-        ip = randomIp();
-        randomEventCount = random.nextInt(25);
-        for (int i=0; i < randomEventCount; i++) {
-            writer.write(generateRandomEvent(sessionId, userId, ip));
-        }
+          sessionId = randomSessionId();
+          userId = randomUserId();
+          ip = randomIp();
+          randomEventCount = random.nextInt(25);
+          for (int i=0; i < randomEventCount; i++) {
+            writer.write(generateRandomEvent(sessionId, userId, ip, counter++));
+          }
       }
     } finally {
       writer.close();
@@ -73,10 +73,10 @@ public class GenerateEvents extends Configured implements Tool {
     return 0;
   }
 
-  public StandardEvent generateRandomEvent(Utf8 sessionId, long userId, Utf8 ip) {
+  public StandardEvent generateRandomEvent(Utf8 sessionId, long userId, Utf8 ip, long counter) {
     return StandardEvent.newBuilder()
         .setEventInitiator(new Utf8("client_user"))
-        .setEventName(randomEventName())
+        .setEventName(randomEventName(counter))
         .setUserId(userId)
         .setSessionId(sessionId)
         .setIp(ip)
@@ -84,8 +84,8 @@ public class GenerateEvents extends Configured implements Tool {
         .build();
   }
 
-  public Utf8 randomEventName() {
-    return new Utf8("event"+counter++);
+  public Utf8 randomEventName(long counter) {
+    return new Utf8("event"+counter);
   }
 
   public long randomUserId() {
