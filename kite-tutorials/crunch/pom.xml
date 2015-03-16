@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  ~ Copyright 2013 Cloudera Inc.
+  ~ Copyright 2015 Cloudera Inc.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -25,9 +25,10 @@
   <version>1.0.0</version>
 
   <parent>
-    <groupId>org.kitesdk.examples</groupId>
-    <artifactId>demo</artifactId>
+    <groupId>org.kitesdk</groupId>
+    <artifactId>kite-app-parent-cdh5</artifactId>
     <version>1.0.0</version>
+    <relativePath></relativePath>
   </parent>
 
   <packaging>jar</packaging>
@@ -40,7 +41,9 @@
         <groupId>org.kitesdk</groupId>
         <artifactId>kite-maven-plugin</artifactId>
         <configuration>
-          <toolClass>org.kitesdk.examples.tutorials.crunch.AggregateEvents</toolClass>
+          <toolClass>
+            org.kitesdk.examples.tutorials.crunch.AggregateEvents
+          </toolClass>
         </configuration>
       </plugin>
     </plugins>
