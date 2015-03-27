@@ -35,7 +35,6 @@ import org.kitesdk.data.event.StandardEvent;
 public class GenerateEvents extends Configured implements Tool {
   protected Random random;
   protected long baseTimestamp;
-  protected long counter;
 
   public GenerateEvents() {
     random = new Random();
