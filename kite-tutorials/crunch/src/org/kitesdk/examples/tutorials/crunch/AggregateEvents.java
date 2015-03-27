@@ -123,7 +123,7 @@ public class AggregateEvents extends CrunchTool implements Serializable {
         // current start time value.
         startTime = Math.min(startTime, event.getTimestamp());
         
-        // Reset the end time if the timestamp is later then the current
+        // Reset the end time if the timestamp is later than the current
         // end time value.
         endTime = Math.max(endTime, event.getTimestamp());
         
