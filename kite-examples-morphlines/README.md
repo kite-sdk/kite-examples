@@ -15,7 +15,7 @@ This step builds the software from source. It also runs the unit tests.
 git clone https://github.com/kite-sdk/kite-examples.git
 cd kite-examples/kite-examples-morphlines
 #git checkout master
-#git checkout 0.12.0 # or whatever the latest version is
+#git checkout 1.0.0 # or whatever the latest version is
 mvn clean package
 ```
 
