@@ -1,0 +1,8 @@
+@namespace("org.kitesdk.examples.oozie")
+protocol PersonSummaryProtocol {
+    record PersonSummary {
+        string person_id;
+
+        // a real model would have some more interesting attributes
+    }
+}

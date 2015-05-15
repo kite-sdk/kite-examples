@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2015 Cloudera Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.kitesdk.examples</groupId>
+  <artifactId>kite-examples-oozie</artifactId>
+  <version>1.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>Kite Oozie Examples</name>
+
+  <properties>
+    <!-- Keep this updated to the latest Kite release! -->
+    <kite-version>1.1.0</kite-version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>cdh.repo</id>
+      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+      <name>Cloudera Repositories</name>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>cdh.repo</id>
+      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+      <name>Cloudera Repositories</name>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-core</artifactId>
+      <version>${kite-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-crunch</artifactId>
+      <version>${kite-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-data-hive</artifactId>
+      <version>${kite-version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-exec</artifactId>
+      <version>0.12.0-cdh5.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.crunch</groupId>
+      <artifactId>crunch-core</artifactId>
+      <version>0.9.0-hadoop2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.avro</groupId>
+          <artifactId>avro-mapred</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro-mapred</artifactId>
+      <classifier>hadoop2</classifier>
+      <version>1.7.5</version>
+      <!-- Avro IPC is not used and pulls in server-side dependencies -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.avro</groupId>
+          <artifactId>avro-ipc</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+
+    <!-- provided by mvn kite:run-tool and MR task classpath -->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-client</artifactId>
+      <version>2.3.0-cdh5.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.avro</groupId>
+        <artifactId>avro-maven-plugin</artifactId>
+        <version>1.7.5</version>
+        <configuration>
+          <stringType>String</stringType>
+          <createSetters>false</createSetters>
+          <fieldVisibility>private</fieldVisibility>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>idl-protocol</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>2.9</version>
+          <configuration>
+            <downloadSources>true</downloadSources>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>deploy-example</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-maven-plugin</artifactId>
+            <version>${kite-version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.kitesdk</groupId>
+                <artifactId>kite-hadoop-dependencies</artifactId>
+                <type>pom</type>
+                <version>${kite-version}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.apache.hive</groupId>
+                <artifactId>hive-exec</artifactId>
+                <version>0.12.0-cdh5.0.0</version>
+              </dependency>
+              <dependency>
+                <groupId>org.apache.hive</groupId>
+                <artifactId>hive-serde</artifactId>
+                <version>0.12.0-cdh5.0.0</version>
+              </dependency>
+              <dependency>
+                <groupId>org.kitesdk</groupId>
+                <artifactId>kite-data-hive</artifactId>
+                <version>${kite-version}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.apache.oozie</groupId>
+                <artifactId>oozie-client</artifactId>
+                <version>4.0.0-cdh5.0.0</version>
+              </dependency>
+            </dependencies>
+            <executions>
+              <execution>
+                <id>create-person-dataset</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>delete-dataset</goal>
+                  <goal>create-dataset</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <repositoryUri>repo:hive://quickstart.cloudera:9083</repositoryUri>
+                  <datasetName>Person</datasetName>
+                  <datasetNamespace>default</datasetNamespace>
+                  <avroSchemaReflectClass>org.kitesdk.examples.oozie.Person</avroSchemaReflectClass>
+                  <partitionExpression>provided("nominal_time", "string")</partitionExpression>
+                </configuration>
+              </execution>
+              <execution>
+                <id>person-workflow</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>package-app</goal>
+                  <goal>deploy-app</goal>
+                  <goal>run-app</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <applicationName>kite-examples-oozie-person-app</applicationName>
+                  <applicationType>coordinator</applicationType>
+                  <workflowName>Person-wf</workflowName>
+                  <deployFileSystem>hdfs://quickstart.cloudera</deployFileSystem>
+                  <toolClass>org.kitesdk.examples.oozie.PersonTool</toolClass>
+                  <updateApplication>true</updateApplication>
+                  <args>
+                    <arg>$${inputPathUri}</arg>
+                    <arg>$${outputDatasetUri}</arg>
+                  </args>
+                  <coordinatorFile>${basedir}/src/main/resources/person-coordinator.xml</coordinatorFile>
+                  <hadoopConfiguration>
+                    <fs.default.name>hdfs://quickstart.cloudera</fs.default.name>
+                    <mapred.job.tracker>quickstart.cloudera:8032</mapred.job.tracker>
+                  </hadoopConfiguration>
+                  <jobProperties>
+                    <workflowsPath>/user/${user.name}/apps</workflowsPath>
+                    <datasetRepositoryUri>view:hive://quickstart.cloudera:9083</datasetRepositoryUri>
+                    <datasetDefinitionsPath>/user/${user.name}/apps/datasets.xml</datasetDefinitionsPath>
+                    <inputPathUri>/user/cloudera/persons.txt</inputPathUri>
+                  </jobProperties>
+                  <oozieUrl>http://quickstart.cloudera:11000/oozie</oozieUrl>
+                </configuration>
+              </execution>
+              <execution>
+                <id>create-personoutcomes-dataset</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>delete-dataset</goal>
+                  <goal>create-dataset</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <repositoryUri>repo:hive://quickstart.cloudera:9083</repositoryUri>
+                  <datasetName>PersonOutcomes</datasetName>
+                  <datasetNamespace>default</datasetNamespace>
+                  <avroSchemaReflectClass>org.kitesdk.examples.oozie.PersonOutcomes</avroSchemaReflectClass>
+                  <partitionExpression>provided("nominal_time", "string")</partitionExpression>
+                </configuration>
+              </execution>
+              <execution>
+                <id>personoutcomes-workflow</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>package-app</goal>
+                  <goal>deploy-app</goal>
+                  <goal>run-app</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <applicationName>kite-examples-oozie-personoutcomes-app</applicationName>
+                  <applicationType>coordinator</applicationType>
+                  <workflowName>PersonOutcomes-wf</workflowName>
+                  <deployFileSystem>hdfs://quickstart.cloudera</deployFileSystem>
+                  <toolClass>org.kitesdk.examples.oozie.PersonOutcomesTool</toolClass>
+                  <updateApplication>true</updateApplication>
+                  <args>
+                    <arg>$${inputDatasetUri}</arg>
+                    <arg>$${outputDatasetUri}</arg>
+                  </args>
+                  <coordinatorFile>${basedir}/src/main/resources/personoutcomes-coordinator.xml</coordinatorFile>
+                  <hadoopConfiguration>
+                    <fs.default.name>hdfs://quickstart.cloudera</fs.default.name>
+                    <mapred.job.tracker>quickstart.cloudera:8032</mapred.job.tracker>
+                  </hadoopConfiguration>
+                  <jobProperties>
+                    <workflowsPath>/user/${user.name}/apps</workflowsPath>
+                    <datasetRepositoryUri>view:hive://quickstart.cloudera:9083</datasetRepositoryUri>
+                    <datasetDefinitionsPath>/user/${user.name}/apps/datasets.xml</datasetDefinitionsPath>
+                  </jobProperties>
+                  <oozieUrl>http://quickstart.cloudera:11000/oozie</oozieUrl>
+                </configuration>
+              </execution>
+              <execution>
+                <id>create-personsummary-dataset</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>delete-dataset</goal>
+                  <goal>create-dataset</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <repositoryUri>repo:hive://quickstart.cloudera:9083</repositoryUri>
+                  <datasetName>PersonSummary</datasetName>
+                  <datasetNamespace>default</datasetNamespace>
+                  <avroSchemaReflectClass>org.kitesdk.examples.oozie.PersonSummary</avroSchemaReflectClass>
+                  <partitionExpression>provided("nominal_time", "string")</partitionExpression>
+                </configuration>
+              </execution>
+              <execution>
+                <id>personsummary-workflow</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>package-app</goal>
+                  <goal>deploy-app</goal>
+                  <goal>run-app</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <applicationName>kite-examples-oozie-personsummary-app</applicationName>
+                  <applicationType>coordinator</applicationType>
+                  <workflowName>PersonSummary-wf</workflowName>
+                  <deployFileSystem>hdfs://quickstart.cloudera</deployFileSystem>
+                  <toolClass>org.kitesdk.examples.oozie.PersonSummaryTool</toolClass>
+                  <updateApplication>true</updateApplication>
+                  <args>
+                    <arg>$${inputDatasetUri}</arg>
+                    <arg>$${outputDatasetUri}</arg>
+                  </args>
+                  <coordinatorFile>${basedir}/src/main/resources/personsummary-coordinator.xml</coordinatorFile>
+                  <hadoopConfiguration>
+                    <fs.default.name>hdfs://quickstart.cloudera</fs.default.name>
+                    <mapred.job.tracker>quickstart.cloudera:8032</mapred.job.tracker>
+                  </hadoopConfiguration>
+                  <jobProperties>
+                    <workflowsPath>/user/${user.name}/apps</workflowsPath>
+                    <datasetRepositoryUri>view:hive://quickstart.cloudera:9083</datasetRepositoryUri>
+                    <datasetDefinitionsPath>/user/${user.name}/apps/datasets.xml</datasetDefinitionsPath>
+                  </jobProperties>
+                  <oozieUrl>http://quickstart.cloudera:11000/oozie</oozieUrl>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

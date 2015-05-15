@@ -1,0 +1,14 @@
+<datasets>
+  <dataset name="Person" frequency="${coord:hours(1)}" initial-instance="2014-04-24T00:00Z" timezone="UTC">
+    <uri-template>${datasetRepositoryUri}/default/Person?nominal_time=${YEAR}${MONTH}${DAY}${HOUR}${MINUTE}
+    </uri-template>
+  </dataset>
+  <dataset name="PersonOutcomes" frequency="${coord:hours(1)}" initial-instance="2014-04-24T00:00Z" timezone="UTC">
+    <uri-template>${datasetRepositoryUri}/default/PersonOutcomes?nominal_time=${YEAR}${MONTH}${DAY}${HOUR}${MINUTE}
+    </uri-template>
+  </dataset>
+  <dataset name="PersonSummary" frequency="${coord:hours(1)}" initial-instance="2014-04-24T00:00Z" timezone="UTC">
+    <uri-template>${datasetRepositoryUri}/default/PersonSummary?nominal_time=${YEAR}${MONTH}${DAY}${HOUR}${MINUTE}
+    </uri-template>
+  </dataset>
+</datasets>
