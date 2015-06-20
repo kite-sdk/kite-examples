@@ -1,0 +1,31 @@
+<coordinator-app name="PersonSummary-c" frequency="${coord:hours(1)}" start="2014-04-24T00:00Z" end="2999-12-31T23:59Z"
+  timezone="UTC" xmlns="uri:oozie:coordinator:0.4">
+  <datasets>
+    <include>${datasetDefinitionsPath}</include>
+  </datasets>
+  <input-events>
+    <data-in name="input" dataset="PersonOutcomes">
+      <instance>${coord:current(0)}</instance>
+    </data-in>
+  </input-events>
+  <output-events>
+    <data-out name="output" dataset="PersonSummary">
+      <instance>${coord:current(0)}</instance>
+    </data-out>
+  </output-events>
+  <action>
+    <workflow>
+      <app-path>${workflowsPath}/kite-examples-oozie-personsummary-app</app-path>
+      <configuration>
+        <property>
+          <name>inputDatasetUri</name>
+          <value>${coord:dataIn('input')}</value>
+        </property>
+        <property>
+          <name>outputDatasetUri</name>
+          <value>${coord:dataOut('output')}</value>
+        </property>
+      </configuration>
+    </workflow>
+  </action>
+</coordinator-app>
