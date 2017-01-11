@@ -19,11 +19,11 @@ Each example is a standalone Maven module with associated documentation.
 ## Getting Started
 
 The easiest way to run the examples is on the
-[Cloudera QuickStart VM](https://ccp.cloudera.com/display/SUPPORT/Cloudera+QuickStart+VM),
+[Cloudera QuickStart VM](http://www.cloudera.com/content/support/en/downloads/quickstart_vms.html),
 which has all the necessary Hadoop services pre-installed, configured, and
 running locally. See the notes below for any initial setup steps you should take.
 
-The current examples run on version 4.4.0 of the QuickStart VM.
+The current examples run on version 5.1.0 of the QuickStart VM.
 
 Checkout the latest [branch](https://github.com/kite-sdk/kite-examples/branches) of this repository in the VM:
 
@@ -31,8 +31,6 @@ Checkout the latest [branch](https://github.com/kite-sdk/kite-examples/branches)
 git clone git://github.com/kite-sdk/kite-examples.git
 cd kite-examples
 ```
-
-If you are using a prepared Kite VM, the `git clone` command is already done for you.
 
 Then choose the example you want to try and refer to the README in the relevant subdirectory.
 
@@ -44,47 +42,95 @@ There are two ways to run the examples with the QuickStart VM:
 2. From your host computer.
 
 The advantage of the first approach is that you don't need to install anything extra on
-your host computer, such as Java or Maven, so there are no extra set up steps.
+your host computer, such as Java or Maven, so there are no fewer set up steps.
 
-The second approach is preferable when you want to use tools from your own development
-environment (browser, IDE, command line). However, there are a few extra steps you
-need to take to configure the QuickStart VM, listed below.
+For either approach, you need to make the following changes while logged into the VM:
 
-* __Enable port forwarding__ For VirtualBox, open the Settings dialog for the VM,
-select the Network tab, and click the Port Forwarding button. Map the following ports -
-in each case the host port and the guest port should be the same.
-    * 7180 (Cloudera Manager web UI)
-    * 8020, 50010, 50020, 50070, 50075 (HDFS NameNode and DataNode)
-    * 8021 (MapReduce JobTracker)
-    * 8888 (Hue web UI)
-    * 9083 (Hive/HCatalog metastore)
-    * 41415 (Flume agent)
-    * 11000 (Oozie server)
-    * 21050 (Impala JDBC port)
-* __Bind daemons to the wildcard address__ Daemons that are accessed from the host need
-to listen on all network interfaces. In [Cloudera Manager]
-(http://localhost:7180/cmf/services/status) for each of the services listed below,
-select the service, click "View and Edit" under the Configuration tab then
-search for "wildcard", check the box, then save changes.
-    * HDFS NameNode and DataNode
-    * Hue server
-    * MapReduce JobTracker
-* __Add a host entry for localhost.localdomain__ If you host computer does not have a
-mapping for `localhost.localdomain`, then add a line like the following to `/etc/hosts`
-```
-127.0.0.1       localhost       localhost.localdomain
-```
 * __Sync the system clock__ For some of the examples it's important that the host and
 guest times are in sync. To synchronize the guest, login and type
 `sudo ntpdate pool.ntp.org`.
-* __Restart the cluster__ Restart the whole cluster in Cloudera Manager.
+* __Configure the NameNode to listen on all interfaces__ In order to access the cluster from
+the host computer, the NameNode must be configured to listen on all network interfaces. This
+is done by setting the `dfs.namenode.rpc-bind-host` property in `/etc/hadoop/conf/hdfs-site.xml`:
+```xml
+  <property>
+    <name>dfs.namenode.rpc-bind-host</name>
+    <value>0.0.0.0</value>
+  </property>
+```
+* __Configure the History Server to listen on all interfaces__ In order to access the
+cluster from the host computer, the History Server must be configured to listen on all
+network interfaces. This is done by setting the `mapreduce.jobhistory.address` property
+in `/etc/hadoop/conf/mapred-site.xml`:
+```xml
+  <property>
+    <name>mapreduce.jobhistory.address</name>
+    <value>0.0.0.0:10020</value>
+  </property>
+```
+* __Configure HBase to listen on all interfaces__ In order to access the cluster from
+the host computer, HBase must be configured to listen on all network interfaces. This
+is done by setting the `hbase.master.ipc.address` and `hbase.regionserver.ipc.address`
+properties in `/etc/hbase/conf/hbase-site.xml`:
+```xml
+  <property>
+    <name>hbase.master.ipc.address</name>
+    <value>0.0.0.0</value>
+  </property>
+
+  <property>
+    <name>hbase.regionserver.ipc.address</name>
+    <value>0.0.0.0</value>
+  </property>
+```
+* __Restart the vm__ Restart the VM with `sudo shutdown -r now`
+
+The second approach is preferable when you want to use tools from your own development
+environment (browser, IDE, command line). However, there are a few extra steps you
+need to take to configure the QuickStart VM, listed below:
+
+* __Add a host entry for quickstart.cloudera__ Add or edit a line like the following
+in `/etc/hosts` on the host machine
+```
+127.0.0.1       localhost.localdomain   localhost       quickstart.cloudera
+```
+* __Enable port forwarding__ Most of the ports that need to be forward are pre-configured
+on the QuickStart VM, but there are few that we need to add. For VirtualBox, open
+the Settings dialog for the VM, select the Network tab, and click the Port Forwarding
+button. Map the following ports - in each case the host port and the guest port
+should be the same. Also, your VM should not be running when you are making these changes.
+  * 8032 (YARN ResourceManager)
+  * 10020 (MapReduce JobHistoryServer)
+
+If you have VBoxManage installed on your host machine, you can do this via
+command line as well. In bash, this would look something like:
+
+```bash
+# Set VM_NAME to the name of your VM as it appears in VirtualBox
+VM_NAME="QuickStart VM"
+PORTS="8032 10020"
+for port in $PORTS; do
+  VBoxManage modifyvm "$VM_NAME" --natpf1 "Rule $port,tcp,,$port,,$port"
+done
+```
+
+## Running integration tests
+
+Some of the examples include integration tests. You can run them all with the following
+command:
+ 
+```bash
+for module in $(ls -d -- */); do
+  (cd $module; mvn clean verify; if [ $? -ne 0 ]; then break; fi)
+done
+```
 
 # Troubleshooting
 
 ## Working with the VM
 
 * __What are the usernames/passwords for the VM?__
-  * Cloudera manager: 4.4.0: cloudera/cloudera, 4.3.0: admin/admin
+  * Cloudera manager: cloudera/cloudera
   * HUE: cloudera/cloudera
   * Login: cloudera/cloudera
 
@@ -124,3 +170,4 @@ guest times are in sync. To synchronize the guest, login and type
   * Using VMWare? Try using VirtualBox.
 
 [vbox]: https://www.virtualbox.org/wiki/Downloads
+

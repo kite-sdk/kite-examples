@@ -15,11 +15,10 @@
  */
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Datasets;
 
 /**
  * Delete the products dataset.
@@ -28,12 +27,8 @@ public class DeleteProductDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct a filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
     // Delete the products dataset
-    boolean success = repo.delete("products");
+    boolean success = Datasets.delete("dataset:hdfs:/tmp/data/products");
 
     return success ? 0 : 1;
   }

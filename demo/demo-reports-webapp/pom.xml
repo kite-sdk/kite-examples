@@ -19,12 +19,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo-reports-webapp</artifactId>
+  <version>1.1.0</version>
 
   <parent>
     <groupId>org.kitesdk.examples</groupId>
     <artifactId>demo</artifactId>
-    <version>0.10.1</version>
+    <version>1.1.0</version>
   </parent>
 
   <packaging>war</packaging>
@@ -70,7 +72,7 @@
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-jdbc</artifactId>
-      <version>0.10.0-cdh4.3.0</version>
+      <version>${kite.hive.version}</version>
       <!-- exclude server-side parts of Hive dependencies that conflict with running in a webapp -->
       <exclusions>
         <exclusion>

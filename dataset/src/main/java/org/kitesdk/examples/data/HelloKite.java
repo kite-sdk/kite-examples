@@ -8,9 +8,8 @@ import org.apache.hadoop.util.ToolRunner;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.kitesdk.data.DatasetWriter;
+import org.kitesdk.data.Datasets;
 
 /**
  * Create a dataset then write and read from it.
@@ -19,39 +18,44 @@ public class HelloKite extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct a local filesystem dataset repository rooted at /tmp/hello-kite
-    DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/hello-kite");
+    String datasetUri = "dataset:file:/tmp/hellos";
 
     // Create a dataset of Hellos
     DatasetDescriptor descriptor = new DatasetDescriptor.Builder()
         .schema(Hello.class).build();
-    Dataset<Hello> hellos = repo.create("hellos", descriptor);
+    Dataset<Hello> hellos = Datasets.create(datasetUri, descriptor, Hello.class);
 
     // Write some Hellos in to the dataset
-    DatasetWriter<Hello> writer = hellos.newWriter();
+    DatasetWriter<Hello> writer = null;
     try {
-      writer.open();
+      writer = hellos.newWriter();
       
       Hello hello = new Hello("Kite");
       writer.write(hello);
+
     } finally {
-      writer.close();
+      if (writer != null) {
+        writer.close();
+      }
     }
     
     // Read the Hellos from the dataset
-    DatasetReader<Hello> reader = hellos.newReader();
+    DatasetReader<Hello> reader = null;
     try {
-      reader.open();
+      reader = hellos.newReader();
+
       for (Hello hello : reader) {
         hello.sayHello();
       }
+
     } finally {
-      reader.close();
+      if (reader != null) {
+        reader.close();
+      }
     }
     
     // Delete the dataset now that we are done with it
-    repo.delete("hellos");
+    Datasets.delete(datasetUri);
 
     return 0;
   }

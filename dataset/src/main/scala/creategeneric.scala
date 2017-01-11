@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.kitesdk.data.{DatasetDescriptor, DatasetWriter}
-import org.kitesdk.data.filesystem.FileSystemDatasetRepository
+import org.kitesdk.data.{DatasetDescriptor, DatasetWriter, Datasets, View}
 import java.io.FileInputStream
 import org.apache.avro.Schema
 import org.apache.avro.Schema.Parser
@@ -24,22 +23,15 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import scala.compat.Platform
 import scala.util.Random
 
-// Construct a local filesystem dataset repository rooted at /tmp/data
-val repo = new FileSystemDatasetRepository(
-  FileSystem.get(new Configuration()),
-  new Path("/tmp/data")
-)
-
 // Read an Avro schema from the user.avsc file on the classpath
 val schema = new Parser().parse(new FileInputStream("src/main/resources/user.avsc"))
 
-// Create a dataset of users with the Avro schema in the repository
-val descriptor = new DatasetDescriptor.Builder().schema(schema).get()
-val users = repo.create("users", descriptor)
+// Create a dataset of users with the Avro schema
+val descriptor = new DatasetDescriptor.Builder().schema(schema).build()
+val users = Datasets.create("dataset:hdfs:/tmp/data/users", descriptor).asInstanceOf[View[GenericRecord]]
 
 // Get a writer for the dataset and write some users to it
 val writer = users.newWriter().asInstanceOf[DatasetWriter[GenericRecord]]
-writer.open()
 val colors = Array("green", "blue", "pink", "brown", "yellow")
 val rand = new Random()
 for (i <- 0 to 100) {

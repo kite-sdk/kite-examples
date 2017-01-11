@@ -17,8 +17,10 @@ all of the rating data and a `u.item` file with information about each movie.
 To add these file to HDFS:
 
 1. Unzip the file: `unzip ml-100k.zip`
-2. Copy the `u.data` file into HDFS: `hadoop fs -copyFromLocal ml-100k/u.data`
-3. Copy the `u.item` file into HDFS: `hadoop fs -copyFromLocal ml-100k/u.item`
+2. Copy the `u.data` file into HDFS: `hdfs dfs -copyFromLocal ml-100k/u.data ratings.tsv`
+3. Copy the `u.item` file into HDFS: `hdfs dfs -copyFromLocal ml-100k/u.item movies.psv`
+
+This also renames the files to be a little more friendly.
 
 ### Configuring Kite Datasets
 
@@ -66,7 +68,7 @@ Next, we need to create a `DatasetDescriptor` with the schema and rest of the
 information, like location and format:
 ```java
 DatasetDescriptor ratings = DatasetDescriptor.Builder()
-    .location("hdfs:u.data")
+    .location("hdfs:ratings.tsv")
     .format(Formats.CSV)
     .property("kite.csv.delimiter", "\t")
     .schema(csvSchema)
@@ -75,7 +77,7 @@ DatasetDescriptor ratings = DatasetDescriptor.Builder()
 
 Finally, save the descriptor so it can be used later:
 ```java
-repo.create("ratings", ratings);
+Datasets.create("dataset:hdfs:/tmp/data/ratings", ratings);
 ```
 
 Similarly, we will create a dataset for movies the same way. The file of movies
@@ -94,25 +96,24 @@ Schema movieSchema = SchemaBuilder.record("Movie")
     // ignore genre fields for now
     .endRecord();
 
-repo.create("movies", new DatasetDescriptor.Builder()
-    .location("hdfs:u.item")
+Datasets.create("dataset:hdfs:/tmp/data/movies", new DatasetDescriptor.Builder()
+    .location("hdfs:movies.psv")
     .format(Formats.CSV)
     .property("kite.csv.delimiter", "|")
     .schema(movieSchema)
     .build());
 ```
 
-*This doesn't currently work because the files need to be in directories
-already under the repo root.* We need to fix this by allowing the user to pass
-a location to the FS repository. To get this working right now, just put the
-data files in directories named "movies" and "ratings" under the repository
-root.
-
 These steps are done in the `org.kitesdk.examples.data.DescribeDatasets`
-program. You can run this and then read the movies using these commands:
+program:
 ```bash
 mvn compile
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.DescribeDatasets"
+```
+
+Now the datasets are ready to be used. You can read movies with this command:
+
+```bash
 mvn exec:java -Dexec.mainClass="org.kitesdk.examples.data.ReadMovies"
 ```
 

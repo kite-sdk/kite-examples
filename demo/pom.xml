@@ -22,34 +22,30 @@
 
   <groupId>org.kitesdk.examples</groupId>
   <artifactId>demo</artifactId>
-  <version>0.10.1</version>
+  <version>1.1.0</version>
   <packaging>pom</packaging>
 
   <name>demo</name>
 
+  <parent>
+    <groupId>org.kitesdk</groupId>
+    <artifactId>kite-app-parent-cdh5</artifactId>
+    <version>1.1.0</version>
+  </parent>
+
   <modules>
     <module>demo-core</module>
     <module>demo-crunch</module>
-    <module>demo-oozie</module>
     <module>demo-logging-webapp</module>
     <module>demo-reports-webapp</module>
   </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <!-- Keep this updated to the latest Kite release! -->
-    <kite-version>0.10.1</kite-version>
+    <maven.tomcat.port>8034</maven.tomcat.port>
   </properties>
 
   <repositories>
-    <repository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
     <repository>
       <id>java.net2</id>
       <name>Repository hosting the jee6 artifacts</name>
@@ -57,32 +53,20 @@
     </repository>
   </repositories>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
-      <name>Cloudera Repositories</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
-
   <build>
     <plugins>
       <plugin>
         <groupId>org.kitesdk</groupId>
         <artifactId>kite-maven-plugin</artifactId>
-      	<version>${kite-version}</version>
         <configuration>
           <hadoopConfiguration>
             <property>
               <name>fs.default.name</name>
-              <value>hdfs://localhost.localdomain:8020</value>
+              <value>hdfs://quickstart.cloudera:8020</value>
             </property>
             <property>
               <name>hive.metastore.uris</name>
-              <value>thrift://localhost:9083</value>
+              <value>thrift://quickstart.cloudera:9083</value>
             </property>
           </hadoopConfiguration>
         </configuration>

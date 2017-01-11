@@ -15,12 +15,11 @@
  */
 package org.kitesdk.examples.data;
 
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.RandomAccessDataset;
-import org.kitesdk.data.RandomAccessDatasetRepository;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.RandomAccessDataset;
 
 /**
  * Write some user objects to the users dataset using Avro specific records.
@@ -29,13 +28,10 @@ public class WriteUserDataset extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-
-    // Construct an HBase dataset repository using the local HBase database
-    RandomAccessDatasetRepository repo =
-        DatasetRepositories.openRandomAccess("repo:hbase:localhost.localdomain");
-
     // Load the users dataset
-    RandomAccessDataset<User> users = repo.load("users");
+    // Dataset is named [table].[entity]
+    RandomAccessDataset<User> users = Datasets.load(
+        "dataset:hbase:quickstart.cloudera/users.User", User.class);
 
     // Get an accessor for the dataset and write some users to it
     users.put(user("bill", "green"));

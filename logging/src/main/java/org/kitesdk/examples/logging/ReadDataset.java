@@ -17,12 +17,11 @@ package org.kitesdk.examples.logging;
 
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Datasets;
 
 /**
  * Read all the event objects from the events dataset using Avro generic records.
@@ -32,16 +31,12 @@ public class ReadDataset extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    // Construct a local filesystem dataset repository rooted at /tmp/data
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-
     // Load the events dataset
-    Dataset<GenericRecord> events = repo.load("events");
+    Dataset<GenericRecord> events = Datasets.load("dataset:hive:/tmp/data/default/events");
 
     // Get a reader for the dataset and read all the events
     DatasetReader<GenericRecord> reader = events.newReader();
     try {
-      reader.open();
       for (GenericRecord event : reader) {
         System.out.println(event);
       }

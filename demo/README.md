@@ -2,15 +2,14 @@
 
 This module provides an example of logging application events from a webapp to Hadoop
 via Flume (using log4j as the logging API), extracting session data from the events using
-Crunch, running the Crunch job periodically using Oozie, and analyzing the
-session data with SQL using Impala or Hive.
+Crunch, and analyzing the session data with SQL using Impala or Hive.
 
 If you run into trouble, check out the [Troubleshooting section](../README.md#troubleshooting).
 
 ## Getting started
 
 1. This example assumes that you have VirtualBox or VMWare installed and have a
-   running [Cloudera QuickStart VM][getvm]. See the
+   running [Cloudera QuickStart VM][getvm] version 5.1 or later. See the
    [Getting Started](../README.md#getting-started) and
    [Troubleshooting](../README.md#troubleshooting) sections for help.
 2. In that VM, check out a copy of this demo so you can build the code and
@@ -24,24 +23,19 @@ cd kite-examples
 cd demo
 ```
 
-If you are using a prepared Kite VM, the `git clone` command is already done for you.
-
-[getvm]: https://ccp.cloudera.com/display/SUPPORT/Cloudera+QuickStart+VM
+[getvm]: http://www.cloudera.com/content/support/en/downloads/quickstart_vms.html
 
 ## Configuring the VM
 
-If you are using a prepared Kite VM, these configuration steps are already done for you.
-
-### __Enable Flume user impersonation__
-Flume needs to be able to impersonate the owner
+*   __Enable Flume user impersonation__ Flume needs to be able to impersonate the owner
  of the dataset it is writing to. (This is like Unix `sudo`, see
-[Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/latest/CDH4-Security-Guide/cdh4sg_topic_4_2.html)
-for further information.) In Cloudera Manager,
-* __Update the configuration__
-  * Click on the "hdfs1" service in [CM services](http://localhost:7180/cmf/services/status)
-  * Under the "Configuration" drop-down, select "View and Edit"
-  * Search for "valve"
-  * Add the following XML snippet as the "Cluster-wide Configuration Safety Valve for core-site.xml" and click "Save Changes"
+[Configuring Flume's Security Properties](http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH5/latest/CDH5-Security-Guide/cdh5sg_flume_security_props.html#topic_4_2_1_unique_1)
+for further information.)
+    * If you're using Cloudera Manager (the QuickStart VM ships with Cloudera Manager,
+      but by default it is not enabled) then this is already configured for you.
+    * If you're not using Cloudera Manager, just add the following XML snippet to your
+      `/etc/hadoop/conf/core-site.xml` file and then restart the NameNode with
+      `sudo service hadoop-hdfs-namenode restart`.
 
 ```
 <property>
@@ -56,36 +50,21 @@ for further information.) In Cloudera Manager,
 
 ### __Configure the flume agent__
 
-* __Update the Flume agent configuration__
-  * Click on the "Cloudera Manager" logo in the upper-left corner of CM, which
-    takes you to [CM services](http://localhost:7180/cmf/services/status)
-  * Click on the "flume1" service
-  * Under the "Configuration" drop-down, select "View and Edit"
-  * Search for "Configuration file"
-  * Replace the contents of of the "Configuration file" with the
-    `flume.properties` file from this repository
-  * Click "Save Changes"
-* __(Re)Start the Flume agent__
-  * Go back to the "flume1" service
-  * Under the "Actions" drop-down on the right side, select "Restart"
+* First, check the value of the `tier1.sinks.sink-1.hdfs.proxyUser` in the `flume.properties`
+  file to ensure it matches your login username. The default value is `cloudera`, which is correct
+  for the QuickStart VM, but you'll likely need to change this when running the example from another system.
+* If you're using Cloudera Manager, configure the Flume agent by following these steps:
+    * Select "View and Edit" under the Flume service Configuration tab
+    * Click on the "Agent (Default)" category
+    * Paste the contents of the `flume.properties` file into the text area for the "Configuration File" property.
+    * Save your change
+* If you're not using Cloudera Manager, configure the Flume agent by following these steps:
+    * Edit the `/etc/default/flume-ng-agent` file and add a line containing `FLUME_AGENT_NAME=tier1`
+      (this sets the default Flume agent name to match the one defined in the `flume.properties` file).
+    * Run `sudo cp flume.properties /etc/flume-ng/conf/flume.conf` so the Flume agent uses our configuration file.
 
-    If you are running this example from you machine and not from a QuickStart VM login,
-then make sure you change the value of the `proxyUser` setting in the agent
-configuration to the user that you are logged in as. Save changes,
-then start the Flume agent.
-
-### __Set up Hive Oozie sharelib__
-
-Add the HCatalog Core JAR to the Hive Oozie
-sharelib, by logging in to the VM and running:
-
-```bash
-sudo -u oozie hadoop fs -put \
-  /usr/lib/hcatalog/share/hcatalog/hcatalog-core-0.5.0-cdh4.4.0.jar \
-  /user/oozie/share/lib/hive
-```
-
-Next: __Ensure Oozie is running__ From Cloudera Manager, start the Oozie service.
+__NOTE:__ Don't start Flume immediately after updating the configuration. Flume requires that the
+dataset already be created before it will start correctly.
 
 ## Building
 
@@ -97,11 +76,11 @@ mvn install
 
 This creates the following artifacts:
 
-* a JAR file containing the compiled Avro specific schema `session.avsc` (in `demo-core`)
+* a JAR file containing the compiled Avro specific schemas `standard_event.avsc` and
+`session.avsc` (in `demo-core`)
 * a WAR file for the webapp that logs application events (in `demo-logging-webapp`)
 * a JAR file for running the Crunch job to transform events into sessions (in
 `demo-crunch`)
-* an Oozie application for running the Crunch job on a periodic basis (in `demo-oozie`)
 * a WAR file for the webapp that displays reports generated by Impala (in
 `demo-reports-webapp`)
 
@@ -121,7 +100,7 @@ via Hive.
 mvn kite:create-dataset \
   -Dkite.rootDirectory=/tmp/data \
   -Dkite.datasetName=events \
-  -Dkite.avroSchemaFile=standard_event.avsc \
+  -Dkite.avroSchemaFile=demo-core/src/main/avro/standard_event.avsc \
   -Dkite.hcatalog=false \
   -Dkite.partitionExpression='[year("timestamp", "year"), month("timestamp", "month"), day("timestamp", "day"), hour("timestamp", "hour"), minute("timestamp", "minute")]'
 
@@ -131,11 +110,10 @@ mvn kite:create-dataset \
   -Dkite.avroSchemaFile=demo-core/src/main/avro/session.avsc
 ```
 
-A few comments about these commands. The schema for the `events` dataset,
-`standard_event.avsc`, is loaded from the classpath (it's in the Kite JAR),
-whereas the schema for `sessions` is a local file.
+A few comments about these commands. The schemas for the `events` and `sessions`
+datasets are loaded from local files.
 
-The `--partition-expression` argument is used to specify how the data is partitioned.
+The `-Dkite.partitionExpression` argument is used to specify how the data is partitioned.
 Here we partition by time fields, using JEXL to specify the field partitioners.
 
 Note that you can delete the datasets if you created them on a previous attempt with:
@@ -147,8 +125,15 @@ mvn kite:delete-dataset -Dkite.rootDirectory=/tmp/data -Dkite.datasetName=sessio
 
 You can check that the data directories were created, using Hue (login as `cloudera` if
  you are logged in to the VM, or as your host login if you are running from your
- machine): [`/tmp/data/events`](http://localhost:8888/filebrowser/#/tmp/data/events),
- [`/tmp/data/sessions`](http://localhost:8888/filebrowser/#/tmp/data/sessions).
+ machine): [`/tmp/data/default/events`](http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/events),
+ [`/tmp/data/default/sessions`](http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/sessions).
+
+### Start Flume
+
+* If using Cloudera Manager:
+    * Start (or restart) the Flume agent
+* If not using Cloudera Manager:
+    * Run `sudo /etc/init.d/flume-ng-agent restart` to restart the Flume agent with this new configuration
 
 ### Create events
 
@@ -159,7 +144,7 @@ container; for this example we'll start an embedded Tomcat instance using Maven:
 mvn tomcat7:run
 ```
 
-Navigate to [http://localhost:8080/demo-logging-webapp/](http://localhost:8080/demo-logging-webapp/),
+Navigate to [http://quickstart.cloudera:8034/demo-logging-webapp/](http://quickstart.cloudera:8034/demo-logging-webapp/),
 which presents you with a very simple web page for sending messages.
 
 The message events are sent to the Flume agent
@@ -176,11 +161,12 @@ a script as follows:
 ### Generate the derived sessions
 
 Wait about 30 seconds for Flume to flush the events to the
-[filesystem](http://localhost:8888/filebrowser/#/tmp/data/events),
+[filesystem](http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/events),
 then run the Crunch job to generate derived session data from the events:
 
 ```bash
-(cd demo-crunch; mvn kite:run-tool)
+cd demo-crunch
+mvn kite:run-tool
 ```
 
 The `kite:run-tool` Maven goal executes the `run` method of the `Tool`,
@@ -189,8 +175,14 @@ in this case `CreateSessions`, which launches a Crunch job on the cluster.
 The `Tool` class to run, as well as the cluster settings, are found from the configuration
 of the `kite-maven-plugin`.
 
-When it's complete you should see a file in [`/tmp/data/sessions`]
-(http://localhost:8888/filebrowser/#/tmp/data/sessions).
+When it's complete you should see a file in [`/tmp/data/default/sessions`]
+(http://quickstart.cloudera:8888/filebrowser/#/tmp/data/default/sessions).
+
+You can also supply a view URI to process the events for a particular minute bucket:
+
+```bash
+mvn kite:run-tool -Dkite.args='view:hdfs:/tmp/data/default/events?year=2014&month=8&date=5&hour=17&minute=10'
+```
 
 ### Run session analysis
 
@@ -201,12 +193,12 @@ impala-shell -q 'invalidate metadata'
 ```
 
 One way to explore the results is by using the `demo-reports-webapp` running at
-[http://localhost:8080/demo-reports-webapp/](http://localhost:8080/demo-reports-webapp/),
+[http://quickstart.cloudera:8034/demo-reports-webapp/](http://quickstart.cloudera:8034/demo-reports-webapp/),
 which uses JDBC to run Impala queries for a few pre-defined reports. (Note this only
 work with Impala 1.1 or later, see instructions above.)
 
 Another way is to run ad hoc SQL queries using the Hue interfaces to
-[Impala](http://localhost:8888/impala/) or [Hive](http://localhost:8888/beeswax/).
+[Impala](http://quickstart.cloudera:8888/impala/) or [Hive](http://quickstart.cloudera:8888/beeswax/).
 Here are some queries to try out:
 
 ```
@@ -220,76 +212,3 @@ SELECT * FROM sessions
 ```
 SELECT AVG(duration) FROM sessions
 ```
-
-### Use Oozie to create derived sessions periodically
-
-Oozie is a workflow management system for running jobs on a Hadoop cluster. Rather than
-launching jobs from the developer console, Oozie applications are deployed to the
-cluster then launched from there.
-
-A quick note on terminology: an Oozie _application_ is all the packaged code and
-configuration. There are three types of Oozie application: workflow applications that
-describe a workflow of actions; coordinator applications that run workflows based on
-time and data triggers; and bundle applications that run batches of coordinator
-applications. An Oozie _job_ is the running instantiation of an Oozie _application_.
-
-The `kite-maven-plugin` provides Maven goals for packaging, deploying,
-and running Oozie applications.
-
-Oozie applications are stored in HDFS to allow Oozie to access and run them, so
-the first thing we do is deploy the Oozie application to HDFS.
-
-```bash
-cd demo-oozie
-mvn kite:deploy-app
-```
-
-The filesystem to deploy to is specified by the `deployFileSystem` setting for the
-`kite-maven-plugin`. By default, Oozie applications are stored in the
-`/user/<user>/apps` directory on
-HDFS. You can navigate to this location using the
-[web interface](http://localhost:8888/filebrowser/#/user) to see if the
-application has been successfully deployed.
-
-Before running an Oozie coordinator application, let's run a one-off workflow. The
-Oozie server to use is specified by `oozieUrl` in the plugin configuration.
-
-```bash
-mvn kite:run-app -Dkite.applicationType=workflow
-```
-
-Monitor the workflow job using the [Oozie application in Hue](http://localhost:8888/oozie/list_oozie_workflows/).
-You can click through to see the underlying MapReduce jobs (just one in this case)
-that are run by Crunch.
-
-Next, let's run a coordinator application that runs the workflow application once
-every minute. Build the coordinator version of the app:
-
-```bash
-mvn package kite:deploy-app -Dkite.applicationType=coordinator
-```
-
-We need to create events continuously, which we do by running the
-user simulation script again. This time we don't specify a limit on the number
-of events to create, so it runs indefinitely.
-
-```bash
-./bin/simulate-activity.sh 1
-```
-
-Now we can run the Oozie coordinator application.
-
-```bash
-mvn kite:run-app -Dkite.applicationType=coordinator -Dstart="$(date -u +"%Y-%m-%dT%H:%MZ")"
-```
-
-Monitor the coordinator and resulting workflow jobs using the [Oozie application in Hue](http://localhost:8888/oozie/list_oozie_coordinators).
-
-After a minute or two when a workflow job has completed, you should see new files appear
-in the `sessions` dataset, in
-[`/tmp/data/sessions`](http://localhost:8888/filebrowser#/tmp/data/sessions).
-When you see new files appear, then try running the session analysis from above.
-
-When you have finished, stop the user simulation script by killing the process
-(with Ctrl-C). Kill the Oozie coordinator job through the Hue web interface.
-

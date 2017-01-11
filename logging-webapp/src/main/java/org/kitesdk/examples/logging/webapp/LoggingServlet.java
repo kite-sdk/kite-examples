@@ -1,7 +1,5 @@
 package org.kitesdk.examples.logging.webapp;
 
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicLong;
@@ -16,16 +14,20 @@ import org.apache.log4j.Logger;
 
 public class LoggingServlet extends HttpServlet {
 
-  private static AtomicLong id = new AtomicLong();
+  private static final AtomicLong id = new AtomicLong();
 
-  private Logger logger = Logger.getLogger(LoggingServlet.class);
+  private final Logger logger = Logger.getLogger(LoggingServlet.class);
   private Schema schema;
 
   @Override
   public void init() throws ServletException {
-    // Find the schema from the repository
-    DatasetRepository repo = DatasetRepositories.open("repo:hdfs:/tmp/data");
-    this.schema = repo.load("events").getDescriptor().getSchema();
+    try {
+      // Load the schema from our classpath
+      this.schema = new Schema.Parser().parse(
+          getClass().getResourceAsStream("/event.avsc"));
+    } catch (IOException ex) {
+      throw new ServletException("Can't load events.avsc schema", ex);
+    }
   }
 
   @Override

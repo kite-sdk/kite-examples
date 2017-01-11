@@ -15,27 +15,29 @@
  */
 package org.kitesdk.examples.staging;
 
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetRepositories;
-import org.kitesdk.data.DatasetRepository;
-import org.kitesdk.data.DatasetWriter;
 import com.google.common.collect.DiscreteDomains;
 import com.google.common.collect.Ranges;
 import java.util.Calendar;
 import java.util.Random;
-import org.apache.avro.generic.GenericRecord;
+import java.util.TimeZone;
 import org.apache.avro.generic.GenericRecordBuilder;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.kitesdk.data.Dataset;
+import org.kitesdk.data.DatasetWriter;
+import org.kitesdk.data.Datasets;
+import org.kitesdk.data.Flushable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.apache.avro.generic.GenericData.Record;
 
 public class GenerateSimpleLogs extends Configured implements Tool {
 
   private static final Logger LOG = LoggerFactory.getLogger(GenerateSimpleLogs.class);
 
-  public static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
+  private static final long DAY_IN_MILLIS = 24 * 60 * 60 * 1000;
 
   public static final String[] LOG_LEVELS = new String[]
       {"DEBUG", "INFO", "WARN", "ERROR"};
@@ -51,23 +53,21 @@ public class GenerateSimpleLogs extends Configured implements Tool {
     // going to generate a lot of random log messages
     final Random rand = new Random();
 
-    // open the repository
-    final DatasetRepository repo = DatasetRepositories.open("repo:file:/tmp/data");
-
     // data is written to the staging dataset
-    final Dataset<GenericRecord> staging = repo.load("logs-staging");
-    final DatasetWriter<GenericRecord> writer = staging.newWriter();
+    Dataset<Record> staging = Datasets.load(
+        "dataset:file:/tmp/data/logs_staging", Record.class);
 
     // this is going to build our simple log records
-    final GenericRecordBuilder builder = new GenericRecordBuilder(
+    GenericRecordBuilder builder = new GenericRecordBuilder(
         staging.getDescriptor().getSchema());
 
-    // generate timestamps 1 second apart starting... now
-    final Calendar now = Calendar.getInstance();
+    // generate timestamps 1 second apart starting 1 day ago
+    final Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     final long yesterday = now.getTimeInMillis() - DAY_IN_MILLIS;
 
+    DatasetWriter<Record> writer = null;
     try {
-      writer.open();
+      writer = staging.newWriter();
 
       // generate 15,000 messages, each 5 seconds apart, starting 24 hours ago
       // this is a little less than 24 hours worth of messages
@@ -83,9 +83,14 @@ public class GenerateSimpleLogs extends Configured implements Tool {
 
         writer.write(builder.build());
       }
+
+      if (writer instanceof Flushable) {
+        ((Flushable) writer).flush();
+      }
     } finally {
-      writer.flush();
-      writer.close();
+      if (writer != null) {
+        writer.close();
+      }
     }
 
     return 0;
