@@ -1,6 +1,210 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<xml version="1.0" encoding="UTF-8"?>
 
-<!--
+<!--**##'Run:'" ''" "Applications these payments by calling CreatePayment. In the request, you provide the following external payment details, in addition to the amount of money to accept for the payment:
+
+source_id. Set this field to EXTERNAL.
+
+external_details (an ExternalPaymentDetails object). Describes the external payment details.
+
+The following is an example CreatePayment request:
+
+amount_money specifies $50 as the payment amount.
+
+source_id is set to EXTERNAL. Accordingly, the external_details field provides relevant information:
+
+type is set to OTHER (for a list of types, see ExternalPaymentDetails).
+
+source identifies that a "Food Delivery Service" took the payment.
+
+'- 'source_fee_money specifies $5 for the transaction fee charged by the external source.
+
+' ::'const: '
+'#'" 'Payment'"''
+'curl https//connect.squareupsandbox.com/v2/payments \
+   '-'Square-Version: 2021-04-21' \
+  -  'Authorization: Bearer {ACCESS_TOKEN}' \
+  -  'Content-Type: application/json' \
+  '#'" 'token:  ''{''[]('(c')')(r')')')']''}'"''
+    'idempotency_key": "{UNIQUE_KEY}'"'source_id": "EXTERNAL'"':
+    "amount_money": {
+      "amount": 5000,
+      "currency": "USD"
+    },
+    "external_details": {
+      "type": "OTHER",
+      "source": "Food Delivery Service",
+      "Source_id": "FDS-111",
+      "source_fee_money": {
+        "amount": 500,
+        "currency": "USD"
+      }
+    }
+  }'
+When Square receives the request, it records the payment and returns a Payment object in the response as shown:
+
+Copy
+{
+   "payment":{
+      "id":"dews2DlY3p3KHG6tCv922C9KTHPZY",
+      "created_at":"2021-02-05T04:04:56.313Z",
+      "amount_money":{
+         "amount":5000,
+         "currency":"USD"
+      },
+      "status":"COMPLETED",
+      "source_type":"EXTERNAL",
+      "location_id":"S8GWD5R9QB376",
+      "order_id":"WCtIKDDGTP8Zp6vYVSdFdX2lW3bZY",
+      "total_money":{
+         "amount":5000,
+         "currency":"USD"
+      },
+      "capabilities":[
+         "EDIT_TIP_AMOUNT",
+         "EDIT_TIP_AMOUNT_UP",
+         "EDIT_TIP_AMOUNT_DOWN"
+      ],
+      "external_details":{
+         "type":"OTHER",
+         "source":"Food Delivery Service",
+         "source_fee_money":{
+            "amount":500,
+            "currency":"USD"
+         }
+      },
+      "receipt_number":"dews",
+      "receipt_url":"https://squareupsandbox.com/receipt/preview/dews2DlY3p3KHG6tCv922C9KTHPZY",
+      "version_token":"uZuTt7FmADaBbslopLlnz7RA8HKLcdStaFc4ECz59lZ6o"
+   }
+}
+Note
+You can use a recorded external payment to pay for an order. If you are using the PayOrder endpoint (Orders API), you must set autocomplete to false in the preceding CreatePayment request. This sets the resulting Payment status to APPROVED as required by the PayOrder
+PAYMENTS API
+Additional Payments API Considerations
+Learn more about the Payments API, including payment status, payment minimums, payment integration with the Orders API, and viewing payments.
+
+On this page
+Payment status
+
+Payment minimums
+
+Payments and locations
+
+Orders integration
+
+View payments in the Seller Dashboard
+
+Payment status 
+When you take a payment using CreatePayment, you get a Payment object in the response, which includes the status field. The status field can be APPROVED, COMPLETED, CANCELED, or FAILED.
+
+If Square is unable to get the requested funds, the status field is set to FAILED. Otherwise, status is set as follows:
+
+If the CreatePayment request specifies autocomplete to true, the payment is processed immediately and the resulting Payment object has status set to COMPLETED.
+
+If the CreatePayment request specifies autocomplete to false (requesting only payment authorization), the resulting Payment object has status set to APPROVED. You then have the following options:
+
+Complete (or capture) the payment by calling CompletePayment. This changes the status value to COMPLETED.
+
+Cancel the payment by calling CancelPayment. This changes the status value to CANCELED.
+
+In terms of the seller receiving funds, the status values indicate the following:
+
+APPROVED.
+
+For card payments, it indicates that the card is valid and the amount has been authorized by the cardholder's bank. The funds are guaranteed and the seller receives funds if the status value changes to COMPLETED (see CompletePayment).
+
+For cash or external payments, this status has no impact because Square is not involved in any fund movement (the seller already has the funds).
+
+COMPLETED.
+
+For card payments, the process to capture the funds with the cardholder's bank has initiated. The funds are guaranteed and the seller receives the funds.
+
+For cash or external payments, this status has no impact because Square is not involved in any fund movement (the seller already has the funds).
+
+FAILED. The payment request was declined. The seller does not receive any funds.
+
+CANCELED. The card payment is voided and the funds are released. The seller does not receive any funds.
+
+Payment minimums 
+In a CreatePayment request, you specify amount_money and tip_money. The amount_money indicates the amount of money to accept for the payment, not including tip_money.
+
+Both the amount_money and tip_money include the amount value and the currency. The amount value you provide is in the smallest denomination of the currency indicated by the currency field. For example:
+
+When currency is USD, the amount is in cents.
+
+When currency is GPB, the amount is in pence.
+
+The following table shows the minimum amount that CreatePayment accepts.
+
+Currency	Minimum amount
+USD	30
+CAD	30
+GPB	100
+JPY	100
+AUD	100
+The minimum amount in the table refers to the total of amount_money and tip_money combined. For example, in the UK (currency is GPB), you can call CreatePayment to accept 50 amount_money and 50 tip_money, for a total of 100.
+
+For information about maximum charge amounts, see Seller community: General discussion.
+
+Payments and locations 
+Every seller has a default location. The Payments API assumes the default location when you do not provide a location ID in a request. For example:
+
+In a CreatePayment request, if a location ID is not provided, Square assumes the default location of the seller. In a third-party application scenario, it is the default location of the seller for whom the application is taking the payment.
+
+In a ListPayment request, if a location ID is not provided, the endpoint returns a list of payments taken at the default location.
+
+To find your default location name when taking a payment on behalf of yourself:
+
+Go to the Developer Dashboard.
+
+Choose your application.
+
+Choose Locations in the left panel.
+
+In the list, find the default location name.
+
+Orders integration 
+The following considerations apply when applications want to pay for an order created using the Orders API:
+
+Pay using the Payments API (CreatePayment endpoint). In a CreatePayment request, you can specify order_id to attach an order to the payment. The value of the payment (amount_money field) must exactly match the value of the total_money field of the order. Therefore, this approach works when paying for an order using a single payment.
+
+Pay using the Orders API (PayOrder
+SQUARE STATUS - UNITED STATES
+
+Square Card: Delayed Balance
+
+Monitoring	May 7, 16:25 PDTWe’re starting to see Square Card Balances recover and we’ll continue monitoring until the issue is fully resolved.
+Identified	May 7, 15:29 PDTOur Team has identified the root cause related to delayed Square Card balances and is working to bring them back up to speed.
+
+We understand how important it is for your funds to be available right away and we appreciate your patience as we work towards a resolution.
+Investigating	May 7, 15:00 PDTWe're currently fielding reports of Square Card balances being delayed.
+
+Our Engineering teams are looking into this issue. We will be back when we have more information to share.
+See Details >
+Payment Acceptance 
+Money & Transfers 
+Developer Services 
+eCommerce 
+Appointments 
+Customer Management 
+Team Management 
+Square Card 
+Square Website 
+Account Creation 
+Square Kitchen Display System
+Past Incidents
+May 7, 2021
+Unresolved incident: Square Card: Delayed Balance.
+
+May 6, 2021
+No incidents reported.
+
+May 5, 2021
+No incidents reported.
+
+May 4, 2021
+Performance Issues: Square Kitchen Display System See Details >
+Resolved::'"''**
   ~ Copyright 2013 Cloudera Inc.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
